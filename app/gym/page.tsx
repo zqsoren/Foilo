@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { productVersions } from "@/lib/product-versions";
 import { headers } from "next/headers";
 import { requireUser } from "@/lib/auth";
 import { sqlite } from "@/lib/db";
@@ -6,7 +7,10 @@ import { dashboard, exercises, gymMonth } from "@/lib/gym/store";
 import GymApp from "@/components/gym/gym-app";
 import "./gym.css";
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "健身 · 在侧 Folio" };
+export const metadata: Metadata = {
+  title: "健身 · 在侧 Folio",
+  other: { "folio-version": productVersions.gym },
+};
 export default async function GymPage({
   searchParams,
 }: {

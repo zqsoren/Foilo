@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleIdentifier</key><string>io.xipo.todo.mac</string>
+<key>CFBundleName</key><string>DIGTODO</string>
+<key>CFBundleDisplayName</key><string>DIGTODO</string>
+<key>CFBundleExecutable</key><string>XipoTodo</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleShortVersionString</key><string>1.2.0</string>
+<key>CFBundleVersion</key><string>20261026.7</string>
+<key>LSMinimumSystemVersion</key><string>14.0</string>
+<key>NSHighResolutionCapable</key><true/>
+<key>CFBundleIconFile</key><string>AppIcon</string>
+<key>CFBundleURLTypes</key><array><dict>
+  <key>CFBundleURLName</key><string>io.xipo.todo.mac</string>
+  <key>CFBundleURLSchemes</key><array><string>xipo-todo</string></array>
+</dict></array>
+</dict></plist>

@@ -1,0 +1,89 @@
+.page { max-width: 480px; min-height: 100dvh; margin: auto; padding: 0 20px 40px; background: #fff; color: #493a31; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; }
+.header { display: flex; align-items: center; justify-content: space-between; padding: 20px 0 14px; }
+.header a { color: #b75c2a; text-decoration: none; font-size: 14px; }
+.header h1 { font-size: 17px; margin: 0; }
+.header > span { color: #aa9385; font-size: 12px; }
+.previewArea { padding: 8px 0 12px; }
+.sizes { display: flex; gap: 4px; justify-content: center; margin-bottom: 18px; }
+.sizes button { background: transparent; border: 0; color: #a68e7f; border-radius: 8px; padding: 6px 16px; cursor: pointer; font-size: 12px; }
+.sizes button[aria-pressed="true"] { background: #fff0e6; color: #ad5628; }
+.widget { display: flex; flex-direction: column; margin: auto; padding: 14px 16px 12px; border-radius: 23px; background: #fff9f4; box-shadow: 0 7px 25px #98684712, 0 0 0 1px #f7e9de; }
+.medium { max-width: 340px; min-height: 172px; }
+.small { width: 174px; min-height: 174px; }
+.large { max-width: 340px; min-height: 340px; }
+.widgetTitle { display: flex; align-items: center; justify-content: space-between; color: #b75c2a; font-size: 14px; margin-bottom: 10px; }
+.widgetTitle span { color: #9a7b69; font-size: 11px; }
+.events { flex: 1; }
+.event { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; font-size: 13px; }
+.event > span { color: #e89053; }
+.event > div { min-width: 0; flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.event strong { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: 550; }
+.event time { color: #9a7b69; font-size: 11px; white-space: nowrap; }
+.done strong { color: #a98f7f; font-weight: 400; }
+.small .event > div { align-items: flex-start; flex-direction: column; gap: 1px; }
+.small .event strong { max-width: 115px; font-size: 12px; }
+.widget footer { color: #9a7b69; font-size: 10px; line-height: 1.6; margin-top: 5px; }
+.widget footer small { display: block; font-size: 9px; color: #a78e7f; }
+.empty { font-size: 14px; padding: 4px 0 10px; }
+.empty small { display: block; margin-top: 5px; color: #9a7b69; font-size: 11px; }
+.previewArea > p { text-align: center; font-size: 11px; color: #ac998d; margin-top: 13px; }
+.steps section { border-bottom: 1px solid #f1eae5; padding: 18px 0; }
+.steps h2 { display: flex; align-items: center; gap: 9px; font-size: 15px; margin: 0 0 9px; font-weight: 600; }
+.steps i { font-style: normal; width: 23px; height: 23px; border-radius: 50%; background: #fff0e6; color: #b75c2a; font-size: 12px; display: grid; place-items: center; }
+.steps p { font-size: 13px; line-height: 1.8; color: #89766a; margin: 8px 0 12px; }
+.button, .primary { display: inline-flex; border: 0; border-radius: 10px; padding: 11px 15px; background: #fff0e6; color: #b75c2a; font-size: 13px; text-decoration: none; cursor: pointer; }
+.primary { background: #ec955c; color: #fff; }
+.actions { display: flex; align-items: center; gap: 16px; }
+.revoke { border: 0; color: #9a7b69; background: none; font-size: 13px; padding: 10px; cursor: pointer; }
+.page button:disabled { opacity: .5; cursor: wait; }
+.steps .hint { font-size: 11px; color: #a18b7e; margin-bottom: 0; }
+.token { display: flex; gap: 7px; margin: 12px 0; }
+.token input { min-width: 0; width: 100%; border: 1px solid #ebd9ca; border-radius: 8px; padding: 8px; font-size: 16px; }
+.token button { flex-shrink: 0; border: 0; background: #fff0e6; border-radius: 8px; color: #b75c2a; padding: 8px; }
+.steps details { margin-top: 12px; font-size: 12px; color: #9a7b69; }
+.steps textarea { width: 100%; margin-top: 8px; font-size: 12px; border: 1px solid #ebd9ca; border-radius: 8px; padding: 8px; }
+.footnote { color: #a18b7e; font-size: 11px; line-height: 1.8; margin-top: 18px; }
+.notice, .error { position: sticky; bottom: 18px; padding: 12px 14px; font-size: 13px; line-height: 1.6; border-radius: 12px; box-shadow: 0 4px 20px #493a3115; background: #fff0e6; color: #98532c; margin-top: 10px; }
+.error { background: #fff0ee; color: #b54837; }
+
+/* v3: the approved warm-persimmon split layout, with no heading. */
+.widget { flex-direction: row; padding: 0; overflow: hidden; background: #fff; color: #2d2d31; box-shadow: 0 8px 28px #6b48351a, 0 0 0 1px #ece7e2; }
+.datePanel { width: 78px; flex-shrink: 0; background: #e78555; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 14px 5px; }
+.datePanel > strong { font-size: 30px; line-height: 1; font-weight: 650; }
+.datePanel > span { font-size: 10px; }
+.progress { margin-top: 15px; padding-top: 10px; border-top: 1px solid #ffffff50; width: 80%; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.progress b { font-size: 16px; font-weight: 600; }
+.progress span { font-size: 10px; }
+.content { min-width: 0; flex: 1; padding: 12px 14px 9px; display: flex; flex-direction: column; }
+.event { margin: 0; padding: 6px 0; border-bottom: 1px solid #f0efed; gap: 9px; }
+.event:last-child { border-bottom: 0; }
+.event > span { font-size: 18px; color: #a5a7aa; }
+.event > div { flex-direction: column; align-items: flex-start; gap: 2px; }
+.event strong { max-width: 100%; }
+.event time { color: #77797f; font-size: 10px; }
+.done strong { color: #89847f; }
+.done > span { color: #e78555; }
+.widget footer { font-size: 9px; color: #77797f; text-align: right; }
+.small .datePanel { width: 48px; padding-inline: 4px; }
+.small .datePanel > strong { font-size: 23px; }
+.small .datePanel > span { font-size: 9px; max-width: 30px; text-align: center; }
+.small .progress b { font-size: 12px; }
+.small .progress span { font-size: 8px; }
+.small .content { padding: 12px 8px 9px; }
+.small .event > span { display: none; }
+.small .event strong { font-size: 11px; max-width: 100%; }
+.small .event time { font-size: 9px; }
+.small .widget footer { font-size: 8px; }
+.large .event { padding: 9px 0; }
+
+.datePanel { background: #fff; color: #f37427; align-items: flex-start; justify-content: space-between; padding: 15px 10px 13px 16px; width: 88px; }
+.datePanel > span { font-size: 11px; line-height: 1.7; }
+.progress { margin: auto 0 0; border: 0; align-items: flex-start; width: 100%; padding: 0; }
+.progress > strong { font-size: 48px; line-height: 1.1; font-weight: 650; }
+.progress b { font-size: 12px; font-weight: 500; }
+.small .datePanel { width: 61px; padding: 13px 6px 13px 12px; }
+.small .progress > strong { font-size: 32px; }
+.done strong { color: #b3b3b8; }
+
+.done strong { text-decoration: none; }
+.completedTitle { text-decoration: line-through; }

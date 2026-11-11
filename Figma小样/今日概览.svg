@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">
+  <rect width="640" height="360" rx="16" fill="#FAFAF8"/>
+  <rect x="20" y="20" width="600" height="320" rx="12" fill="#FFFFFF" stroke="#E8E7E3"/>
+  <text x="48" y="68" font-family="Arial, PingFang SC, sans-serif" font-size="20" font-weight="600" fill="#272724">今日概览</text>
+  <text x="48" y="94" font-family="Arial, PingFang SC, sans-serif" font-size="13" fill="#92918B">2026年11月8日 · 星期日</text>
+  <rect x="48" y="120" width="260" height="110" rx="8" fill="#F7F7F5"/>
+  <text x="68" y="151" font-family="Arial, PingFang SC, sans-serif" font-size="14" fill="#777770">今日任务</text>
+  <text x="68" y="202" font-family="Arial, PingFang SC, sans-serif" font-size="36" font-weight="600" fill="#292925">8</text>
+  <text x="96" y="202" font-family="Arial, PingFang SC, sans-serif" font-size="14" fill="#92918B">项</text>
+  <rect x="320" y="120" width="260" height="110" rx="8" fill="#F3F8F4"/>
+  <text x="340" y="151" font-family="Arial, PingFang SC, sans-serif" font-size="14" fill="#6E8072">已完成</text>
+  <text x="340" y="202" font-family="Arial, PingFang SC, sans-serif" font-size="36" font-weight="600" fill="#43845A">5</text>
+  <text x="368" y="202" font-family="Arial, PingFang SC, sans-serif" font-size="14" fill="#809487">项</text>
+  <text x="48" y="272" font-family="Arial, PingFang SC, sans-serif" font-size="14" fill="#777770">今天已经完成 5 项任务</text>
+  <rect x="48" y="291" width="532" height="6" rx="3" fill="#ECEDE9"/>
+  <rect x="48" y="291" width="332" height="6" rx="3" fill="#75A982"/>
+  <text x="530" y="272" font-family="Arial, sans-serif" font-size="13" fill="#6E8072">63%</text>
+</svg>

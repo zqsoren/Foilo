@@ -76,7 +76,9 @@ export function Library({
           <div className="library-results" ref={results} role="region" aria-label="动作列表" tabIndex={0}>
             <div className="library-count"><strong>{q.trim() ? "搜索结果" : region === "全部" ? "全部动作" : region}</strong>
               <small aria-live="polite">{browse ? found.length + " 项" : "已选 " + selected.length + " 项"}</small></div>
-            <div className="gym-filters library-filters">
+            <details className="library-options">
+              <summary>{tool === "全部" && muscle === "全部" ? "筛选" : "已筛选"}</summary>
+              <div className="gym-filters library-filters">
               <select aria-label="器械" value={tool} onChange={(e) => setTool(e.target.value)}>
                 <option value="全部">全部器械</option>{gears.map((s) => <option key={s}>{s}</option>)}
               </select>
@@ -84,6 +86,7 @@ export function Library({
                 <option value="全部">全部肌群</option>{muscles.map((s) => <option key={s}>{s}</option>)}
               </select>}
             </div>
+            </details>
             <div className="library-grid">
               {found.map((e) => {
                 const already = blocked.includes(e.id), checked = selected.includes(e.id);

@@ -28,9 +28,12 @@ describe("健身模块数据库", () => {
       now,
     );
   }
-  it("共享目录实际有 100 项，图片与署名在数据库", () => {
+  it("共享目录有 106 项，指定的十二个动作都有数据库配图", () => {
     const list = exercises(db);
-    expect(list.length).toBe(100);
+    expect(list.length).toBe(106);
+    for (const id of [15, 16, 20, 30, 37, 71, 101, 102, 103, 104, 105, 106]) {
+      expect(list.find((exercise) => exercise.id === id)?.imageId).toBeTruthy();
+    }
     const media = db.prepare("SELECT content,artist FROM gym_media").all() as {
       content: Buffer;
       artist: string;

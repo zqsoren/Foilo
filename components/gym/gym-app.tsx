@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { CalendarDays, Dumbbell, LayoutGrid, Pencil } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { changeGym, readGym, readWorkout } from "@/app/gym/actions";
@@ -17,7 +18,7 @@ import type {
 import { setLabel, totals } from "@/lib/gym/model";
 import { Diary, Overview } from "./diary";
 import { Library } from "./library";
-import { Elapsed, SetForm, Sheet, Thumb } from "./parts";
+import { GymTitle, Elapsed, SetForm, Sheet, Thumb } from "./parts";
 type View =
   | "home"
   | "browse"
@@ -247,16 +248,9 @@ export default function GymApp({
       <section className="gym-page" aria-busy={busy}>
         {view === "home" && (
           <>
-            <div className="gym-eyebrow">训练</div>
-            <header className="gym-heading">
-              <h1>我的计划</h1>
-              <button
-                className="text"
-                aria-label="训练日历"
-                onClick={() => go("diary")}
-              >
-                <CalendarDays size={20} aria-hidden="true" />
-              </button>
+            <header className="gym-home-heading">
+              <Image src="/folio/gym-mark.svg" alt="在侧健身" width={49} height={53} unoptimized />
+              <GymTitle name="我的计划" />
             </header>
             <div className="gym-plans">
               {data.plans.map((p) => (
@@ -339,7 +333,7 @@ export default function GymApp({
               ‹ 我的计划
             </button>
             <header className="gym-heading">
-              <h1>编辑计划</h1>
+              <GymTitle name="编辑计划" />
               <button
                 className="primary compact"
                 disabled={planBusy}

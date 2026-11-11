@@ -2,7 +2,7 @@
 import { useState } from "react";
 import type { Dashboard, Exercise, Workout } from "@/lib/gym/model";
 import { clockTime, setLabel, totals } from "@/lib/gym/model";
-import { Thumb } from "./parts";
+import { GymTitle, Thumb } from "./parts";
 export function Overview({
   work,
   catalog,
@@ -118,7 +118,7 @@ export function Diary({
   return (
     <>
       <div className="gym-heading">
-        <h1>{stats ? "训练统计" : "训练日记"}</h1>
+        <GymTitle name={stats ? "训练统计" : "训练日记"} />
         <div className="gym-switch">
           <button aria-pressed={!stats} onClick={() => switchTab(false)}>
             历史
@@ -248,7 +248,7 @@ export function Diary({
               );
             })}
           </div>
-          <h2>{selectedDay.slice(5).replace("-", " 月 ")} 日</h2>
+          <hr className="day-record-divider" />
           {dayRows.length ? (
             dayRows.map((r) => (
               <button

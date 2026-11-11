@@ -3,6 +3,16 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import type { Exercise, Mode, Values, SetRow } from "@/lib/gym/model";
 import { clockTime } from "@/lib/gym/model";
+const titleArtwork = {
+  "我的计划": ["plans", 98, 24], "动作库": ["library", 73, 23], "选择计划动作": ["select-plan", 148, 24],
+  "添加训练动作": ["select-training", 148, 23], "编辑计划": ["edit-plan", 98, 24], "训练统计": ["stats", 99, 23], "训练日记": ["diary", 98, 23],
+} as const;
+
+export function GymTitle({ name }: { name: keyof typeof titleArtwork }) {
+  const [file, width, height] = titleArtwork[name];
+  return <h1><Image src={"/folio/gym-titles/" + file + ".svg"}
+    alt={name} width={width} height={height} unoptimized /></h1>;
+}
 export function Thumb({ exercise }: { exercise?: Exercise }) {
   return (
     <span className="gym-thumb">

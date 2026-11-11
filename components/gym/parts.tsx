@@ -8,10 +8,10 @@ const titleArtwork = {
   "添加训练动作": ["select-training", 148, 23], "编辑计划": ["edit-plan", 98, 24], "训练统计": ["stats", 99, 23], "训练日记": ["diary", 98, 23],
 } as const;
 
-export function GymTitle({ children }: { children: keyof typeof titleArtwork }) {
-  const [file, width, height] = titleArtwork[children];
+export function GymTitle({ name }: { name: keyof typeof titleArtwork }) {
+  const [file, width, height] = titleArtwork[name];
   return <h1><Image src={"/folio/gym-titles/" + file + ".svg"}
-    alt={children} width={width} height={height} unoptimized /></h1>;
+    alt={name} width={width} height={height} unoptimized /></h1>;
 }
 export function Thumb({ exercise }: { exercise?: Exercise }) {
   return (

@@ -118,7 +118,7 @@ export function Diary({
   return (
     <>
       <div className="gym-heading">
-        <GymTitle>{stats ? "训练统计" : "训练日记"}</GymTitle>
+        <GymTitle name={stats ? "训练统计" : "训练日记"} />
         <div className="gym-switch">
           <button aria-pressed={!stats} onClick={() => switchTab(false)}>
             历史

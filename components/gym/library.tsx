@@ -59,7 +59,7 @@ export function Library({
         <header className="gym-heading library-heading">
           <div>
             {!browse && <button className="text" onClick={onBack}>‹ 返回</button>}
-            <GymTitle>{browse ? "动作库" : purpose === "plan" ? "选择计划动作" : "添加训练动作"}</GymTitle>
+            <GymTitle name={browse ? "动作库" : purpose === "plan" ? "选择计划动作" : "添加训练动作"} />
           </div>
           {!browse && <button className="library-done primary" aria-label={(purpose === "plan" ? "完成" : "加入本次") + " · " + selected.length}
             disabled={!selected.length || busy} onClick={onDone}><Check size={20} aria-hidden="true" /></button>}

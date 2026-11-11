@@ -250,7 +250,7 @@ export default function GymApp({
           <>
             <header className="gym-home-heading">
               <Image src="/folio/gym-mark.svg" alt="在侧健身" width={49} height={53} unoptimized />
-              <GymTitle>我的计划</GymTitle>
+              <GymTitle name="我的计划" />
             </header>
             <div className="gym-plans">
               {data.plans.map((p) => (
@@ -333,7 +333,7 @@ export default function GymApp({
               ‹ 我的计划
             </button>
             <header className="gym-heading">
-              <GymTitle>编辑计划</GymTitle>
+              <GymTitle name="编辑计划" />
               <button
                 className="primary compact"
                 disabled={planBusy}

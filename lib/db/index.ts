@@ -35,13 +35,15 @@ const applied = new Set(
 for (const migration of migrations) {
   if (applied.has(migration.version)) continue;
   sqlite.transaction(() => {
+    // Another worker may have migrated while this connection waited for the writer lock.
+    if (sqlite.prepare("SELECT 1 FROM schema_migrations WHERE version=?").get(migration.version)) return;
     sqlite.exec(migration.sql);
     sqlite
       .prepare(
         "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?, ?, ?)",
       )
       .run(migration.version, migration.name, Date.now());
-  })();
+  }).immediate();
 }
 
 const now = Date.now();

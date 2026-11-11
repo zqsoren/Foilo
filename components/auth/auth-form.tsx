@@ -163,6 +163,7 @@ export function AuthForm({ destination }: { destination: string }) {
           <p className="folio-subtitle">
             {step === "password"
               ? `正在登录 ${confirmedPhone.slice(0, 3)} **** ${confirmedPhone.slice(-4)}`
+              : destination.startsWith("/gym") ? `登录后返回健身 · ${destination.endsWith("desktop") ? "桌面端" : "手机端"}`
               : "生活在侧，生活在册，生活在策。"}
           </p>
         </header>

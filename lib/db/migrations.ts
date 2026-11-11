@@ -1,3 +1,5 @@
+import { gymMigration } from "../gym/migration";
+
 export const migrations = [
   {
     version: 1,
@@ -543,4 +545,5 @@ export const migrations = [
       layout TEXT NOT NULL, revision INTEGER NOT NULL
     )`,
   },
+  gymMigration,
 ] as const;

@@ -1,0 +1,639 @@
+html:has(.gym) {
+  zoom: 1;
+}
+.gym {
+  --ink: #242424;
+  --sub: #646464;
+  color: var(--ink);
+  background: #fff;
+  min-height: 100dvh;
+  font:
+    15px/1.5 -apple-system,
+    BlinkMacSystemFont,
+    "PingFang SC",
+    "Microsoft YaHei",
+    sans-serif;
+}
+.gym-page {
+  max-width: 450px;
+  margin: auto;
+  padding: clamp(24px, 5vh, 52px) 22px 110px;
+  min-height: 100dvh;
+}
+.gym h1,
+.gym h2,
+.gym p {
+  margin: 0;
+}
+.gym h1 {
+  font-size: clamp(26px, 8vw, 36px);
+  line-height: 1.22;
+  letter-spacing: -0.04em;
+  overflow-wrap: anywhere;
+}
+.gym h2,
+.gym-sheet h2 {
+  font-size: 19px;
+  margin: 22px 0 14px;
+}
+.gym small,
+.gym-muted,
+.gym-sheet .gym-muted {
+  color: var(--sub);
+  font-size: 13px;
+}
+.gym .gym-muted {
+  margin: 14px 0;
+}
+.gym-eyebrow {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+.gym-eyebrow + .gym-heading {
+  margin-top: 36px;
+  margin-bottom: 42px;
+}
+.gym-heading,
+.sheet-heading,
+.gym-month,
+.gym-actions,
+.gym-progress,
+.gym-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.gym-heading {
+  margin: 0 0 24px;
+}
+.gym-heading > * {
+  min-width: 0;
+}
+.gym button,
+.gym-sheet button {
+  border: 0;
+  background: #f0f0ee;
+  color: #242424;
+  border-radius: 11px;
+  cursor: pointer;
+  padding: 11px 15px;
+  line-height: 1.35;
+  min-height: 42px;
+}
+.gym button:disabled,
+.gym-sheet button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.gym .primary,
+.gym-sheet .primary {
+  background: #242424;
+  color: #fff;
+  font-weight: 600;
+}
+.gym .text,
+.gym-sheet .text {
+  background: transparent;
+  padding: 7px 3px;
+}
+.gym .compact {
+  padding: 9px 14px;
+  white-space: nowrap;
+  font-size: 14px;
+  min-height: 38px;
+}
+.gym .wide,
+.gym-sheet .wide {
+  width: 100%;
+  margin-top: 20px;
+}
+.gym-plans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+.plan-card {
+  border-radius: 15px;
+  background: #e7e7e7;
+  position: relative;
+  min-width: 0;
+}
+.plan-card:nth-child(even) {
+  background: white;
+  box-shadow: inset 0 0 0 1px #d5d5d5;
+  transform: translateY(28px);
+}
+.gym-plans:has(.plan-card:nth-child(even):last-child) {
+  padding-bottom: 28px;
+}
+.gym .plan-start {
+  display: block;
+  width: 100%;
+  min-height: 166px;
+  text-align: left;
+  background: transparent;
+  padding: 13px 14px 33px;
+}
+.plan-start strong {
+  display: block;
+  padding-right: 31px;
+  font-size: 20px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.plan-start small {
+  display: block;
+  margin: 8px 0;
+}
+.plan-examples {
+  border-top: 1px solid #ccc;
+  padding-top: 6px;
+  display: block;
+}
+.plan-examples span {
+  display: block;
+  font-size: 12px;
+  color: #575757;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.plan-play {
+  position: absolute;
+  bottom: 12px;
+  right: 13px;
+  border-radius: 50%;
+  background: #242424;
+  color: white;
+  font-size: 10px;
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+}
+.gym .plan-edit {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  padding: 6px 5px;
+  min-width: 39px;
+  background: transparent;
+  font-size: 12px;
+  color: #585858;
+}
+.gym .new-plan {
+  display: block;
+  margin: 16px 0 22px;
+  width: calc((100% - 16px) / 2);
+  min-height: 48px;
+  border-radius: 28px;
+}
+.gym .gym-resume {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  width: 100%;
+  margin-top: 24px;
+  padding: 17px;
+  text-align: left;
+}
+.gym-resume b {
+  white-space: nowrap;
+}
+.gym-dock {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100%, 450px);
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.96);
+  border-top: 1px solid #dedede;
+  display: flex;
+  padding: 8px 12px max(10px, env(safe-area-inset-bottom));
+  gap: 8px;
+}
+.gym-dock button {
+  flex: 1;
+  font-size: 14px;
+}
+.gym nav button {
+  background: transparent;
+  color: #777;
+}
+.gym nav button.current {
+  color: #222;
+  font-weight: 700;
+  background: #f2f2f0;
+}
+.gym-search,
+.gym-input input,
+.gym-sheet input,
+.gym-sheet textarea,
+.gym-filters select,
+.gym-edit-row input {
+  background: #f3f3f1;
+  border: 1px solid #dededc;
+  border-radius: 10px;
+  font: inherit;
+  color: #242424;
+  padding: 12px;
+}
+.gym-search,
+.gym-input input,
+.gym-sheet textarea {
+  width: 100%;
+}
+.gym-input {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+}
+.gym-chips,
+.gym-switch {
+  display: flex;
+  gap: 6px;
+}
+.gym-chips {
+  overflow: auto;
+  margin: 16px 0 12px;
+}
+.gym-chips button,
+.gym-switch button {
+  white-space: nowrap;
+  border-radius: 22px;
+  font-size: 13px;
+  min-height: 35px;
+  padding: 7px 12px;
+}
+.gym .chosen,
+.gym-switch button[aria-pressed="true"] {
+  background: #242424;
+  color: white;
+}
+.gym-filters {
+  justify-content: flex-start;
+}
+.gym-filters select {
+  max-width: 40%;
+  padding: 6px;
+  font-size: 13px;
+  background: white;
+}
+.gym-filters small {
+  margin-left: auto;
+}
+.gym-list {
+  margin-top: 12px;
+}
+.gym .gym-ex,
+.gym .gym-history {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: white;
+  border-radius: 0;
+  border-bottom: 1px solid #ddd;
+  padding: 12px 0;
+  width: 100%;
+  text-align: left;
+}
+.gym-ex b,
+.gym-history b {
+  font-size: 16px;
+}
+.gym-ex .fill {
+  flex: 1;
+}
+.gym-ex small,
+.gym-history small,
+.gym-record small {
+  display: block;
+  margin-top: 3px;
+}
+.gym-thumb {
+  width: 54px;
+  height: 54px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  background: #f8f8f7;
+  border: 1px solid #e7e7e5;
+  border-radius: 9px;
+  overflow: hidden;
+  color: #aaa;
+}
+.gym-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #fff;
+}
+.large-art .gym-thumb {
+  width: 100%;
+  height: 180px;
+  margin: 15px 0;
+}
+.gym-orb {
+  position: fixed;
+  bottom: 26px;
+  left: max(22px, calc(50% - 205px));
+  z-index: 3;
+}
+.gym .gym-orb {
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  background: #292929;
+  color: white;
+}
+.gym-credit {
+  display: block;
+  text-align: right;
+  font-size: 12px;
+  color: #666;
+  margin: 20px 0;
+}
+.tick {
+  color: #666;
+}
+.tick.marked {
+  color: #222;
+  font-weight: 700;
+}
+.gym-clock {
+  font:
+    600 27px/1 Arial,
+    sans-serif;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.gym-progress {
+  border-bottom: 1px solid #ccc;
+  padding: 4px 0 14px;
+  color: #646464;
+  font-size: 13px;
+}
+.gym-movement {
+  margin: 12px 0;
+}
+.gym-set-heading {
+  font-size: 13px;
+  color: #666;
+  margin: 12px 0;
+}
+.gym .gym-set {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+  margin: 5px 0;
+  padding: 12px;
+  background: #f5f5f3;
+  font-variant-numeric: tabular-nums;
+}
+.gym-set i {
+  margin-left: auto;
+  font-style: normal;
+}
+.gym .gym-set.completed {
+  background: #e9e9e6;
+}
+.gym-sheet {
+  width: min(calc(100% - 24px), 420px);
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 22px;
+  color: #242424;
+  background: white;
+  max-height: 90dvh;
+  overflow: auto;
+}
+.gym-sheet::backdrop {
+  background: #18181855;
+}
+.sheet-heading h2 {
+  margin: 0;
+}
+.sheet-heading {
+  margin-bottom: 20px;
+}
+.sheet-heading > button {
+  font-size: 13px;
+}
+.gym-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 14px 0;
+}
+.gym-fields label {
+  font-size: 13px;
+}
+.gym-fields input {
+  display: block;
+  width: 100%;
+  font-size: 18px;
+  margin-top: 6px;
+}
+.gym-actions {
+  margin-top: 18px;
+}
+.gym-actions button {
+  flex: 1;
+}
+.gym-month {
+  margin: 24px 0 14px;
+  justify-content: flex-start;
+}
+.gym-month b {
+  margin-right: auto;
+  font-size: 22px;
+}
+.gym-month button {
+  font-size: 20px;
+  min-height: 35px;
+  padding: 2px 12px;
+}
+.gym-cal {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 5px 0 10px;
+}
+.gym-cal > small {
+  text-align: center;
+  padding: 5px 0;
+}
+.gym .gym-cal button {
+  background: white;
+  min-width: 0;
+  min-height: 58px;
+  padding: 4px 1px;
+  align-self: start;
+  font-size: 12px;
+}
+.gym-cal button span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 20px;
+}
+.gym-cal button[aria-pressed="true"] span {
+  background: #242424;
+  color: white;
+}
+.gym-cal em,
+.gym-cal small {
+  font-size: 10px;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-style: normal;
+}
+.gym .gym-history {
+  display: block;
+  background: #f4f4f2;
+  border: 0;
+  border-radius: 12px;
+  padding: 14px;
+  margin: 8px 0;
+}
+.gym-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  background: #f3f3f1;
+  padding: 17px;
+  border-radius: 14px;
+  margin: 22px 0;
+}
+.gym-metrics strong,
+.gym-volume strong {
+  display: block;
+  font-size: clamp(19px, 5vw, 26px);
+  font-variant-numeric: tabular-nums;
+}
+.gym-volume {
+  padding: 19px;
+  background: #eee;
+  border-radius: 14px;
+}
+.gym-volume strong {
+  font-size: 38px;
+}
+.gym-plot {
+  margin: 14px 0;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+.gym-plot i {
+  display: block;
+  margin: 8px 0;
+  min-height: 5px;
+  border-radius: 4px;
+  background: #444;
+}
+.gym-plot b {
+  flex: 1;
+  text-align: right;
+}
+.gym-plot:after {
+  content: "";
+  order: 2;
+  width: 100%;
+}
+.gym-plot i {
+  order: 3;
+}
+.gym-record {
+  display: flex;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid #ddd;
+}
+.gym-record p {
+  font-size: 13px;
+  margin-top: 4px;
+}
+.gym-note {
+  white-space: pre-wrap;
+}
+.gym-edit-row {
+  border-bottom: 1px solid #ddd;
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.gym-edit-row input {
+  width: 48px;
+  padding: 4px;
+}
+.gym-edit-row button {
+  padding: 5px;
+  min-height: 34px;
+  margin: 0 2px;
+  background: transparent;
+}
+.gym-feedback {
+  position: fixed;
+  z-index: 20;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 12px;
+  background: #222;
+  color: white;
+  padding: 10px 16px;
+  max-width: 90vw;
+  text-align: center;
+}
+@media (min-width: 800px) {
+  .gym[data-device="desktop"] {
+    background: #f5f5f3;
+    padding: 28px;
+  }
+  .gym[data-device="desktop"] .gym-page {
+    max-width: 820px;
+    background: white;
+    border-radius: 20px;
+    min-height: calc(100dvh - 56px);
+    padding: 36px 48px 110px;
+  }
+  .gym[data-device="desktop"] .gym-dock {
+    width: min(724px, 95vw);
+    border-radius: 16px 16px 0 0;
+  }
+  .gym[data-device="desktop"] .gym-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 30px;
+  }
+  .gym[data-device="desktop"] .gym-orb {
+    left: max(40px, calc(50% - 360px));
+  }
+  .gym[data-device="desktop"] .gym-plans {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .gym-sheet {
+    margin: auto auto 0;
+    width: 100%;
+    max-width: 100%;
+    padding-bottom: max(22px, env(safe-area-inset-bottom));
+    border-radius: 20px 20px 0 0;
+  }
+}

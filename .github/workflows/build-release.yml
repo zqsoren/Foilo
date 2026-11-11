@@ -1,0 +1,46 @@
+name: Build Linux release
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      MY_LIFE_DB_PATH: /tmp/folio-release-build.sqlite
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked packages and verify the SQLite binary
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          node -e "require('better-sqlite3')(':memory:').prepare('SELECT 1').get()"
+      - run: npm test
+      - run: npm run typecheck
+      - name: Build standalone web application
+        run: npm run build
+      - name: Prepare archive for the existing standby-slot deployment
+        run: |
+          set -eu
+          stage=.next/standalone
+          cp -a public "$stage/public"
+          cp -a .next/static "$stage/.next/static"
+          mkdir -p "$stage/node_modules/better-sqlite3/prebuilds"
+          cp node_modules/better-sqlite3/prebuilds/linux-x64.node "$stage/node_modules/better-sqlite3/prebuilds/"
+          test ! -e "$stage/data"
+          test -z "$(find "$stage" -type f \( -name '*.sqlite*' -o -name '.env*' \) -print -quit)"
+          (cd "$stage" && node -e "require('better-sqlite3')(':memory:').prepare('SELECT 1').get()")
+          tar -czf "$RUNNER_TEMP/release.tar.gz" -C "$stage" .
+          cd "$RUNNER_TEMP"
+          sha256sum release.tar.gz > SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: folio-linux-x64
+          path: |
+            ${{ runner.temp }}/release.tar.gz
+            ${{ runner.temp }}/SHA256SUMS
+          retention-days: 7

@@ -2,7 +2,7 @@ export const todoDashboardPath = "/todo/dashboard";
 export const todoTasksPath = todoDashboardPath + "?view=tasks";
 const mobileTodoDestinations = new Set(["/todo", "/todo?tab=chat", "/todo/settings", "/todo/widget"]);
 const destinations = new Set([
-  "/", "/history", "/projects", "/settings",
+  "/", "/history", "/projects", "/settings", "/gym", "/gym?device=mobile", "/gym?device=desktop",
   todoDashboardPath, todoTasksPath, ...mobileTodoDestinations,
 ]);
 

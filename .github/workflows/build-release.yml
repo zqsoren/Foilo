@@ -27,8 +27,11 @@ jobs:
         run: |
           set -eu
           stage=.next/standalone
-          cp -a public "$stage/public"
-          cp -a .next/static "$stage/.next/static"
+          mkdir -p "$stage/public" "$stage/.next/static"
+          cp -a public/. "$stage/public/"
+          cp -a .next/static/. "$stage/.next/static/"
+          diff -qr public "$stage/public"
+          diff -qr .next/static "$stage/.next/static"
           mkdir -p "$stage/node_modules/better-sqlite3/prebuilds"
           cp node_modules/better-sqlite3/prebuilds/linux-x64.node "$stage/node_modules/better-sqlite3/prebuilds/"
           test ! -e "$stage/data"

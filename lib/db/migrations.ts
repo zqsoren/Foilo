@@ -1,4 +1,5 @@
 import { gymMigration } from "../gym/migration";
+import { gymCatalogUpdate } from "../gym/catalog-update";
 
 export const migrations = [
   {
@@ -546,4 +547,5 @@ export const migrations = [
     )`,
   },
   gymMigration,
+  gymCatalogUpdate,
 ] as const;

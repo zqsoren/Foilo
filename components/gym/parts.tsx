@@ -1,16 +1,18 @@
 "use client";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import Image from "next/image";
 import type { Exercise, Mode, Values, SetRow } from "@/lib/gym/model";
 import { clockTime } from "@/lib/gym/model";
 export function Thumb({ exercise }: { exercise?: Exercise }) {
   return (
     <span className="gym-thumb">
       {exercise?.imageId ? (
-        <img
+        <Image
+          unoptimized
           src={"/api/gym/images/" + exercise.imageId}
           alt={exercise.name + "示意"}
-          width="56"
-          height="56"
+          width={56}
+          height={56}
           loading="lazy"
         />
       ) : (
@@ -23,10 +25,12 @@ export function Sheet({
   title,
   close,
   children,
+  message,
 }: {
   title: string;
   close: () => void;
   children: ReactNode;
+  message?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -50,6 +54,7 @@ export function Sheet({
         </button>
       </div>
       {children}
+      {message && <p role="alert">{message}</p>}
     </dialog>
   );
 }

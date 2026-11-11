@@ -1,4 +1,5 @@
 "use client";
+import { CalendarDays, Dumbbell, LayoutGrid, Pencil } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { changeGym, readGym, readWorkout } from "@/app/gym/actions";
 import { loginUrl } from "@/lib/login-routing";
@@ -40,6 +41,7 @@ export default function GymApp({
 }) {
   const [data, update] = useState(initial),
     [view, setView] = useState<View>(device === "desktop" ? "stats" : "home");
+  const [selectedDay, selectDay] = useState(initial.today);
   const [dialog, show] = useState<Dialog>(null),
     [busy, setBusy] = useState(false),
     [message, say] = useState("");
@@ -126,6 +128,7 @@ export default function GymApp({
       const w = await readWorkout(id);
       if (gen !== generation.current) return;
       setDetail(w);
+      selectDay(w.day);
       setFinished(justFinished);
       go("overview");
     } catch (e) {
@@ -252,7 +255,7 @@ export default function GymApp({
                 aria-label="训练日历"
                 onClick={() => go("diary")}
               >
-                日历
+                <CalendarDays size={20} aria-hidden="true" />
               </button>
             </header>
             <div className="gym-plans">
@@ -283,7 +286,7 @@ export default function GymApp({
                     aria-label={"编辑" + p.name}
                     onClick={() => openEdit(p)}
                   >
-                    编辑
+                    <Pencil size={15} aria-hidden="true" />
                   </button>
                 </article>
               ))}
@@ -514,6 +517,8 @@ export default function GymApp({
         {isDiary && (
           <Diary
             data={data}
+            selected={selectedDay}
+            pick={selectDay}
             stats={view === "stats"}
             switchTab={(v) => go(v ? "stats" : "diary")}
             monthChange={changeMonth}
@@ -544,13 +549,20 @@ export default function GymApp({
                 }
                 onClick={() => go(v)}
               >
+                {i === 0 ? (
+                  <Dumbbell size={18} aria-hidden="true" />
+                ) : i === 1 ? (
+                  <CalendarDays size={18} aria-hidden="true" />
+                ) : (
+                  <LayoutGrid size={18} aria-hidden="true" />
+                )}
                 {["训练", "日历", "动作库"][i]}
               </button>
             ))}
           </nav>
         )}
         {dialog === "name" && (
-          <Sheet title="计划名称" close={() => show(null)}>
+          <Sheet title="计划名称" message={message} close={() => show(null)}>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -575,7 +587,11 @@ export default function GymApp({
           </Sheet>
         )}
         {dialog === "set" && editingSet && (
-          <Sheet title={editingSet.item.name} close={() => show(null)}>
+          <Sheet
+            title={editingSet.item.name}
+            message={message}
+            close={() => show(null)}
+          >
             <SetForm
               row={editingSet.row}
               mode={editingSet.item.mode}
@@ -585,7 +601,7 @@ export default function GymApp({
           </Sheet>
         )}
         {dialog === "note" && active && (
-          <Sheet title="训练心得" close={() => show(null)}>
+          <Sheet title="训练心得" message={message} close={() => show(null)}>
             <textarea
               maxLength={2000}
               rows={4}
@@ -614,6 +630,7 @@ export default function GymApp({
         )}
         {dialog === "finish" && active && (
           <Sheet
+            message={message}
             title={totals(active).done ? "完成本次训练？" : "还没有完成的组"}
             close={() => show(null)}
           >
@@ -649,7 +666,7 @@ export default function GymApp({
             </div>
           </Sheet>
         )}
-        {message && (
+        {message && !dialog && (
           <p className="gym-feedback" role="status">
             {message}
           </p>

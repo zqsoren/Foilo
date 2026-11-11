@@ -14,6 +14,9 @@ import {
 } from "./model";
 import { gymCommand, type Command } from "./commands";
 
+export function gymMonth(now = Date.now()) {
+  return epochToLocalInput(now).slice(0, 7);
+}
 export function exercises(db: Database.Database) {
   return db
     .prepare(

@@ -83,6 +83,8 @@ export function Diary({
   stats,
   switchTab,
   busy,
+  selected,
+  pick,
 }: {
   data: Dashboard;
   monthChange: (month: string) => void;
@@ -90,8 +92,9 @@ export function Diary({
   stats: boolean;
   switchTab: (v: boolean) => void;
   busy: boolean;
+  selected: string;
+  pick: (day: string) => void;
 }) {
-  const [selected, pick] = useState(data.today);
   const [monthly, setMonthly] = useState(true);
   const [year, month] = data.month.split("-").map(Number);
   const start = (new Date(Date.UTC(year, month - 1, 1)).getUTCDay() + 6) % 7;
@@ -180,7 +183,12 @@ export function Diary({
                 </div>
                 <div>
                   <small>总时长</small>
-                  <strong>{Math.round(duration / 60000)} 分</strong>
+                  <strong>
+                    {duration > 0 && duration < 60000
+                      ? "<1"
+                      : Math.round(duration / 60000)}{" "}
+                    分
+                  </strong>
                 </div>
                 <div>
                   <small>完成组</small>

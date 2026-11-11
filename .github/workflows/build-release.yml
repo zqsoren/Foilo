@@ -34,6 +34,16 @@ jobs:
           test ! -e "$stage/data"
           test -z "$(find "$stage" -type f \( -name '*.sqlite*' -o -name '.env*' \) -print -quit)"
           (cd "$stage" && node -e "require('better-sqlite3')(':memory:').prepare('SELECT 1').get()")
+          export NODE_ENV=production HOSTNAME=127.0.0.1 PORT=3351
+          (cd "$stage" && exec node server.js) > "$RUNNER_TEMP/folio-smoke.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          curl --fail --retry 12 --retry-all-errors --retry-delay 1 -sS http://127.0.0.1:3351/api/health >/dev/null
+          for device in mobile desktop; do
+            ua="Folio desktop smoke"
+            if [ "$device" = mobile ]; then ua="Mozilla/5.0 (iPhone; Mobile)"; fi
+            curl -sSI -A "$ua" http://127.0.0.1:3351/gym | tr -d '\r' | grep -Fi "location: /login?next=%2Fgym%3Fdevice%3D$device"
+          done
           tar -czf "$RUNNER_TEMP/release.tar.gz" -C "$stage" .
           cd "$RUNNER_TEMP"
           sha256sum release.tar.gz > SHA256SUMS

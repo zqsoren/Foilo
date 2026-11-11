@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { requireUser } from "@/lib/auth";
 import { sqlite } from "@/lib/db";
-import { epochToLocalInput } from "@/lib/life-date";
-import { dashboard, exercises } from "@/lib/gym/store";
+import { dashboard, exercises, gymMonth } from "@/lib/gym/store";
 import GymApp from "@/components/gym/gym-app";
 import "./gym.css";
 export const dynamic = "force-dynamic";
@@ -24,7 +23,7 @@ export default async function GymPage({
         ? "mobile"
         : "desktop";
   const user = await requireUser("/gym?device=" + device);
-  const month = epochToLocalInput(Date.now()).slice(0, 7);
+  const month = gymMonth();
   return (
     <GymApp
       device={device}

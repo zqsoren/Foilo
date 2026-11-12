@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
-import { CalendarDays, Dumbbell, LayoutGrid, Pencil } from "lucide-react";
+import { GymNavigation } from "./navigation";
+import { Pencil } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { changeGym, readGym, readWorkout } from "@/app/gym/actions";
 import { loginUrl } from "@/lib/login-routing";
@@ -499,26 +500,7 @@ export default function GymApp({
           />
         )}
         {navVisible && (
-          <nav className="gym-dock" aria-label="健身导航">
-            {(["home", "diary", "browse"] as const).map((v, i) => (
-              <button
-                key={v}
-                className={
-                  view === v || (v === "diary" && isDiary) ? "current" : ""
-                }
-                onClick={() => go(v)}
-              >
-                {i === 0 ? (
-                  <Dumbbell size={18} aria-hidden="true" />
-                ) : i === 1 ? (
-                  <CalendarDays size={18} aria-hidden="true" />
-                ) : (
-                  <LayoutGrid size={18} aria-hidden="true" />
-                )}
-                {["训练", "日历", "动作库"][i]}
-              </button>
-            ))}
-          </nav>
+          <GymNavigation current={isDiary ? "diary" : "home"} navigate={go} />
         )}
         {dialog === "name" && (
           <Sheet title="计划名称" message={message} close={() => show(null)}>

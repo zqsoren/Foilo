@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
-import type { Exercise, Mode, Values, SetRow } from "@/lib/gym/model";
+import type { Exercise, Mode } from "@/lib/gym/model";
 import { clockTime } from "@/lib/gym/model";
 const titleArtwork = {
   "我的计划": ["plans", 98, 24], "动作库": ["library", 73, 23], "选择计划动作": ["select-plan", 148, 24],
@@ -86,90 +86,3 @@ export const modeLabels: Record<Mode, string> = {
   body: "次数 · 可记额外负重",
   assist: "辅助配重 × 次数",
 };
-export function SetForm({
-  row,
-  segment = false,
-  mode,
-  save,
-  busy,
-}: {
-  segment?: boolean;
-  row: SetRow;
-  mode: Mode;
-  save: (v: Values, done: boolean) => void;
-  busy: boolean;
-}) {
-  const [values, setValues] = useState<Values>({
-    kg: row.kg,
-    reps: row.reps,
-    rightKg: row.rightKg,
-    rightReps: row.rightReps,
-    seconds: row.seconds,
-  });
-  const field = (key: keyof Values, title: string, integer = false) => (
-    <label key={key}>
-      {title}
-      <input
-        type="number"
-        min="0"
-        max={key === "seconds" ? 86400 : 10000}
-        step={integer ? "1" : "0.01"}
-        inputMode={integer ? "numeric" : "decimal"}
-        defaultValue={values[key] || ""}
-        placeholder="0"
-        onChange={(e) =>
-          setValues({ ...values, [key]: Number(e.target.value) })
-        }
-      />
-    </label>
-  );
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        save(values, true);
-      }}
-    >
-      <p className="gym-muted">{modeLabels[mode]}</p>
-      <div className="gym-fields">
-        {mode === "time" ? (
-          field("seconds", "时长（秒）", true)
-        ) : (
-          <>
-            {field(
-              "kg",
-              mode === "assist"
-                ? "辅助重量 kg"
-                : mode === "pair"
-                  ? "单只重量 kg"
-                  : mode === "sides"
-                    ? "左侧总负重 kg"
-                    : mode === "body"
-                      ? "额外负重 kg"
-                      : "总重量 kg",
-            )}
-            {field("reps", mode === "sides" ? "左侧次数" : "实际次数", true)}
-            {mode === "sides" && (
-              <>
-                {field("rightKg", "右侧总负重 kg")}
-                {field("rightReps", "右侧次数", true)}
-              </>
-            )}
-          </>
-        )}
-      </div>
-      <div className="gym-actions">
-        {!segment && <button
-          type="button"
-          disabled={busy}
-          onClick={() => save(values, false)}
-        >
-          {row.done ? "撤销完成" : "保存未完成"}
-        </button>}
-        <button className="primary" disabled={busy}>
-          {segment ? "保存本段" : "完成这一组"}
-        </button>
-      </div>
-    </form>
-  );
-}

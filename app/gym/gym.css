@@ -712,3 +712,9 @@ html:has(.gym) {
 .set-stage { margin-top:4px; }
 .set-stage .set-number { color:#666; font-size:12px; background:#f8f8f7; }
 .set-menu { display:grid; gap:8px; }
+.set-line .set-field { display:flex; min-width:0; align-items:stretch; background:#f1f1ef; border-radius:9px; }
+.inline-number { flex:1; min-width:0; display:grid; text-align:center; align-content:center; padding:3px 1px; border-radius:8px; }
+.inline-number:focus-within { outline:1.5px solid #444; outline-offset:-1.5px; background:#fff; }
+.inline-number input { appearance:textfield; width:100%; min-width:0; border:0; padding:0; background:transparent; color:inherit; text-align:center; outline:0; line-height:1.2; font-family:inherit; font-size:17px; font-weight:600; }
+.inline-number input::-webkit-inner-spin-button { appearance:none; }
+.set-number { font-size:12px; white-space:nowrap; }

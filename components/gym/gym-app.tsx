@@ -52,7 +52,9 @@ export default function GymApp({
     [detail, setDetail] = useState<Workout | null>(null),
     [finished, setFinished] = useState(false);
   const [focused, focus] = useState<number | null>(null);
-  const inflight = useRef(false),
+  const writeQueue = useRef(Promise.resolve()),
+    lastWrite = useRef<{id:number;revision:number} | null>(null),
+    failure = useRef(0),
     pending = useRef<{ payload: string; key: string } | null>(null),
     generation = useRef(0);
   const active = data.active;
@@ -76,37 +78,46 @@ export default function GymApp({
   async function send(
     command: Command,
     after?: (id: number, next: Dashboard) => void | Promise<void>,
+    quiet = false,
   ) {
-    if (inflight.current) return;
-    inflight.current = true;
-    setBusy(true);
-    say("");
-    generation.current++;
-    const payload = JSON.stringify(command);
-    if (pending.current?.payload !== payload)
-      pending.current = { payload, key: crypto.randomUUID() };
-    try {
-      const result = await changeGym(pending.current.key, data.month, command);
-      pending.current = null;
-      if (!result.ok) {
-        say(result.message);
-        if (result.login) login();
-        else if (result.message.includes("已更新")) {
-          const fresh = await readGym(data.month);
-          update(fresh);
-          show(null);
-          if (!fresh.active && view === "work") setView("home");
+    const epoch = failure.current;
+    if (!quiet) setBusy(true);
+    const run = async () => {
+      if (epoch !== failure.current) return;
+      if ("workoutId" in command && lastWrite.current?.id === command.workoutId && command.revision < lastWrite.current.revision)
+        command = {...command, revision:lastWrite.current.revision};
+
+      say("");
+      generation.current++;
+      const payload = JSON.stringify(command);
+      if (pending.current?.payload !== payload)
+        pending.current = { payload, key: crypto.randomUUID() };
+      try {
+        const result = await changeGym(pending.current.key, data.month, command);
+        pending.current = null;
+        if (!result.ok) {
+          failure.current++; lastWrite.current=null;
+          say(result.message);
+          if (result.login) login();
+          else if (result.message.includes("已更新")) {
+            const fresh = await readGym(data.month);
+            update(fresh);
+            show(null);
+            if (!fresh.active && view === "work") setView("home");
+          }
+          return;
         }
-        return;
+        lastWrite.current = result.data.active;
+        update(result.data);
+        await after?.(result.id, result.data);
+      } catch (e) {
+        report(e);
+        failure.current++;
       }
-      update(result.data);
-      await after?.(result.id, result.data);
-    } catch (e) {
-      report(e);
-    } finally {
-      inflight.current = false;
-      setBusy(false);
-    }
+    };
+    const task = writeQueue.current.then(run);
+    writeQueue.current = task.catch(() => {});
+    try { await task; } finally { if (!quiet) setBusy(false); }
   }
   async function changeMonth(month: string) {
     const gen = ++generation.current;
@@ -421,11 +432,11 @@ export default function GymApp({
                   </button>
                   {expanded && (
                     <>
-                      {item.sets.map((row, i) => <TrainingSet key={row.id} row={row}
+                      {item.sets.map((row, i) => <TrainingSet key={row.id + ":" + row.stages.length} row={row}
                         number={i+1} mode={item.mode} busy={busy} message={message} canCopy={item.sets.length<30}
                         copy={() => send({ type:"copySet", workoutId:active.id, revision:active.revision, setId:row.id })}
-                        save={(stages,done,after) => send({ type:"recordStages", workoutId:active.id,
-                          revision:active.revision, setId:row.id, stages, done }, after)} />)}
+                        save={(stages,done,after,quiet) => send({ type:"recordStages", workoutId:active.id,
+                          revision:active.revision, setId:row.id, stages, done }, after,quiet)} />)}
                       <button
                         className="text"
                         disabled={busy || item.sets.length >= 30}

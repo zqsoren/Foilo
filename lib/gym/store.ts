@@ -7,6 +7,7 @@ import {
   type Plan,
   type PlanItem,
   type SetRow,
+  type Values,
   type Workout,
   type WorkoutItem,
   type Summary,
@@ -42,7 +43,7 @@ export function workout(
     .all(id) as WorkoutItem[];
   const rows = db
     .prepare(
-      `SELECT s.item_id AS itemId,s.id,s.kg,s.reps,s.right_kg AS rightKg,s.right_reps AS rightReps,s.seconds,s.done,s.volume
+      `SELECT s.item_id AS itemId,s.id,s.kind,s.kg,s.reps,s.right_kg AS rightKg,s.right_reps AS rightReps,s.seconds,s.done,s.volume
     FROM gym_sets s JOIN gym_workout_items i ON i.id=s.item_id WHERE i.workout_id=? ORDER BY i.position,s.position`,
     )
     .all(id) as (SetRow & { itemId: number })[];
@@ -52,7 +53,15 @@ export function workout(
       return [i.id, i];
     }),
   );
-  for (const row of rows) byItem.get(row.itemId)!.sets.push(row);
+  const bySet = new Map(rows.map(row => [row.id, row]));
+  for (const row of rows) {
+    row.stages = [];
+    byItem.get(row.itemId)!.sets.push(row);
+  }
+  const stages = db.prepare(`SELECT t.set_id AS setId,t.kg,t.reps,t.right_kg AS rightKg,t.right_reps AS rightReps,t.seconds
+    FROM gym_set_stages t JOIN gym_sets s ON s.id=t.set_id JOIN gym_workout_items i ON i.id=s.item_id
+    WHERE i.workout_id=? ORDER BY t.set_id,t.position`).all(id) as (Values & {setId:number})[];
+  for (const stage of stages) bySet.get(stage.setId)!.stages.push(stage);
   return { ...head, items };
 }
 export function dashboard(
@@ -177,6 +186,11 @@ function apply(
     return wid;
   }
   const wid = c.workoutId;
+  if (c.type === "deleteHistory") {
+    const removed = db.prepare("DELETE FROM gym_workouts WHERE id=? AND user_id=? AND revision=? AND finished IS NOT NULL").run(wid,uid,c.revision);
+    if (!removed.changes) throw Error("找不到可删除的训练记录");
+    return wid;
+  }
   const lock = db
     .prepare(
       "UPDATE gym_workouts SET revision=revision+1 WHERE id=? AND user_id=? AND finished IS NULL AND revision=?",
@@ -214,37 +228,41 @@ function apply(
       );
       break;
     }
+    case "copySet": {
+      const row = db.prepare(`SELECT s.* FROM gym_sets s JOIN gym_workout_items i ON i.id=s.item_id
+        WHERE i.workout_id=? AND s.id=?`).get(wid,c.setId) as {item_id:number;position:number} | undefined;
+      if (!row) throw Error("找不到训练组");
+      const count = db.prepare("SELECT count(*) n FROM gym_sets WHERE item_id=?").get(row.item_id) as {n:number};
+      if (count.n >= 30) throw Error("每个动作最多 30 组");
+      // Move later rows in two passes to respect the unique position constraint.
+      db.prepare("UPDATE gym_sets SET position=position+100 WHERE item_id=? AND position>?").run(row.item_id,row.position);
+      db.prepare("UPDATE gym_sets SET position=position-99 WHERE item_id=? AND position>=100").run(row.item_id);
+      const copy = db.prepare(`INSERT INTO gym_sets(item_id,position,kind,kg,reps,right_kg,right_reps,seconds)
+        SELECT item_id,position+1,kind,kg,reps,right_kg,right_reps,seconds FROM gym_sets WHERE id=?`).run(c.setId);
+      db.prepare(`INSERT INTO gym_set_stages SELECT ?,position,kg,reps,right_kg,right_reps,seconds FROM gym_set_stages WHERE set_id=?`).run(copy.lastInsertRowid,c.setId);
+      break;
+    }
+    case "recordStages":
     case "record": {
-      const item = db
-        .prepare(
-          "SELECT i.mode FROM gym_sets s JOIN gym_workout_items i ON i.id=s.item_id WHERE s.id=? AND i.workout_id=?",
-        )
-        .get(c.setId, wid) as { mode: Mode } | undefined;
-      if (!item) throw Error("找不到训练组");
-      const mode = item.mode;
-      if (
-        c.done &&
-        (mode === "time"
-          ? c.seconds === 0
-          : mode === "sides"
-            ? c.reps + c.rightReps === 0
-            : c.reps === 0)
-      )
-        throw Error(mode === "time" ? "请填写时长" : "请填写实际次数");
-      const timed = mode === "time",
-        two = mode === "sides";
-      db.prepare(
-        "UPDATE gym_sets SET kg=?,reps=?,right_kg=?,right_reps=?,seconds=?,done=?,volume=? WHERE id=?",
-      ).run(
-        timed ? 0 : c.kg,
-        timed ? 0 : c.reps,
-        two ? c.rightKg : 0,
-        two ? c.rightReps : 0,
-        timed ? c.seconds : 0,
-        Number(c.done),
-        c.done ? capacity(mode, c) : 0,
-        c.setId,
-      );
+      const row = db.prepare(`SELECT i.mode,s.kind FROM gym_sets s JOIN gym_workout_items i ON i.id=s.item_id
+        WHERE s.id=? AND i.workout_id=?`).get(c.setId,wid) as {mode:Mode;kind:string} | undefined;
+      if (!row) throw Error("找不到训练组");
+      if (c.type === "record" && row.kind !== "normal") throw Error("请刷新页面后编辑递减组");
+      const mode = row.mode;
+      const values = (c.type === "record" ? [c] : c.stages).map(v => ({
+        kg: mode === "time" ? 0 : v.kg, reps: mode === "time" ? 0 : v.reps,
+        rightKg: mode === "sides" ? v.rightKg : 0, rightReps: mode === "sides" ? v.rightReps : 0,
+        seconds: mode === "time" ? v.seconds : 0,
+      }));
+      if (c.done && values.some(v => mode === "time" ? !v.seconds : !(v.reps + v.rightReps)))
+        throw Error(mode === "time" ? "请为每段填写时长" : "请为每段填写实际次数");
+      const first = values[0];
+      const volume = c.done ? Math.round(values.reduce((sum,v) => sum+capacity(mode,v),0)*100)/100 : 0;
+      db.prepare("UPDATE gym_sets SET kind=?,kg=?,reps=?,right_kg=?,right_reps=?,seconds=?,done=?,volume=? WHERE id=?")
+        .run(values.length>1?"drop":"normal",first.kg,first.reps,first.rightKg,first.rightReps,first.seconds,Number(c.done),volume,c.setId);
+      db.prepare("DELETE FROM gym_set_stages WHERE set_id=?").run(c.setId);
+      const insert = db.prepare("INSERT INTO gym_set_stages VALUES(?,?,?,?,?,?,?)");
+      values.slice(1).forEach((v,i)=>insert.run(c.setId,i+1,v.kg,v.reps,v.rightKg,v.rightReps,v.seconds));
       break;
     }
     case "note":

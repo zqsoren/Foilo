@@ -10,15 +10,13 @@ import type {
   Exercise,
   Plan,
   PlanItem,
-  SetRow,
-  Values,
   Workout,
-  WorkoutItem,
 } from "@/lib/gym/model";
-import { setLabel, totals } from "@/lib/gym/model";
+import { TrainingSet } from "./training-set";
+import { totals } from "@/lib/gym/model";
 import { Diary, Overview } from "./diary";
 import { Library } from "./library";
-import { GymTitle, Elapsed, SetForm, Sheet, Thumb } from "./parts";
+import { GymTitle, Elapsed, Sheet, Thumb } from "./parts";
 type View =
   | "home"
   | "browse"
@@ -29,7 +27,7 @@ type View =
   | "diary"
   | "stats"
   | "overview";
-type Dialog = "name" | "note" | "set" | "finish" | null;
+type Dialog = "name" | "note" | "delete" | "finish" | null;
 
 export default function GymApp({
   initial,
@@ -53,11 +51,7 @@ export default function GymApp({
   const [note, setNote] = useState(""),
     [detail, setDetail] = useState<Workout | null>(null),
     [finished, setFinished] = useState(false);
-  const [focused, focus] = useState<number | null>(null),
-    [editingSet, setEditingSet] = useState<{
-      item: WorkoutItem;
-      row: SetRow;
-    } | null>(null);
+  const [focused, focus] = useState<number | null>(null);
   const inflight = useRef(false),
     pending = useRef<{ payload: string; key: string } | null>(null),
     generation = useRef(0);
@@ -214,24 +208,6 @@ export default function GymApp({
   }
   function toggle(id: number) {
     select((v) => (v.includes(id) ? v.filter((x) => x !== id) : [...v, id]));
-  }
-  function editSet(item: WorkoutItem, row: SetRow) {
-    setEditingSet({ item, row });
-    show("set");
-  }
-  function record(values: Values, done: boolean) {
-    if (!active || !editingSet) return;
-    void send(
-      {
-        type: "record",
-        workoutId: active.id,
-        revision: active.revision,
-        setId: editingSet.row.id,
-        ...values,
-        done,
-      },
-      () => show(null),
-    );
   }
   function planItems(index: number, delta: number) {
     const next = [...draftItems],
@@ -445,34 +421,11 @@ export default function GymApp({
                   </button>
                   {expanded && (
                     <>
-                      <div className="gym-set-heading">
-                        组　　
-                        {item.mode === "time"
-                          ? "时长"
-                          : item.mode === "sides"
-                            ? "左右负重与次数"
-                            : "实际记录"}
-                      </div>
-                      {item.sets.map((s, i) => (
-                        <button
-                          className={"gym-set " + (s.done ? "completed" : "")}
-                          key={s.id}
-                          onClick={() => editSet(item, s)}
-                        >
-                          <b>{i + 1}</b>
-                          <span>
-                            {s.seconds || s.reps || s.rightReps || s.kg
-                              ? setLabel(item.mode, s)
-                              : "填写" +
-                                (item.mode === "time"
-                                  ? "秒数"
-                                  : item.mode === "sides"
-                                    ? "左右记录"
-                                    : "重量与次数")}
-                          </span>
-                          <i>{s.done ? "✓" : "○"}</i>
-                        </button>
-                      ))}
+                      {item.sets.map((row, i) => <TrainingSet key={row.id} row={row}
+                        number={i+1} mode={item.mode} busy={busy} message={message} canCopy={item.sets.length<30}
+                        copy={() => send({ type:"copySet", workoutId:active.id, revision:active.revision, setId:row.id })}
+                        save={(stages,done,after) => send({ type:"recordStages", workoutId:active.id,
+                          revision:active.revision, setId:row.id, stages, done }, after)} />)}
                       <button
                         className="text"
                         disabled={busy || item.sets.length >= 30}
@@ -524,6 +477,7 @@ export default function GymApp({
           <Overview
             work={detail}
             catalog={catalog}
+            remove={() => show("delete")}
             justFinished={finished}
             back={() => {
               go("diary");
@@ -580,20 +534,12 @@ export default function GymApp({
             </form>
           </Sheet>
         )}
-        {dialog === "set" && editingSet && (
-          <Sheet
-            title={editingSet.item.name}
-            message={message}
-            close={() => show(null)}
-          >
-            <SetForm
-              row={editingSet.row}
-              mode={editingSet.item.mode}
-              busy={busy}
-              save={record}
-            />
-          </Sheet>
-        )}
+        {dialog === "delete" && detail && <Sheet title="删除这次训练记录？" close={() => show(null)} message={message}>
+          <p>{detail.day} · {detail.name}</p><p className="gym-muted">删除后无法恢复，当天的训练统计会同步更新。</p>
+          <div className="gym-actions"><button disabled={busy} onClick={() => show(null)}>取消</button>
+            <button disabled={busy} className="primary" onClick={() => send({ type:"deleteHistory",workoutId:detail.id,revision:detail.revision },
+              () => { selectDay(detail.day); setDetail(null); go("diary"); })}>确认删除</button></div>
+        </Sheet>}
         {dialog === "note" && active && (
           <Sheet title="训练心得" message={message} close={() => show(null)}>
             <textarea

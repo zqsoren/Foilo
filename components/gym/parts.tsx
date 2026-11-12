@@ -88,10 +88,12 @@ export const modeLabels: Record<Mode, string> = {
 };
 export function SetForm({
   row,
+  segment = false,
   mode,
   save,
   busy,
 }: {
+  segment?: boolean;
   row: SetRow;
   mode: Mode;
   save: (v: Values, done: boolean) => void;
@@ -157,15 +159,15 @@ export function SetForm({
         )}
       </div>
       <div className="gym-actions">
-        <button
+        {!segment && <button
           type="button"
           disabled={busy}
           onClick={() => save(values, false)}
         >
           {row.done ? "撤销完成" : "保存未完成"}
-        </button>
+        </button>}
         <button className="primary" disabled={busy}>
-          完成这一组
+          {segment ? "保存本段" : "完成这一组"}
         </button>
       </div>
     </form>

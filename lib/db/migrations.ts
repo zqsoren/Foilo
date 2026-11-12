@@ -548,4 +548,26 @@ export const migrations = [
   },
   gymMigration,
   gymCatalogUpdate,
+  {
+    version: 10,
+    name: "gym_set_types_and_drop_stages",
+    sql: `
+      CREATE TABLE gym_set_types (code TEXT PRIMARY KEY);
+      INSERT INTO gym_set_types VALUES ('normal'),('drop');
+      ALTER TABLE gym_sets ADD COLUMN kind TEXT NOT NULL DEFAULT 'normal';
+      CREATE TABLE gym_set_stages (
+        set_id INTEGER NOT NULL REFERENCES gym_sets(id) ON DELETE CASCADE,
+        position INTEGER NOT NULL CHECK(position >= 1),
+        kg REAL NOT NULL CHECK(kg >= 0), reps INTEGER NOT NULL CHECK(reps >= 0),
+        right_kg REAL NOT NULL CHECK(right_kg >= 0), right_reps INTEGER NOT NULL CHECK(right_reps >= 0),
+        seconds INTEGER NOT NULL CHECK(seconds >= 0), PRIMARY KEY(set_id,position)
+      );
+      CREATE TRIGGER gym_sets_kind_new BEFORE INSERT ON gym_sets
+        WHEN NOT EXISTS (SELECT 1 FROM gym_set_types WHERE code=NEW.kind)
+        BEGIN SELECT RAISE(ABORT,'unknown set kind'); END;
+      CREATE TRIGGER gym_sets_kind_update BEFORE UPDATE OF kind ON gym_sets
+        WHEN NOT EXISTS (SELECT 1 FROM gym_set_types WHERE code=NEW.kind)
+        BEGIN SELECT RAISE(ABORT,'unknown set kind'); END;
+    `,
+  },
 ] as const;

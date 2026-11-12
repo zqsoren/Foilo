@@ -699,3 +699,16 @@ html:has(.gym) {
   .gym[data-device="desktop"] .gym-page:has(.gym-library) { height: calc(100dvh - 56px); }
   .gym[data-device="desktop"] .library-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
 }
+.set-block { margin: 8px 0 12px; }
+.set-line { display: grid; grid-template-columns: 44px minmax(0,1fr) minmax(0,1fr) 42px 38px; gap: 5px; align-items: stretch; }
+.gym .set-line button, .set-number { display:grid; align-content:center; justify-items:center; padding: 5px 2px; min-height:44px; background:#f1f1ef; border-radius:9px; }
+.set-number { font-size:13px; font-weight:600; }
+.gym .set-field { font-size:17px; font-weight:650; font-variant-numeric:tabular-nums; line-height:1.15; }
+.set-field small { font-size:10px; font-weight:400; }
+.set-field.timed { grid-column:span 2; }
+.gym .set-more { background:white; }
+.gym .set-check { color:#999; }
+.gym .set-check[aria-pressed=true] { background:#262626; color:white; }
+.set-stage { margin-top:4px; }
+.set-stage .set-number { color:#666; font-size:12px; background:#f8f8f7; }
+.set-menu { display:grid; gap:8px; }

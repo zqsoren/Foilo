@@ -28,6 +28,27 @@ describe("健身模块数据库", () => {
       now,
     );
   }
+  it("递减段累计容量但只计一组，复制和删除按训练归属生效", () => {
+    const planId = create();
+    const workoutId = mutate(db,41,randomUUID(),{type:"start",planId},now);
+    const setId = workout(db,41,workoutId).items[0].sets[0].id;
+    const stages = [[3,40],[2,20],[1,20]].map(([kg,reps])=>({...emptyValues,kg,reps}));
+    const change = (type:string, revision:number, extra = {}) =>
+      mutate(db,41,randomUUID(),{type,revision,workoutId,...extra},now);
+    change("recordStages",0,{setId,stages,done:true});
+    change("copySet",1,{setId});
+    const sets = workout(db,41,workoutId).items[0].sets;
+    expect(sets.map(s=>[s.kind,s.done,s.volume])).toEqual([["drop",1,180],["drop",0,0],["normal",0,0]]);
+    expect(sets[1].stages.map(s=>s.kg)).toEqual([2,1]);
+    expect(()=>change("deleteHistory",2)).toThrow();
+    change("finish",2);
+    expect(dashboard(db,41,"2026-11").history[0]).toMatchObject({count:1,volume:180});
+    expect(()=>mutate(db,42,randomUUID(),{type:"deleteHistory",workoutId,revision:3})).toThrow();
+    change("deleteHistory",3);
+    expect(dashboard(db,41,"2026-11").history).toEqual([]);
+    expect(db.prepare("SELECT count(*) n FROM gym_set_stages").get()).toEqual({n:0});
+    expect(dashboard(db,41,"2026-11").plans).toHaveLength(1);
+  });
   it("共享目录有 106 项，指定的十二个动作都有数据库配图", () => {
     const list = exercises(db);
     expect(list.length).toBe(106);

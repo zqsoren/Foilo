@@ -9,6 +9,13 @@ import "./gym.css";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "健身 · 在侧 Folio",
+  applicationName: "在侧健身",
+  manifest: "/gym.webmanifest",
+  appleWebApp: { capable: true, title: "在侧健身", statusBarStyle: "default" },
+  icons: {
+    icon: { url: "/gym-icons/icon-192.png", sizes: "192x192", type: "image/png" },
+    apple: { url: "/gym-icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+  },
   other: { "folio-version": productVersions.gym },
 };
 export default async function GymPage({

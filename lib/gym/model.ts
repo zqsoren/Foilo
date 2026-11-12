@@ -23,7 +23,7 @@ export type Values = {
   rightReps: number;
   seconds: number;
 };
-export type SetRow = Values & { id: number; done: number; volume: number };
+export type SetRow = Values & { id: number; done: number; volume: number; kind: string; stages: Values[] };
 export type WorkoutItem = {
   id: number;
   exerciseId: number;

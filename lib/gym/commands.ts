@@ -44,6 +44,12 @@ export const gymCommand = z.discriminatedUnion("type", [
     ...current,
     text: z.string().trim().max(2000),
   }),
+  z.object({ type: z.literal("copySet"), ...current, setId: id }),
+  z.object({ type: z.literal("deleteHistory"), ...current }),
+  z.object({
+    type: z.literal("recordStages"), ...current, setId: id, done: z.boolean(),
+    stages: z.array(z.object({ kg, reps, rightKg: kg, rightReps: reps, seconds: z.number().int().min(0).max(86400) })).min(1).max(30),
+  }),
   z.object({ type: z.literal("finish"), ...current }),
   z.object({ type: z.literal("discard"), ...current }),
 ]);

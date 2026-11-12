@@ -8,12 +8,14 @@ export function Overview({
   catalog,
   back,
   home,
+  remove,
   justFinished,
 }: {
   work: Workout;
   catalog: Exercise[];
   back: () => void;
   home: () => void;
+  remove: () => void;
   justFinished: boolean;
 }) {
   const total = totals(work);
@@ -57,7 +59,8 @@ export function Overview({
               </small>
               {sets.map((s) => (
                 <p key={s.id}>
-                  第 {item.sets.indexOf(s) + 1} 组　{setLabel(item.mode, s)}
+                  第 {item.sets.indexOf(s) + 1} 组　{s.kind === "drop" ? "递减组" : setLabel(item.mode,s)}
+                  {s.kind === "drop" && [s,...s.stages].map((v,i)=><small key={i}>递 {i+1}　{setLabel(item.mode,v)}</small>)}
                 </p>
               ))}
             </div>
@@ -70,8 +73,8 @@ export function Overview({
           <p className="gym-note">{work.note}</p>
         </>
       )}
-      <button className="primary wide" onClick={home}>
-        返回训练首页
+      <button className="primary wide" onClick={justFinished ? home : remove}>
+        {justFinished ? "返回训练首页" : "删除记录"}
       </button>
     </>
   );

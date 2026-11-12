@@ -2,6 +2,7 @@
 import { useMemo, useRef, useState } from "react";
 import type { Exercise } from "@/lib/gym/model";
 import { Check, Search } from "lucide-react";
+import { GymNavigation } from "./navigation";
 import { GymTitle, Thumb, Sheet, modeLabels } from "./parts";
 export function Library({
   catalog,
@@ -103,9 +104,7 @@ export function Library({
         </div>
       </section>
       {browse && (
-        <button className="gym-orb" aria-label="返回训练首页" onClick={onBack}>
-          训练
-        </button>
+        <GymNavigation current="browse" compact navigate={onBack} />
       )}
       {detail && (
         <Sheet title={detail.name} close={() => setDetail(null)}>

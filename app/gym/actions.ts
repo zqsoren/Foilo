@@ -1,7 +1,7 @@
 "use server";
 import { getCurrentUser } from "@/lib/auth";
 import { sqlite } from "@/lib/db";
-import { dashboard, mutate, workout } from "@/lib/gym/store";
+import { dashboard, mutate, previousExercise, workout } from "@/lib/gym/store";
 import type { Command } from "@/lib/gym/commands";
 import type { Dashboard } from "@/lib/gym/model";
 
@@ -15,6 +15,12 @@ export async function readWorkout(id: number) {
   if (!user || !Number.isSafeInteger(id)) throw Error("无法读取这次训练");
   return workout(sqlite, user.id, id);
 }
+export async function readPreviousExercise(exerciseId: number) {
+  const user = await getCurrentUser();
+  if (!user || !Number.isSafeInteger(exerciseId)) throw Error("无法读取上次记录");
+  return previousExercise(sqlite,user.id,exerciseId);
+}
+
 type Result =
   | { ok: true; id: number; data: Dashboard }
   | { ok: false; message: string; login?: boolean };

@@ -13,11 +13,11 @@ import type {
   PlanItem,
   Workout,
 } from "@/lib/gym/model";
-import { TrainingSet } from "./training-set";
+import { WorkoutLedger } from "./workout-ledger";
 import { totals } from "@/lib/gym/model";
 import { Diary, Overview } from "./diary";
 import { Library } from "./library";
-import { GymTitle, Elapsed, Sheet, Thumb } from "./parts";
+import { GymTitle, Sheet, Thumb } from "./parts";
 type View =
   | "home"
   | "browse"
@@ -52,6 +52,7 @@ export default function GymApp({
   const [note, setNote] = useState(""),
     [detail, setDetail] = useState<Workout | null>(null),
     [finished, setFinished] = useState(false);
+  const [preview, setPreview] = useState<Plan | null>(null);
   const [focused, focus] = useState<number | null>(null);
   const writeQueue = useRef(Promise.resolve()),
     lastWrite = useRef<{id:number;revision:number} | null>(null),
@@ -246,7 +247,7 @@ export default function GymApp({
                   <button
                     className="plan-start"
                     disabled={busy}
-                    onClick={() => begin(p)}
+                    onClick={() => active ? begin(p) : setPreview(p)}
                     aria-label={"开始" + p.name}
                   >
                     <strong>{p.name}</strong>
@@ -390,89 +391,9 @@ export default function GymApp({
             </button>
           </>
         )}
-        {view === "work" && active && (
-          <>
-            <div className="gym-heading">
-              <span className="gym-eyebrow">训练中</span>
-              <button
-                className="primary compact"
-                onClick={() => show("finish")}
-              >
-                完成训练
-              </button>
-            </div>
-            <header className="gym-heading">
-              <h1>{active.name}</h1>
-              <Elapsed since={active.started} />
-            </header>
-            <div className="gym-progress">
-              <span>
-                已完成 {totals(active).done} / {totals(active).total} 组
-              </span>
-              <b>{totals(active).volume.toLocaleString()} kg 容量</b>
-            </div>
-            {active.items.map((item) => {
-              const expanded = item.id === (focused ?? active.items[0]?.id);
-              return (
-                <section className="gym-movement" key={item.id}>
-                  <button
-                    className="gym-ex"
-                    onClick={() => focus(expanded ? -1 : item.id)}
-                    aria-expanded={expanded}
-                  >
-                    <Thumb exercise={byId.get(item.exerciseId)} />
-                    <span className="fill">
-                      <b>{item.name}</b>
-                      <small>
-                        {item.temporary ? "本次新增 · " : ""}
-                        {item.sets.filter((s) => s.done).length} /{" "}
-                        {item.sets.length} 组
-                      </small>
-                    </span>
-                    <span>{expanded ? "−" : "＋"}</span>
-                  </button>
-                  {expanded && (
-                    <>
-                      {item.sets.map((row, i) => <TrainingSet key={row.id + ":" + row.stages.length} row={row}
-                        number={i+1} mode={item.mode} busy={busy} message={message} canCopy={item.sets.length<30}
-                        copy={() => send({ type:"copySet", workoutId:active.id, revision:active.revision, setId:row.id })}
-                        save={(stages,done,after,quiet) => send({ type:"recordStages", workoutId:active.id,
-                          revision:active.revision, setId:row.id, stages, done }, after,quiet)} />)}
-                      <button
-                        className="text"
-                        disabled={busy || item.sets.length >= 30}
-                        onClick={() =>
-                          send({
-                            type: "addSet",
-                            itemId: item.id,
-                            workoutId: active.id,
-                            revision: active.revision,
-                          })
-                        }
-                      >
-                        ＋ 新增一组
-                      </button>
-                    </>
-                  )}
-                </section>
-              );
-            })}
-            <div className="gym-dock">
-              <button onClick={() => go("home")}>最小化</button>
-              <button className="primary" onClick={() => openPicker("append")}>
-                ＋ 加动作
-              </button>
-              <button
-                onClick={() => {
-                  setNote(active.note);
-                  show("note");
-                }}
-              >
-                写心得
-              </button>
-            </div>
-          </>
-        )}
+        {view === "work" && active && <WorkoutLedger active={active} catalog={byId} focused={focused} focus={focus}
+          busy={busy} message={message} send={send} finish={()=>show("finish")} minimize={()=>go("home")}
+          append={()=>openPicker("append")} note={()=>{setNote(active.note);show("note");}}/>}
         {isDiary && (
           <Diary
             data={data}
@@ -502,6 +423,13 @@ export default function GymApp({
         {navVisible && (
           <GymNavigation current={isDiary ? "diary" : "home"} navigate={go} />
         )}
+        {preview && <Sheet title={preview.name} close={()=>setPreview(null)}>
+          <div className="plan-preview">
+            <small>{preview.items.length} 个动作 | {preview.items.reduce((n,i)=>n+i.sets,0)} 组训练</small>
+            {preview.items.map(i=><article key={i.exerciseId}><Thumb exercise={byId.get(i.exerciseId)}/><div><b>{byId.get(i.exerciseId)?.name}</b><small>{i.sets} 组</small></div></article>)}
+          </div>
+          <button disabled={busy} className="primary wide" aria-label="开始训练" onClick={()=>{setPreview(null);begin(preview);}}>STAR　→</button>
+        </Sheet>}
         {dialog === "name" && (
           <Sheet title="计划名称" message={message} close={() => show(null)}>
             <form

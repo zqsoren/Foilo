@@ -64,6 +64,18 @@ export function workout(
   for (const stage of stages) bySet.get(stage.setId)!.stages.push(stage);
   return { ...head, items };
 }
+export function previousExercise(db: Database.Database, userId: number, exerciseId: number) {
+  const last = db.prepare(`SELECT w.id FROM gym_workouts w
+    JOIN gym_workout_items i ON i.workout_id=w.id
+    WHERE w.user_id=? AND w.finished IS NOT NULL AND i.exercise_id=?
+      AND EXISTS (SELECT 1 FROM gym_sets s WHERE s.item_id=i.id AND s.done=1)
+    ORDER BY w.finished DESC,w.id DESC LIMIT 1`).get(userId,exerciseId) as {id:number} | undefined;
+  if (!last) return null;
+  const session = workout(db,userId,last.id);
+  const item = session.items.find(i=>i.exerciseId===exerciseId)!;
+  return { day:session.day, mode:item.mode, sets:item.sets.map((s,i)=>({...s,number:i+1})).filter(s=>s.done) };
+}
+
 export function dashboard(
   db: Database.Database,
   userId: number,

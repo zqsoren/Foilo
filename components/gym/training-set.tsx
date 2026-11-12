@@ -57,9 +57,9 @@ export function TrainingSet({ row, number, mode, busy, canCopy, message, save, c
     if (!row.done && missing >= 0) form.current?.querySelector<HTMLInputElement>(`input[data-stage="${missing}"][data-field="${mode==="time"?"seconds":"reps"}"]`)?.focus();
     else save(values, !row.done);
   }
-  return <div className="set-block" ref={form}>
+  return <div className="set-block" data-mode={mode} ref={form}>
     {stages.map((stage, i) => <div className={"set-line" + (i ? " set-stage" : "")} key={i}>
-      <span className="set-number">{drop ? (i ? "递 " + (i + 1) : number + " · 递1") : number}</span>
+      <span className="set-number">{drop ? (i ? "递 " + (i + 1) : number + " · 递1") : String(number).padStart(2,"0")}</span>
       {mode === "time" ? <div className="set-field timed">{field(i,"seconds","时长（秒）","秒")}</div> :
         <>
           <div className="set-field">{field(i,"kg",mode==="sides"?"左 kg":mode==="pair"?"单只 kg":mode==="assist"?"辅助 kg":mode==="body"?"额外 kg":"kg")}{mode==="sides" && field(i,"rightKg","右 kg")}</div>

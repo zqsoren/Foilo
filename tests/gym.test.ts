@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import Database from "better-sqlite3";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { migrations } from "../lib/db/migrations";
-import { dashboard, exercises, mutate, workout } from "../lib/gym/store";
+import { dashboard, exercises, mutate, previousExercise, workout } from "../lib/gym/store";
 import { capacity, emptyValues } from "../lib/gym/model";
 import { loginDestination, loginUrl } from "../lib/login-routing";
 
@@ -41,7 +41,11 @@ describe("健身模块数据库", () => {
     expect(sets.map(s=>[s.kind,s.done,s.volume])).toEqual([["drop",1,180],["drop",0,0],["normal",0,0]]);
     expect(sets[1].stages.map(s=>s.kg)).toEqual([2,1]);
     expect(()=>change("deleteHistory",2)).toThrow();
+    expect(previousExercise(db,41,1)).toBeNull();
     change("finish",2);
+    expect(previousExercise(db,42,1)).toBeNull();
+    const previous = previousExercise(db,41,1);
+    expect(previous?.sets.map(s=>[s.number,s.stages.length])).toEqual([[1,2]]);
     expect(dashboard(db,41,"2026-11").history[0]).toMatchObject({count:1,volume:180});
     expect(()=>mutate(db,42,randomUUID(),{type:"deleteHistory",workoutId,revision:3})).toThrow();
     change("deleteHistory",3);

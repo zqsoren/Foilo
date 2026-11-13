@@ -26,11 +26,12 @@ function PreviousSets({ exerciseId }: { exerciseId: number }) {
   const { mode, sets, day } = record;
   const stages = sets.flatMap(set => [set, ...set.stages]);
   const numbers = stages.flatMap(v => mode === "time" ? [v.seconds] : mode === "sides" ? [v.kg, v.rightKg] : [v.kg]);
+  const measured = mode==="time" && stages.some(v=>v.measure!=null);
   const min = Math.min(...numbers), max = Math.max(...numbers);
   const range = min === max ? String(max) : min + "–" + max;
   return <>
     <button className="ledger-history-toggle" aria-expanded={open} aria-controls="previous-sets" onClick={() => setOpen(!open)}>
-      上次记录　{sets.length} 组 · {range} {mode === "time" ? "秒" : "kg"} <ChevronDown size={14} />
+      上次记录　{sets.length} 组 · {measured ? setLabel(mode,stages[0]) : range + (mode==="time" ? " 秒" : " kg")} <ChevronDown size={14} />
     </button>
     {open && <div className="ledger-history" id="previous-sets">
       <time dateTime={day}>{day.replace(/-/g, ".")}</time>

@@ -32,7 +32,7 @@ export function TrainingSet({ unit, row, number, mode, busy, canCopy, message, s
         aria-label={"第 " + number + " 组，第 " + (i+1) + " 段，" + label}
         type="number" inputMode={weight ? "decimal" : "numeric"} min={0}
         max={key === "seconds" ? 86400 : 10000} step={weight ? "any" : 1}
-        defaultValue={stages[i][key] || ""} placeholder={weight ? "0" : "—"}
+        defaultValue={key==="measure" ? stages[i].measure ?? "" : stages[i][key] || ""} placeholder={weight ? "0" : "—"}
         onFocus={event => {event.currentTarget.dataset.initial = event.currentTarget.value; event.currentTarget.select();}}
         onKeyDown={event => { if(event.key === "Enter") event.currentTarget.blur(); }}
         onBlur={event => {

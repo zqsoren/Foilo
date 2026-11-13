@@ -286,6 +286,7 @@ function apply(
         rightKg: mode === "sides" ? v.rightKg : 0, rightReps: mode === "sides" ? v.rightReps : 0,
         seconds: mode === "time" ? v.seconds : 0,
       }));
+      if(unit==="层" && values.some(v=>v.measure!=null && !Number.isInteger(v.measure))) throw Error("层数须为整数");
       if (c.done && values.some(v => mode === "time" ? !(v.seconds || v.measure) : !(v.reps + v.rightReps)))
         throw Error(mode === "time" ? "请为每段填写时长" : "请为每段填写实际次数");
       const first = values[0];

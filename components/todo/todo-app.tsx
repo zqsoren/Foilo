@@ -19,6 +19,7 @@ export function TodoApp({ initialState, today: initialToday, aiConfigured: initi
   const [state, setState] = useState(initialState);
   const [today, setToday] = useState(initialToday);
   const [date, setDate] = useState(initialToday);
+  const [quickOpen, setQuickOpen] = useState(false);
   const [tab, setTab] = useState<"schedule" | "chat">(initialTab);
   const [editing, setEditing] = useState<TodoEvent | null>(null);
   const [draft, setDraft] = useState("");
@@ -35,6 +36,19 @@ export function TodoApp({ initialState, today: initialToday, aiConfigured: initi
   const draftRef = useRef<HTMLTextAreaElement>(null);
   const acceptState = useCallback((next: TodoState) => setState((current) => next.revision >= current.revision ? next : current), []);
 
+  useEffect(() => {
+    const restoreTab = () => setTab(new URLSearchParams(window.location.search).get("tab") === "chat" ? "chat" : "schedule");
+    window.addEventListener("popstate", restoreTab);
+    return () => window.removeEventListener("popstate", restoreTab);
+  }, []);
+  function switchTab(e: React.MouseEvent<HTMLAnchorElement>, next: "schedule" | "chat") {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    if (tab === next) return;
+    window.history.pushState(null, "", e.currentTarget.href);
+    setTab(next);
+    window.scrollTo(0, 0);
+  }
   useEffect(() => {
     async function refresh() {
       const now = shanghaiNow(); setToday(now.date); setClock(now.clock);
@@ -72,6 +86,8 @@ export function TodoApp({ initialState, today: initialToday, aiConfigured: initi
   const weekStart = weekBounds(date).start;
   const weekdays = ["一", "二", "三", "四", "五", "六", "日"];
 
+  const showDayHeading = dayEvents.length > 0 && !quickOpen;
+
   function openEditor(event: TodoEvent) {
     editRevision.current = state.revision;
     setError(""); setEditing(event);
@@ -83,6 +99,10 @@ export function TodoApp({ initialState, today: initialToday, aiConfigured: initi
   async function send(event: FormEvent) {
     event.preventDefault();
     const content = draft.trim(); if (!content || busy) return;
+    if (!aiConfigured) {
+      setError("当前账号还没有配置 AI。请打开上方的工作台设置，配置后再发送。");
+      return;
+    }
     setSending(content);
     const success = await mutate({ action: "chat", date, content });
     setSending("");
@@ -93,26 +113,33 @@ export function TodoApp({ initialState, today: initialToday, aiConfigured: initi
     return <div className={`${styles.eventCard} ${styles[statusOf(event)] ?? ""} ${current ? styles.current : ""} ${compact ? styles.compact : ""}`}>
       <TaskStatusButton event={event} disabled={busy} onStatus={status => { void mutate({ action: "status", id: event.id, occurrenceDate: event.occurrenceDate, date: event.date, status }); }} />
       {compact ? <span className={styles.compactTime}>{event.start ?? "待安排"}<br />{event.end}</span> : null}
-      <button type="button" className={styles.eventBody} onClick={() => openEditor(event)}><strong>{event.title}</strong><span>{!compact && event.notes ? event.notes : durationLabel(event)}{event.repeat ? <><Repeat2 size={11} />{repeatLabel(event)}</> : null}{current ? <em>进行中</em> : null}</span></button>
+      <button type="button" className={styles.eventBody} onClick={() => openEditor(event)}><strong>{event.title}</strong><span>{compact ? durationLabel(event) : event.notes}{event.repeat ? <><Repeat2 size={11} />{repeatLabel(event)}</> : null}{current ? <em>进行中</em> : null}</span></button>
       <button type="button" className={styles.eventArrow} aria-label={`编辑：${event.title}`} onClick={() => openEditor(event)}><ChevronRight size={17} /></button>
     </div>;
   }
 
-  return <main className={`${styles.root} ${tab === "chat" ? styles.chatRoot : ""}`}>
+  return <main data-schedule={tab === "schedule" ? (showDayHeading ? "day" : dayEvents.length ? "quick" : "empty") : undefined} className={`${styles.root} ${tab === "chat" ? styles.chatRoot : ""}`}>
     <div className={styles.main}>
-      <header className={styles.heading}>{tab === "chat" ? <h1>DIGTODO AI</h1> : <span />}{tab === "schedule" ? <div className={styles.headerActions}><button aria-label="新建日程" className={styles.newButton} onClick={createEvent}><Plus size={22} /></button></div> : <Link href="/todo/settings" className={styles.settingsLink} aria-label="设置"><Menu size={23} /></Link>}</header>
+      <header className={styles.heading}>{tab === "chat" ? <h1>DIGTODO AI</h1> :
+        <label className={styles.datePicker}>
+          {showDayHeading ? <span className={styles.dayStamp}><b>{Number(date.slice(8))}</b><span>{displayDate(date).weekday}<small>{date.slice(0,4)} 年 {Number(date.slice(5,7))} 月</small></span></span> :
+            <span>{Number(date.slice(5,7))}月 <small>{date.slice(0,4)}</small><ChevronDown size={16} /></span>}
+          <input type="date" aria-label="选择日期" value={date} onChange={e=>{ if(e.target.value) setDate(e.target.value); }} />
+        </label>}
+        {tab === "schedule" ? <div className={styles.headerActions}>{date !== today && <button className={styles.todayButton} onClick={()=>setDate(today)}>今天</button>}<button aria-label="新建日程" className={styles.newButton} onClick={createEvent}><Plus size={18}/></button></div> :
+          <Link href="/todo/settings" className={styles.settingsLink} aria-label="设置"><Menu size={23}/></Link>}
+      </header>
       {error ? <div className={styles.error} role="alert"><span>{error}</span><button aria-label="关闭错误提示" onClick={() => setError("")}><X size={16} /></button></div> : null}
       {notice ? <div className={styles.notice} role="status"><span>{notice}</span><button aria-label="关闭提示" onClick={() => setNotice("")}><X size={16} /></button></div> : null}
 
       {tab === "schedule" ? <>
-        <div className={styles.monthRow}><label className={styles.datePicker}><span>{Number(date.slice(5, 7))}月 <small>{date.slice(0, 4)}</small><ChevronDown size={16} /></span><input type="date" aria-label="选择日期" value={date} onInput={(event) => { if (event.currentTarget.value) setDate(event.currentTarget.value); }} /></label><button className={styles.todayButton} onClick={() => setDate(today)}>今天</button></div>
         <div className={styles.weekNavigation}><button aria-label="上一周" onClick={() => setDate(addDays(date, -7))}><ChevronLeft size={15} /></button><span>{displayDate(weekStart).monthDay} — {displayDate(addDays(weekStart, 6)).monthDay}</span><button aria-label="下一周" onClick={() => setDate(addDays(date, 7))}><ChevronRight size={15} /></button></div>
         <div className={styles.week}>{weekdays.map((label, i) => { const value = addDays(weekStart, i); return <button key={value} aria-label={`${value}${value === today ? " 今天" : ""}`} aria-pressed={value === date} onClick={() => setDate(value)} className={value === date ? styles.selectedDay : ""}><span>{label}</span><strong>{Number(value.slice(8))}</strong><i className={value === today ? styles.todayDot : ""} /></button>; })}</div>
         <div className={styles.sectionHeading}><span>{done}/{dayEvents.length} 已完成</span></div>
         <div className={styles.progressTrack} role="progressbar" aria-label="完成进度" aria-valuenow={done} aria-valuemin={0} aria-valuemax={dayEvents.length || 1}><i style={{ width: `${dayEvents.length ? done / dayEvents.length * 100 : 0}%` }} /></div>
         {dayEvents.length ? <div className={styles.timeline}>{scheduled.map(event => <div key={`${event.id}:${event.date}`} className={styles.timelineRow}><div className={styles.timeLabel}><i /><strong>{event.start}</strong><span>{event.end}</span></div>{eventCard(event)}</div>)}
           </div> : null}
-        <InlineSchedule key={date} date={date} events={scheduled} busy={busy} onSave={event => mutate({ action: "save", event })} />
+        <InlineSchedule key={date} date={date} events={scheduled} onOpenChange={setQuickOpen} busy={busy} onSave={event => mutate({ action: "save", event })} />
         {unscheduled.length ? <div><h3 className={styles.unscheduledHeading}>待安排 <span>{unscheduled.length}</span></h3>{unscheduled.map((event) => <div key={event.id} className={styles.unscheduled}>{eventCard(event)}</div>)}</div> : null}
         {state.undo ? <button className={styles.undo} disabled={busy} onClick={async () => { if (await mutate({ action: "undo" })) setNotice("已撤销上一次修改"); }}><Undo2 size={14} />撤销上一次修改</button> : null}
       </> : <div className={styles.chat}>
@@ -122,10 +149,10 @@ export function TodoApp({ initialState, today: initialToday, aiConfigured: initi
           {sending ? <><div className={styles.userMessage}><p>{sending}</p></div><div className={styles.thinking}><span /><span /><span />正在查看日程、安排时间…</div></> : null}
           <div ref={chatEnd} />
         </div>
-        <div className={styles.composerDock}>{state.undo ? <button className={styles.undo} disabled={busy} onClick={async () => { if (await mutate({ action: "undo" })) setNotice("已撤销上一次修改"); }}><Undo2 size={14} />撤销上一次修改</button> : null}<form className={styles.composer} onSubmit={send}><textarea ref={draftRef} aria-label="告诉 AI 你的安排" rows={1} maxLength={4000} placeholder="说说你的安排…" value={draft} disabled={busy} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.form?.requestSubmit(); } }} /><VoiceInput disabled={busy} onText={(text) => setDraft((draft) => `${draft}${draft ? "，" : ""}${text}`)} onNotice={setNotice} /><button type="submit" className={styles.sendButton} disabled={busy || !draft.trim() || !aiConfigured} aria-label="发送"><ArrowUp size={22} /></button></form></div>
+        <div className={styles.composerDock}>{state.undo ? <button className={styles.undo} disabled={busy} onClick={async () => { if (await mutate({ action: "undo" })) setNotice("已撤销上一次修改"); }}><Undo2 size={14} />撤销上一次修改</button> : null}<form className={styles.composer} onSubmit={send}><textarea ref={draftRef} aria-label="告诉 AI 你的安排" rows={1} maxLength={4000} placeholder="说说你的安排…" value={draft} disabled={busy} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.form?.requestSubmit(); } }} /><VoiceInput disabled={busy} onText={(text) => setDraft((draft) => `${draft}${draft ? "，" : ""}${text}`)} onNotice={setNotice} /><button type="submit" className={styles.sendButton} disabled={busy || !draft.trim()} aria-label="发送"><ArrowUp size={22} /></button></form></div>
       </div>}
     </div>
-    <nav className={styles.navigation} aria-label="日程工具导航"><button aria-label="日程" aria-current={tab === "schedule" ? "page" : undefined} onClick={() => setTab("schedule")}><CalendarDays size={21} /></button><button aria-label="AI助手" aria-current={tab === "chat" ? "page" : undefined} onClick={() => setTab("chat")}><MessageSquare size={21} />{sending ? <Circle size={6} fill="currentColor" className={styles.navDot} /> : null}</button></nav>
+    <nav className={styles.navigation} aria-label="日程工具导航"><a href="/todo" aria-label="日程" aria-current={tab === "schedule" ? "page" : undefined} onClick={e => switchTab(e, "schedule")}><CalendarDays size={21} /></a><a href="/todo?tab=chat" aria-label="AI助手" aria-current={tab === "chat" ? "page" : undefined} onClick={e => switchTab(e, "chat")}><MessageSquare size={21} />{sending ? <Circle size={6} fill="currentColor" className={styles.navDot} /> : null}</a></nav>
     {editing ? <EventEditor key={editing.id} event={editing} seriesEvent={state.events.find((event) => event.id === editing.id)} serverError={error} isNew={!state.events.some((event) => event.id === editing.id)} busy={busy} onClose={() => setEditing(null)} onSave={async (event) => { const ok = await mutate({ action: "save", event }, editRevision.current); if (ok) { setDate(event.date); } return ok; }} onDelete={async (id, occurrenceDate) => { const ok = await mutate({ action: "delete", id, occurrenceDate }, editRevision.current); if (ok) setNotice("日程已删除，可以撤销"); return ok; }} /> : null}
   </main>;
 }

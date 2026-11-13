@@ -35,7 +35,7 @@ export function EventEditor({ event, seriesEvent, isNew, busy, serverError, onCl
         <section className={styles.formCard} aria-label="时间">
         {event.occurrenceDate && seriesEvent ? <label className={styles.field}>修改范围<select aria-label="修改范围" value={draft.occurrenceDate ? "occurrence" : "series"} onChange={(e) => { setDraft(e.target.value === "series" ? { ...seriesEvent, occurrenceDate: undefined } : event); setConfirmDelete(false); }}><option value="occurrence">仅这一次</option><option value="series">整个重复日程</option></select></label> : null}
         <label className={styles.formDate}><CalendarDays size={18} />
-          <span>{draft.date.replace(/-/g, " / ")}</span><small>{draft.date ? "周" + "日一二三四五六"[weekday(draft.date)] : ""} ﹀</small>
+          <span>{draft.date.slice(0,4)} 年 {Number(draft.date.slice(5,7))} 月 {Number(draft.date.slice(8))} 日</span><small>{draft.date ? "周" + "日一二三四五六"[weekday(draft.date)] : ""} ﹀</small>
           <input aria-label="日期" type="date" required disabled={Boolean(draft.occurrenceDate)} value={draft.date}
             onChange={e => { if(e.currentTarget.value) setDraft({ ...draft, date:e.currentTarget.value }); }} />
         </label>

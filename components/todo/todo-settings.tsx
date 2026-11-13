@@ -36,7 +36,7 @@ export function TodoSettings({ initialStatus }: { initialStatus: McpAccessStatus
   function config(secret: string) { return JSON.stringify({ mcpServers: { "xipo-todo": { type: "http", url: endpoint, headers: { Authorization: `Bearer ${secret}` } } } }, null, 2); }
   return <main className={styles.page}>
     <header className={styles.header}><Link href="/todo?tab=chat">‹ AI 助手</Link><h1>设置</h1></header>
-    <section className={styles.intro}><span>MCP CONNECTION</span><h2>让其他 AI 帮你安排</h2><p>连接你自己的日程，读取计划、查看进度，也可以帮你调整安排。</p></section>
+    <section className={styles.intro}><h2>让其他 AI 帮你安排</h2><p>连接你自己的日程，读取计划、查看进度，也可以帮你调整安排。</p></section>
     <section className={styles.card}>
       <div className={styles.row}><h3>个人 MCP 连接</h3><span className={status.enabled ? styles.enabled : styles.disabled}>{status.enabled ? "已启用" : "未启用"}</span></div>
       <p className={styles.description}>每个账号使用独立 API Key，只能访问自己的 TODO 日程。它与 AI 模型接口密钥不同。</p>
@@ -49,11 +49,10 @@ export function TodoSettings({ initialStatus }: { initialStatus: McpAccessStatus
       <h3>连接方法</h3><p className={styles.description}>在支持远程 MCP 和自定义请求头的 AI 客户端中，添加以下配置。</p>
       <div className={styles.field}><span>连接地址</span><code>{endpoint}</code><button onClick={() => copy(endpoint)}>复制地址</button></div>
       <dl><div><dt>传输方式</dt><dd>Streamable HTTP</dd></div><div><dt>请求头</dt><dd><code>Authorization: Bearer 你的 API Key</code></dd></div></dl>
-      <details><summary>查看 JSON 配置示例</summary><pre>{config("YOUR_API_KEY")}</pre></details>
+      <details><summary>查看 JSON 配置示例</summary><pre>{config("YOUR_API_KEY")}</pre><p className={styles.hint}>此连接可读取日程、创建与调整未完成事项。过去日期与已完成事项只读，重复日程仅修改指定那一天。</p></details>
       <button className={styles.secondary} disabled={!key} onClick={() => copy(config(key))}>复制含密钥的连接配置</button>
       <p className={styles.hint}>{key ? "复制后直接粘贴到客户端的 MCP 配置中；不要公开分享配置。" : "生成 API Key 后可一键复制完整配置，也可以手动替换示例中的 YOUR_API_KEY。"}只支持 OAuth 登录、不能填写密钥的客户端暂不能直接连接。</p>
     </section>
-    <section className={styles.card}><h3>AI 可以做什么</h3><ul><li>读取任意日期的日程、备注、起止时间和完成情况</li><li>新建、修改、删除未完成日程，或将其标为完成</li><li>批量调整任务顺序和时间，保留 5 分钟缓冲</li></ul><p className={styles.hint}>过去日期与已完成日程只读。重复日程仅修改指定那一天。不会开放人生工作台的其他模块、聊天记录或模型密钥。</p></section>
     <Link className={styles.widgetLink} href="/todo/widget"><span>桌面小组件</span><span>设置与安装 ›</span></Link>
     <small className={styles.version}>ToDo {productVersions.todo}</small>
     {manualCopy ? <textarea className={styles.manualCopy} aria-label="手动复制内容" readOnly value={manualCopy} rows={5} onFocus={e => e.target.select()} /> : null}

@@ -1,7 +1,8 @@
 "use client";
-import { useMemo, useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import type { Exercise } from "@/lib/gym/model";
 import { Check, Search } from "lucide-react";
+import taxonomy from "@/lib/gym/muscle-taxonomy.json";
 import { GymNavigation } from "./navigation";
 import { GymTitle, Thumb, Sheet, modeLabels } from "./parts";
 export function Library({
@@ -12,6 +13,7 @@ export function Library({
   onToggle,
   onDone,
   onBack,
+  navigate,
   busy,
 }: {
   catalog: Exercise[];
@@ -21,6 +23,7 @@ export function Library({
   onToggle: (id: number) => void;
   onDone: () => void;
   onBack: () => void;
+  navigate: (tab: "home" | "diary" | "browse") => void;
   busy: boolean;
 }) {
   const [q, search] = useState(""),
@@ -29,15 +32,11 @@ export function Library({
     [muscle, setMuscle] = useState("全部"),
     [detail, setDetail] = useState<Exercise | null>(null);
   const results = useRef<HTMLDivElement>(null);
-  const regions = useMemo(
-    () => ["全部", ...new Set(catalog.map((e) => e.region))],
-    [catalog],
-  );
-  const candidates = catalog.filter(
-    (e) => region === "全部" || e.region === region,
-  );
-  const gears = [...new Set(candidates.map((e) => e.equipment))],
-    muscles = [...new Set(candidates.flatMap((e) => e.muscles.split(" ")))];
+  const regions = ["全部", ...Object.keys(taxonomy)];
+  const muscles: string[] = taxonomy[region as keyof typeof taxonomy] ?? [];
+  const candidates = catalog.filter(e => region === "全部" || e.region === region ||
+    e.muscles.split(" ").some(tag => muscles.includes(tag)));
+  const gears = [...new Set(candidates.map(e => e.equipment))];
   const found = candidates.filter(
     (e) =>
       (tool === "全部" || e.equipment === tool) &&
@@ -69,10 +68,11 @@ export function Library({
           <input className="gym-search" type="search" aria-label="搜索动作" placeholder="搜索动作、肌群或器械" value={q}
             onChange={(e) => { search(e.target.value); results.current?.scrollTo(0, 0); }} />
         </label>
+        <a className="gym-credit" href="https://gymvisual.com/">© Gym visual — gymvisual.com</a>
         <div className="library-body">
           <nav className="library-rail" aria-label="按部位筛选">
-            {regions.map((r) => <button key={r} aria-pressed={region === r}
-              onClick={() => { setRegion(r); setMuscle("全部"); setTool("全部"); results.current?.scrollTo(0, 0); }}>{r}</button>)}
+            {regions.map((r) => <Fragment key={r}><button aria-pressed={region === r}
+              onClick={() => { setRegion(r); setMuscle("全部"); setTool("全部"); results.current?.scrollTo(0, 0); }}>{r}</button>{region === r && muscles.length > 0 && <div className="library-subnav">{["全部", ...muscles].map(tag => <button key={tag} aria-pressed={tag === muscle} onClick={() => {setMuscle(tag); results.current?.scrollTo(0,0);}}>{tag}</button>)}</div>}</Fragment>)}
           </nav>
           <div className="library-results" ref={results} role="region" aria-label="动作列表" tabIndex={0}>
             <div className="library-count"><strong>{q.trim() ? "搜索结果" : region === "全部" ? "全部动作" : region}</strong>
@@ -83,9 +83,7 @@ export function Library({
               <select aria-label="器械" value={tool} onChange={(e) => setTool(e.target.value)}>
                 <option value="全部">全部器械</option>{gears.map((s) => <option key={s}>{s}</option>)}
               </select>
-              {region !== "全部" && <select aria-label="肌群" value={muscle} onChange={(e) => setMuscle(e.target.value)}>
-                <option value="全部">全部肌群</option>{muscles.map((s) => <option key={s}>{s}</option>)}
-              </select>}
+
             </div>
             </details>
             <div className="library-grid">
@@ -94,7 +92,7 @@ export function Library({
                 return <button key={e.id} className="exercise-card" disabled={already}
                   aria-pressed={browse ? undefined : checked} onClick={() => browse ? setDetail(e) : onToggle(e.id)}>
                   <Thumb exercise={e} />
-                  <b>{e.name}</b><small>{e.equipment}</small>
+                  <b>{e.name}</b><small>{[e.mainMuscle,e.equipment].filter(Boolean).join(" · ")}</small>
                   {!browse && <span className={already ? "card-mark existing" : "card-mark"} aria-hidden="true">{already ? "已有" : checked ? <Check size={13} /> : ""}</span>}
                 </button>;
               })}
@@ -104,16 +102,18 @@ export function Library({
         </div>
       </section>
       {browse && (
-        <GymNavigation current="browse" compact navigate={onBack} />
+        <GymNavigation current="browse" navigate={navigate} />
       )}
       {detail && (
         <Sheet title={detail.name} close={() => setDetail(null)}>
           <div className="large-art">
-            <Thumb exercise={detail} />
+            <Thumb exercise={detail} animated />
           </div>
           <p>
-            {detail.region} · {detail.muscles} · {detail.equipment}
+            {[detail.code,detail.region,detail.equipment].filter(Boolean).join(" · ")}
           </p>
+          {[["拉伸／活动",detail.stretchTarget],["主练",detail.mainMuscle],["明显参与",detail.alsoMuscles],["顺带参与",detail.minorMuscles]].map(([label,value])=>value && <p key={label}>{label}　{value}</p>)}
+          {detail.code && <a href="https://gymvisual.com/">© Gym visual — https://gymvisual.com/</a>}
           <p className="gym-muted">{modeLabels[detail.mode]}</p>
           {detail.imageId && <a className="gym-credit" href="/gym/credits">插图来源与署名</a>}
         </Sheet>

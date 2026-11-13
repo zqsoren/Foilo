@@ -6,7 +6,7 @@ export default async function Credits() {
   await requireUser("/gym");
   const rows = sqlite
     .prepare(
-      "SELECT e.name,m.artist,m.source,m.license FROM gym_media m JOIN gym_exercises e ON e.image_id=m.id ORDER BY e.id",
+      "SELECT e.name,m.artist,m.source,m.license FROM gym_media m JOIN gym_exercises e ON e.image_id=m.id WHERE e.listed=1 ORDER BY e.id",
     )
     .all() as {
     name: string;
@@ -25,6 +25,7 @@ export default async function Credits() {
         </a>{" "}
         许可。由在侧生成的动作示意图在下方单独标注。
       </p>
+      <p>精选动作缩略图与动画来自 <a href="https://gymvisual.com/">© Gym visual — https://gymvisual.com/</a>。</p>
       <ul>
         {rows.map((r) => (
           <li key={r.name}>

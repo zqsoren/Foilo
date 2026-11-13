@@ -14,6 +14,7 @@ const item = z.object({
 });
 const current = { workoutId: id, revision: rev };
 export const gymCommand = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("itemNote"), ...current, itemId:id, text:z.string().trim().max(2000) }),
   z.object({
     type: z.literal("savePlan"),
     planId: id.optional(),

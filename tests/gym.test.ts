@@ -53,18 +53,13 @@ describe("健身模块数据库", () => {
     expect(db.prepare("SELECT count(*) n FROM gym_set_stages").get()).toEqual({n:0});
     expect(dashboard(db,41,"2026-11").plans).toHaveLength(1);
   });
-  it("共享目录有 106 项，指定的十二个动作都有数据库配图", () => {
+  it("精选目录包含334个编号动作和三个原图动作", () => {
     const list = exercises(db);
-    expect(list.length).toBe(106);
-    for (const id of [15, 16, 20, 30, 37, 71, 101, 102, 103, 104, 105, 106]) {
-      expect(list.find((exercise) => exercise.id === id)?.imageId).toBeTruthy();
+    expect(list).toHaveLength(337);
+    expect(new Set(list.filter(e=>e.code).map(e=>e.code)).size).toBe(334);
+    for (const id of [101,102,105]) {
+      expect(list.find(e=>e.id===id)?.imageId).toBe(1000+id);
     }
-    const media = db.prepare("SELECT content,artist FROM gym_media").all() as {
-      content: Buffer;
-      artist: string;
-    }[];
-    expect(media.length).toBe(list.filter((e) => e.imageId).length);
-    expect(media.every((m) => m.content.length > 0 && m.artist)).toBe(true);
   });
   it("隔离账户；开始、重复请求、改计划、临时添加与完成互不串写", () => {
     const planId = create(),
@@ -85,7 +80,7 @@ describe("健身模块数据库", () => {
     const initial = workout(db, 41, w);
     expect(initial.name).toBe("上肢");
     expect(initial.items[0].sets).toHaveLength(2);
-    const curl = exercises(db).find((e) => e.name === "哑铃交替弯举")!;
+    const curl = exercises(db).find((e) => e.name === "哑铃交替二头弯举")!;
     mutate(db, 41, randomUUID(), {
       type: "append",
       workoutId: w,

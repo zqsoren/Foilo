@@ -13,13 +13,14 @@ export function GymTitle({ name }: { name: keyof typeof titleArtwork }) {
   return <h1><Image src={"/folio/gym-titles/" + file + ".svg"}
     alt={name} width={width} height={height} unoptimized /></h1>;
 }
-export function Thumb({ exercise }: { exercise?: Exercise }) {
+export function Thumb({ exercise, animated = false }: { exercise?: Exercise; animated?: boolean }) {
   return (
     <span className="gym-thumb">
-      {exercise?.imageId ? (
+      {exercise && (exercise.code || exercise.imageId) ? (
         <Image
           unoptimized
-          src={"/api/gym/images/" + exercise.imageId}
+          src={exercise.code ? "/folio/gym-visual/" + exercise.code + (animated ? ".gif" : ".jpg") : "/api/gym/images/" + exercise.imageId}
+          title={exercise.code ? "© Gym visual — https://gymvisual.com/" : undefined}
           alt={exercise.name + "示意"}
           width={56}
           height={56}

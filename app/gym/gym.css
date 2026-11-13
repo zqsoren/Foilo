@@ -745,3 +745,30 @@ html:has(.gym) {
 @media (min-width: 800px) {
   .gym[data-device="desktop"] .gym-tabs-compact { left: max(40px, calc(50% - 362px)); }
 }
+.gym-page:has(.gym-library) .library-body { grid-template-columns: minmax(72px,24%) minmax(0,1fr); }
+.gym .library-subnav button { font-size:12px; min-height:32px; text-align:left; padding-left:10px; color:#646464; }
+.gym .library-grid { display:flex; flex-direction:column; gap:6px; }
+.gym .exercise-card { display:grid; grid-template-columns:48px minmax(0,1fr); grid-template-rows:auto auto; column-gap:8px; align-content:center; padding:7px; }
+.exercise-card .gym-thumb { grid-row:span 2; width:48px; height:48px; }
+.exercise-card b { align-self:end; margin:0; }
+.exercise-card small { margin:0; }
+.exercise-card:has(.card-mark) { padding-right:24px; }
+.card-mark { left:auto; right:4px; }
+.library-results { padding-bottom:96px; }
+.gym .gym-tabs button.highlighted { background:#242424; color:white; }
+.gym-heading:has(.gym-switch) { justify-content:center; }
+.gym-switch,.gym-chips { background:#f2f2f4; border-radius:22px; padding:3px; width:fit-content; }
+.gym .gym-switch button[aria-pressed="true"],.gym .gym-chips .chosen { background:white; color:#222; box-shadow:0 1px 4px #0002; }
+.gym-chips { margin-left:auto; }
+.summary-columns { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.summary-columns article { padding:12px; margin-bottom:10px; border-radius:16px; background:#f4f4f6; overflow-wrap:anywhere; }
+.summary-columns h3 { margin:5px 0; font-size:15px; }
+.set-dots { display:flex; flex-wrap:wrap; gap:4px; padding:4px 0; }
+.set-dots i { width:7px; height:7px; background:#ccc; border-radius:50%; }
+.set-dots i[data-done="1"] { background:#292929; }
+.summary-set { font-size:12px; margin:5px 0; }
+.summary-set small { display:block; padding-left:8px; }
+.summary-columns .gym-note { white-space:pre-wrap; padding:6px 0; font-size:12px; }
+.summary-columns .gym-note b { display:block; }
+.gym-item-note { max-width:100%; text-align:left; overflow-wrap:anywhere; white-space:pre-wrap; }
+@media (max-width:799px) { .gym-page:not(:has(.ledger)) { padding-top:27px; } }

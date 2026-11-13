@@ -1,5 +1,7 @@
 import { gymMigration } from "../gym/migration";
 import { gymCatalogUpdate } from "../gym/catalog-update";
+import { muscleLoadMigration } from "../gym/muscle-storage";
+import { curatedMigration } from "../gym/catalog-curated";
 
 export const migrations = [
   {
@@ -570,4 +572,6 @@ export const migrations = [
         BEGIN SELECT RAISE(ABORT,'unknown set kind'); END;
     `,
   },
+  muscleLoadMigration,
+  curatedMigration,
 ] as const;

@@ -14,6 +14,7 @@ import {
   type Mode,
 } from "./model";
 import { gymCommand, type Command } from "./commands";
+import { readMuscleLoad, snapshotMuscles } from "./muscle-storage";
 
 export function gymMonth(now = Date.now()) {
   return epochToLocalInput(now).slice(0, 7);
@@ -21,7 +22,7 @@ export function gymMonth(now = Date.now()) {
 export function exercises(db: Database.Database) {
   return db
     .prepare(
-      "SELECT id,name,region,muscles,equipment,mode,aliases,image_id AS imageId FROM gym_exercises ORDER BY id",
+      "SELECT id,name,region,muscles,equipment,mode,aliases,image_id AS imageId,source_code AS code,main_muscle AS mainMuscle,also_muscles AS alsoMuscles,minor_muscles AS minorMuscles,stretch_target AS stretchTarget,star FROM gym_exercises WHERE listed=1 ORDER BY star DESC,id",
     )
     .all() as Exercise[];
 }
@@ -38,7 +39,7 @@ export function workout(
   if (!head) throw Error("找不到这次训练");
   const items = db
     .prepare(
-      "SELECT id,exercise_id AS exerciseId,name,mode,temporary FROM gym_workout_items WHERE workout_id=? ORDER BY position",
+      "SELECT id,exercise_id AS exerciseId,name,mode,temporary,note FROM gym_workout_items WHERE workout_id=? ORDER BY position",
     )
     .all(id) as WorkoutItem[];
   const rows = db
@@ -62,7 +63,7 @@ export function workout(
     FROM gym_set_stages t JOIN gym_sets s ON s.id=t.set_id JOIN gym_workout_items i ON i.id=s.item_id
     WHERE i.workout_id=? ORDER BY t.set_id,t.position`).all(id) as (Values & {setId:number})[];
   for (const stage of stages) bySet.get(stage.setId)!.stages.push(stage);
-  return { ...head, items };
+  return { ...head, items, muscleLoad: head.finished === null ? [] : readMuscleLoad(db, userId, { id }) };
 }
 export function previousExercise(db: Database.Database, userId: number, exerciseId: number) {
   const last = db.prepare(`SELECT w.id FROM gym_workouts w
@@ -114,6 +115,7 @@ export function dashboard(
     plans,
     active: active ? workout(db, userId, active.id) : null,
     history,
+    muscleLoad: readMuscleLoad(db, userId, { start: month + "-01", end: month + "-31" }),
     today: epochToLocalInput(Date.now()).slice(0, 10),
     month,
   };
@@ -210,6 +212,11 @@ function apply(
     .run(wid, uid, c.revision);
   if (!lock.changes) throw Error("训练状态已更新，请刷新后重试");
   switch (c.type) {
+    case "itemNote": {
+      const result = db.prepare("UPDATE gym_workout_items SET note=? WHERE id=? AND workout_id=?").run(c.text,c.itemId,wid);
+      if (!result.changes) throw Error("找不到本次训练的动作");
+      break;
+    }
     case "append": {
       const present = db
         .prepare("SELECT exercise_id FROM gym_workout_items WHERE workout_id=?")
@@ -287,6 +294,7 @@ function apply(
         )
         .get(wid);
       if (!done) throw Error("至少完成一组，或放弃这次空训练");
+      snapshotMuscles(db, wid);
       db.prepare(
         "UPDATE gym_workouts SET finished=max(started,?) WHERE id=?",
       ).run(now, wid);

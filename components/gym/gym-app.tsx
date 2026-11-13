@@ -53,6 +53,7 @@ export default function GymApp({
     [detail, setDetail] = useState<Workout | null>(null),
     [finished, setFinished] = useState(false);
   const [preview, setPreview] = useState<Plan | null>(null);
+  const [noteItemId, setNoteItemId] = useState<number | null>(null);
   const [focused, focus] = useState<number | null>(null);
   const writeQueue = useRef(Promise.resolve()),
     lastWrite = useRef<{id:number;revision:number} | null>(null),
@@ -304,6 +305,7 @@ export default function GymApp({
             }
             onToggle={toggle}
             busy={busy}
+            navigate={go}
             onDone={selectedDone}
             onBack={() =>
               go(
@@ -393,7 +395,7 @@ export default function GymApp({
         )}
         {view === "work" && active && <WorkoutLedger active={active} catalog={byId} focused={focused} focus={focus}
           busy={busy} message={message} send={send} finish={()=>show("finish")} minimize={()=>go("home")}
-          append={()=>openPicker("append")} note={()=>{setNote(active.note);show("note");}}/>}
+          append={()=>openPicker("append")} note={(id,text)=>{setNoteItemId(id);setNote(text);show("note");}}/>}
         {isDiary && (
           <Diary
             data={data}
@@ -461,14 +463,14 @@ export default function GymApp({
             <button disabled={busy} className="primary" onClick={() => send({ type:"deleteHistory",workoutId:detail.id,revision:detail.revision },
               () => { selectDay(detail.day); setDetail(null); go("diary"); })}>确认删除</button></div>
         </Sheet>}
-        {dialog === "note" && active && (
-          <Sheet title="训练心得" message={message} close={() => show(null)}>
+        {dialog === "note" && active && noteItemId!==null && (
+          <Sheet title={active.items.find(i=>i.id===noteItemId)?.name+" · 动作心得"} message={message} close={() => show(null)}>
             <textarea
               maxLength={2000}
               rows={4}
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="记下这次训练的感受"
+              placeholder="记下本次做这个动作的感受"
             />
             <button
               className="primary wide"
@@ -476,7 +478,7 @@ export default function GymApp({
               onClick={() =>
                 send(
                   {
-                    type: "note",
+                    type: "itemNote", itemId:noteItemId,
                     text: note,
                     workoutId: active.id,
                     revision: active.revision,

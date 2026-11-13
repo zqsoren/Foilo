@@ -1,3 +1,4 @@
+import type { LoadEntry } from "./muscle-load";
 export type Mode = "load" | "pair" | "sides" | "time" | "body" | "assist";
 export type Exercise = {
   id: number;
@@ -8,6 +9,12 @@ export type Exercise = {
   mode: Mode;
   aliases: string;
   imageId: number | null;
+  code: string | null;
+  mainMuscle: string;
+  alsoMuscles: string;
+  minorMuscles: string;
+  stretchTarget: string;
+  star: number;
 };
 export type PlanItem = { exerciseId: number; sets: number };
 export type Plan = {
@@ -30,6 +37,7 @@ export type WorkoutItem = {
   name: string;
   mode: Mode;
   temporary: number;
+  note: string;
   sets: SetRow[];
 };
 export type Workout = {
@@ -42,6 +50,7 @@ export type Workout = {
   revision: number;
   note: string;
   items: WorkoutItem[];
+  muscleLoad: LoadEntry[];
 };
 export type Summary = {
   id: number;
@@ -56,6 +65,7 @@ export type Dashboard = {
   plans: Plan[];
   active: Workout | null;
   history: Summary[];
+  muscleLoad: LoadEntry[];
   today: string;
   month: string;
 };

@@ -7,6 +7,7 @@ import { dashboard, exercises, gymMonth } from "@/lib/gym/store";
 import GymApp from "@/components/gym/gym-app";
 import "./gym.css";
 import "./ledger.css";
+import "./muscle-map.css";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "健身 · 在侧 Folio",

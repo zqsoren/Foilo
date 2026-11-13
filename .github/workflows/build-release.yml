@@ -19,6 +19,8 @@ jobs:
         run: |
           npm ci --ignore-scripts --no-audit --no-fund
           node -e "require('better-sqlite3')(':memory:').prepare('SELECT 1').get()"
+      - name: Prepare pinned gym thumbnails and animations
+        run: python3 scripts/prepare-gym-media.py
       - run: npm test
       - run: npm run typecheck
       - name: Build standalone web application

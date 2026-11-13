@@ -44,7 +44,7 @@ const weightLabel: Record<Mode,string> = { load:"重量 kg", pair:"单只 kg", b
 const tools = [["minimize","最小化"],["add","加动作"],["note","写心得"]] as const;
 type Props = {
   active: Workout; catalog: Map<number,Exercise>; focused: number | null;
-  focus: (id:number) => void; finish: () => void; minimize: () => void; append: () => void; note: () => void;
+  focus: (id:number) => void; finish: () => void; minimize: () => void; append: () => void; note: (id:number,text:string) => void;
   busy:boolean; message:string; send:(command:Command, after?:()=>void, quiet?:boolean)=>void;
 };
 export function WorkoutLedger({ active,catalog,focused,focus,finish,minimize,append,note,busy,message,send }:Props) {
@@ -52,7 +52,7 @@ export function WorkoutLedger({ active,catalog,focused,focus,finish,minimize,app
   const item = active.items.find(v => v.id === focused) ?? active.items[0];
   const exercise = catalog.get(item.exerciseId);
   const ref = {workoutId:active.id, revision:active.revision};
-  const actions = {minimize,add:append,note};
+  const actions = {minimize,add:append,note:()=>note(item.id,item.note)};
   return <div className="ledger">
     <header className="ledger-head">
       <div><span>训练中</span><button onClick={finish}>结束训练</button></div>
@@ -72,6 +72,7 @@ export function WorkoutLedger({ active,catalog,focused,focus,finish,minimize,app
           <button className="ledger-info" aria-label="动作信息" onClick={()=>setInfo(true)}><MoreHorizontal size={20}/></button>
           <PreviousSets exerciseId={item.exerciseId}/>
         </div>
+        {item.note && <button className="gym-item-note" onClick={actions.note}>动作心得　{item.note}</button>}
         <div className="ledger-columns"><span>组</span>{item.mode==="time" ? <span className="timed">时长（秒）</span> :
           <><span>{weightLabel[item.mode]}</span><span>次数</span></>}<span>完成</span></div>
         {item.sets.map((row,i)=><TrainingSet key={row.id+":"+row.stages.length} row={row} number={i+1} mode={item.mode} busy={busy} canCopy={item.sets.length<30} message={message}

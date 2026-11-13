@@ -19,12 +19,17 @@ import { readMuscleLoad, snapshotMuscles } from "./muscle-storage";
 export function gymMonth(now = Date.now()) {
   return epochToLocalInput(now).slice(0, 7);
 }
+import curated from "./catalog.curated.json";
+const catalogOrder = new Map(curated.map((e,i)=>[e.dbId,{index:i,english:e.english}]));
+
 export function exercises(db: Database.Database) {
-  return db
+  const rows = db
     .prepare(
       "SELECT id,name,region,muscles,equipment,mode,aliases,image_id AS imageId,source_code AS code,main_muscle AS mainMuscle,also_muscles AS alsoMuscles,minor_muscles AS minorMuscles,stretch_target AS stretchTarget,star FROM gym_exercises WHERE listed=1 ORDER BY star DESC,id",
     )
     .all() as Exercise[];
+  for (const row of rows) row.english = catalogOrder.get(row.id)?.english;
+  return rows.sort((a,b)=>b.star-a.star || (catalogOrder.get(a.id)?.index ?? Infinity) - (catalogOrder.get(b.id)?.index ?? Infinity));
 }
 export function workout(
   db: Database.Database,
@@ -104,18 +109,20 @@ export function dashboard(
   const active = db
     .prepare("SELECT id FROM gym_workouts WHERE user_id=? AND finished IS NULL")
     .get(userId) as { id: number } | undefined;
+  // Include the preceding days when the first calendar week spans two months.
+  const historyStart = new Date(Date.parse(month + "-01T00:00:00Z") - 6 * 86400000).toISOString().slice(0,10);
   const history = db
     .prepare(
       `SELECT w.id,w.name,w.day,w.started,w.finished,round(coalesce(sum(s.volume),0),2) volume,coalesce(sum(s.done),0) count
     FROM gym_workouts w LEFT JOIN gym_workout_items i ON i.workout_id=w.id LEFT JOIN gym_sets s ON s.item_id=i.id
     WHERE w.user_id=? AND w.finished IS NOT NULL AND w.day>=? AND w.day<=? GROUP BY w.id ORDER BY w.started DESC`,
     )
-    .all(userId, month + "-01", month + "-31") as Summary[];
+    .all(userId, historyStart, month + "-31") as Summary[];
   return {
     plans,
     active: active ? workout(db, userId, active.id) : null,
     history,
-    muscleLoad: readMuscleLoad(db, userId, { start: month + "-01", end: month + "-31" }),
+    muscleLoad: readMuscleLoad(db, userId, { start: historyStart, end: month + "-31" }),
     today: epochToLocalInput(Date.now()).slice(0, 10),
     month,
   };

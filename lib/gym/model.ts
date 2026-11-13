@@ -10,6 +10,7 @@ export type Exercise = {
   aliases: string;
   imageId: number | null;
   code: string | null;
+  english?: string;
   mainMuscle: string;
   alsoMuscles: string;
   minorMuscles: string;

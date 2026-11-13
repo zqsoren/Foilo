@@ -26,6 +26,8 @@ export default async function Credits() {
         许可。由在侧生成的动作示意图在下方单独标注。
       </p>
       <p>精选动作缩略图与动画来自 <a href="https://gymvisual.com/">© Gym visual — https://gymvisual.com/</a>。</p>
+      <h2>肌群模型</h2>
+      <p>正背面由 ArianArsenal 转换的 Z-Anatomy 模型投影、简化。作者 Gauthier Kervyn、Marcin Zielinski 等。衍生图形采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>。上游 BodyParts3D © The Database Center for Life Science，<a href="https://creativecommons.org/licenses/by-sa/2.1/jp/">CC BY-SA 2.1 JP</a>。<a href="https://github.com/ArianArsenal/anatomy-explorer/blob/8375d6ce7fec36e677c0eda66cae829ba55a4717/CREDITS.md">完整素材署名</a></p>
       <ul>
         {rows.map((r) => (
           <li key={r.name}>

@@ -282,7 +282,7 @@ export default function GymApp({
               className="primary new-plan"
               onClick={() => openPicker("plan")}
             >
-              ＋　新建计划
+              <span aria-hidden="true">＋</span><Image unoptimized src="/folio/gym-titles/new-plan.svg" alt="新建计划" width={68} height={20}/>
             </button>
             {active && (
               <button className="gym-resume" onClick={() => go("work")}>
@@ -296,6 +296,7 @@ export default function GymApp({
           <Library
             key={view}
             purpose={view === "append" ? "training" : view}
+            editing={!!editId}
             catalog={catalog}
             selected={picked}
             blocked={

@@ -4,7 +4,7 @@ import Image from "next/image";
 import type { Exercise, Mode } from "@/lib/gym/model";
 import { clockTime } from "@/lib/gym/model";
 const titleArtwork = {
-  "我的计划": ["plans", 98, 24], "动作库": ["library", 73, 23], "选择计划动作": ["select-plan", 148, 24],
+  "我的计划": ["plans", 98, 24], "动作库": ["library", 85, 27], "选择计划动作": ["select-plan", 148, 24],
   "添加训练动作": ["select-training", 148, 23], "编辑计划": ["edit-plan", 98, 24], "训练统计": ["stats", 99, 23], "训练日记": ["diary", 98, 23],
 } as const;
 

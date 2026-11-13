@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import type { Dashboard, Exercise, Workout } from "@/lib/gym/model";
-import { clockTime, setLabel, totals } from "@/lib/gym/model";
+import { setLabel, totals } from "@/lib/gym/model";
 import { Thumb } from "./parts";
 import { MuscleMap } from "./muscle-map";
 export function Overview({
@@ -24,39 +24,19 @@ export function Overview({
   const skipped = work.items.filter(item => item.sets.every(set => !set.done));
   return (
     <>
-      <button className="text" onClick={back}>
-        ‹ 训练日记
-      </button>
-      <p className="gym-muted">
-        {justFinished ? "✓ 训练完成，辛苦了" : "训练概览"} · {work.day}
-      </p>
-      <h1>{work.name}</h1>
-      <div className="gym-volume"><small>外部训练容量</small><strong>{total.volume.toLocaleString()} <small>kg</small></strong></div>
-      <div className="gym-metrics">
-        {[
-          [
-            "训练时长",
-            clockTime((work.finished ?? work.started) - work.started),
-          ],
-          ["训练动作", trained.length],
-          ["完成组", total.done],
-        ].map(([k, v]) => (
-          <div key={k}>
-            <small>{k}</small>
-            <strong>{v}</strong>
-          </div>
-        ))}
-      </div>
-      <h2>动作明细</h2>
+      <p className="summary-date">{justFinished ? "训练完成" : "训练概览"} / {Number(work.day.slice(5,7))} 月 {Number(work.day.slice(8))} 日</p>
+      <header className="summary-hero"><h1>{work.name}</h1><small>总训练容量</small>
+        <div><strong>{total.volume.toLocaleString()}</strong> kg</div>
+        <footer><span>{Math.floor(((work.finished ?? work.started)-work.started)/60000)} min</span>
+          <span>{work.items.length} 个动作　　 {total.done} 组</span></footer></header>
       <div className="summary-columns">{[0,1].map(column=><div key={column}>{trained.filter((_,i)=>i%2===column).map(item=><article key={item.id}>
-        <Thumb exercise={catalog.find(e=>e.id===item.exerciseId)} />
-        <h3>{item.name}</h3>
-        <div className="set-dots">{item.sets.map((set,i)=><i key={set.id} data-done={set.done} aria-label={`第 ${i+1} 组${set.done?"完成":"未完成"}`}/>)}</div>
-        {item.sets.map((set,i)=>set.done ? <div className="summary-set" key={set.id}><strong>第 {i+1} 组</strong> {setLabel(item.mode,set)}
-          {set.stages.map((stage,j)=><small key={j}>↳ {setLabel(item.mode,stage)}</small>)}</div>:null)}
+        <div className="summary-exercise"><div className="summary-name"><Thumb exercise={catalog.find(e=>e.id===item.exerciseId)} />
+          <h3>{item.name}</h3><div className="set-dots">{item.sets.map((set,i)=><i key={set.id} data-done={set.done} aria-label={`第 ${i+1} 组${set.done?"完成":"未完成"}`}/>)}</div></div>
+          <div>{item.sets.map((set,i)=>set.done ? <div className="summary-set" key={set.id}><b>{String(i+1).padStart(2,"0")}</b> {setLabel(item.mode,set)}
+            {set.stages.map((stage,j)=><small key={j}>{setLabel(item.mode,stage)}</small>)}</div>:null)}</div></div>
         {item.note && <p className="gym-note"><b>本次动作心得</b>{item.note}</p>}
       </article>)}</div>)}</div>
-      {skipped.length>0 && <section><h2>未训练</h2>{skipped.map(i=><p key={i.id}>{i.name}{i.note && <small> · 本次动作心得　{i.note}</small>}</p>)}</section>}
+      {skipped.length>0 && <section className="summary-skipped"><h2>未训练</h2>{skipped.map(i=><p key={i.id}>{i.name}{i.note && <small> · 本次动作心得　{i.note}</small>}</p>)}</section>}
       <MuscleMap entries={work.muscleLoad} period="session" />
       {work.note && (
         <>
@@ -64,9 +44,8 @@ export function Overview({
           <p className="gym-note">{work.note}</p>
         </>
       )}
-      <button className="primary wide" onClick={justFinished ? home : remove}>
-        {justFinished ? "返回训练首页" : "删除记录"}
-      </button>
+      <div className="summary-actions"><button onClick={back}>训练日记</button>
+        <button className="primary" onClick={justFinished ? home : remove}>{justFinished ? "回到首页" : "删除记录"}</button></div>
     </>
   );
 }
@@ -89,7 +68,7 @@ export function Diary({
   selected: string;
   pick: (day: string) => void;
 }) {
-  const [monthly, setMonthly] = useState(false);
+  const [monthly, setMonthly] = useState(true);
   const [year, month] = data.month.split("-").map(Number);
   const start = (new Date(Date.UTC(year, month - 1, 1)).getUTCDay() + 6) % 7;
   const length = new Date(Date.UTC(year, month, 0)).getUTCDate();
@@ -100,13 +79,14 @@ export function Diary({
     monthChange(
       new Date(Date.UTC(year, month - 1 + dir, 1)).toISOString().slice(0, 7),
     );
-  const rows = data.history;
+  const rows = data.history.filter(r=>r.day.startsWith(data.month));
   const dayRows = rows.filter((r) => r.day === selectedDay);
   const spanStart =
     data.month === data.today.slice(0, 7)
       ? data.today
       : data.month + "-" + length;
-  const cutoff = new Date(Date.parse(spanStart + "T00:00:00Z") - 6 * 86400000)
+  const anchor = new Date(spanStart + "T00:00:00Z");
+  const cutoff = new Date(anchor.getTime() - ((anchor.getUTCDay()+6)%7)*86400000)
     .toISOString()
     .slice(0, 10);
   return (
@@ -122,9 +102,9 @@ export function Diary({
           </button>
         </div>
       </div>
-      <div className="gym-month">
+      {!stats && <div className="gym-month">
         <b>
-          {month} 月
+          {month}<small>月</small>
         </b>
         <button aria-label="上个月" disabled={busy} onClick={() => shift(-1)}>
           ‹
@@ -132,38 +112,32 @@ export function Diary({
         <button aria-label="下个月" disabled={busy} onClick={() => shift(1)}>
           ›
         </button>
-        <span>{year} 年</span>
-      </div>
+        <span>{year}</span>
+      </div>}
       {stats ? (
         (() => {
           const range = monthly
             ? rows
-            : rows.filter((r) => r.day >= cutoff && r.day <= spanStart);
+            : data.history.filter((r) => r.day >= cutoff && r.day <= spanStart);
           const volume = range.reduce((n, r) => n + r.volume, 0),
             duration = range.reduce((n, r) => n + r.finished - r.started, 0);
-          const days = [...new Set(range.map((r) => r.day))].sort();
           const workoutIds = new Set(range.map(r => r.id));
-          const points = days.map((day) => ({
-            day,
-            value: range
-              .filter((r) => r.day === day)
-              .reduce((n, r) => n + r.volume, 0),
-          }));
+          const points = [...range].reverse().map(r=>({id:r.id,day:r.day,name:r.name,value:r.volume}));
           const max = Math.max(1, ...points.map((r) => r.value));
           return (
             <>
               <div className="gym-chips">
                 <button
-                  className={monthly ? "chosen" : ""}
-                  onClick={() => setMonthly(true)}
-                >
-                  整月
-                </button>
-                <button
-                  className={!monthly ? "chosen" : ""}
+                  aria-pressed={!monthly}
                   onClick={() => setMonthly(false)}
                 >
-                  月内最近 7 天
+                  本周
+                </button>
+                <button
+                  aria-pressed={monthly}
+                  onClick={() => setMonthly(true)}
+                >
+                  本月
                 </button>
               </div>
               <div className="gym-volume">
@@ -183,22 +157,22 @@ export function Diary({
                     {duration > 0 && duration < 60000
                       ? "<1"
                       : Math.round(duration / 60000)}{" "}
-                    分
+                    min
                   </strong>
                 </div>
                 <div>
-                  <small>完成组</small>
+                  <small>完成组数</small>
                   <strong>{range.reduce((n, r) => n + r.count, 0)}</strong>
                 </div>
               </div>
               <MuscleMap entries={data.muscleLoad.filter(row=>workoutIds.has(row.workoutId))} period={monthly?"month":"week"} />
-              <h2>每日训练容量</h2>
+              <h2>每次训练容量</h2>
               {points.length ? (
                 points.map((p) => (
-                  <div className="gym-plot" key={p.day}>
-                    <span>{p.day.slice(5)}</span>
+                  <div className="gym-plot" key={p.id}>
+                    <span>{p.day.slice(5).replace("-",".")} · {p.name}</span>
                     <b>{Number(p.value.toFixed(2))} kg</b>
-                    <i style={{ width: (100 * p.value) / max + "%" }} />
+                    <div className="plot-track"><i style={{ width: (100 * p.value) / max + "%" }}/></div>
                   </div>
                 ))
               ) : (
@@ -236,8 +210,7 @@ export function Diary({
                       <small>
                         {Number(
                           list.reduce((n, r) => n + r.volume, 0).toFixed(2),
-                        )}{" "}
-                        kg
+                        ).toLocaleString()}
                       </small>
                     </>
                   )}
@@ -255,8 +228,8 @@ export function Diary({
               >
                 <b>{r.name}</b>
                 <small>
-                  {clockTime(r.finished - r.started)} · {r.count} 组 ·{" "}
-                  {r.volume} kg
+                  {Math.floor((r.finished-r.started)/60000)} 分 {Math.floor((r.finished-r.started)/1000)%60} 秒 · {r.count} 组 ·{" "}
+                  {r.volume.toLocaleString()} kg
                 </small>
               </button>
             ))

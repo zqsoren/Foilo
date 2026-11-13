@@ -1,19 +1,14 @@
 "use client";
 import { useRef, useState } from "react";
-import { shanghaiNow, type TodoEvent } from "@/lib/todo/model";
-import { addDays } from "@/lib/life-date";
+import { type TodoEvent } from "@/lib/todo/model";
+import { initialSlot } from "@/lib/todo/mobile-time";
 import styles from "./todo.module.css";
-export function InlineSchedule({ date, busy, onSave }: { date: string; busy: boolean; onSave: (event: TodoEvent) => Promise<boolean> }) {
+export function InlineSchedule({ date, events, busy, onSave }: { date: string; events: TodoEvent[]; busy: boolean; onSave: (event: TodoEvent) => Promise<boolean> }) {
   const [draft, setDraft] = useState<TodoEvent | null>(null);
   const lock = useRef(false), titleRef = useRef<HTMLInputElement>(null);
   function activate() {
     if (draft) return;
-    const now = shanghaiNow(), [h,m] = now.clock.split(":").map(Number);
-    const rounded = Math.ceil((h*60+m)/10)*10;
-    const start = date === now.date ? rounded : 9*60;
-    const clock = (n: number) => `${String(Math.floor(n/60)).padStart(2,"0")}:${String(n%60).padStart(2,"0")}`;
-    const fits = start+60 < 1440;
-    setDraft({ id: crypto.randomUUID(), title: "", notes: "", date: start >= 1440 ? addDays(date,1) : date, start: fits ? clock(start) : null, end: fits ? clock(start+60) : null, completed: false, fixed: false });
+    setDraft({ id: crypto.randomUUID(), title: "", notes: "", ...initialSlot(date, events), completed: false, fixed: false });
   }
   async function commit() {
     if (!draft || busy || lock.current) return;

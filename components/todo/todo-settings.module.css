@@ -1,42 +1,42 @@
-.page { max-width: 480px; min-height: 100dvh; margin: auto; padding: 0 18px 36px; background: #fffaf6; color: #482d1c; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; }
+.page { max-width: 480px; min-height: 100dvh; margin: auto; padding: 0 18px 36px; background: #f8f8f8; color: #323232; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; }
 .header { display: flex; align-items: center; gap: 24px; padding: 20px 0; }
-.header a { text-decoration: none; color: #ad5c2b; font-size: 13px; }
+.header a { text-decoration: none; color: #6a6a6a; font-size: 13px; }
 .header h1 { font-size: 17px; margin: 0; }
 .intro { padding: 10px 2px 19px; }
-.intro > span { font-size: 10px; letter-spacing: 1.8px; color: #d67e43; }
+.intro > span { font-size: 10px; letter-spacing: 1.8px; color: #8c8c8c; }
 .intro h2 { font-size: 23px; letter-spacing: -.5px; margin: 8px 0; }
-.intro p { color: #947663; font-size: 12px; line-height: 1.8; margin: 0; }
-.card { padding: 17px; background: #fff; border: 1px solid #f2e5da; border-radius: 16px; margin-bottom: 12px; }
+.intro p { color: #7b7b7b; font-size: 12px; line-height: 1.8; margin: 0; }
+.card { padding: 17px; background: #fff; border: 1px solid #e7e7e7; border-radius: 16px; margin-bottom: 12px; }
 .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .card h3 { font-size: 15px; margin: 0 0 6px; }
-.enabled, .disabled { border-radius: 20px; padding: 4px 9px; background: #fff0e3; color: #bc591b; font-size: 11px; }
-.disabled { background: #f5f1ed; color: #a38e7e; }
-.description { color: #8f7563; font-size: 12px; line-height: 1.8; margin: 8px 0 13px; }
+.enabled, .disabled { border-radius: 20px; padding: 4px 9px; background: #f2f2f2; color: #6a6a6a; font-size: 11px; }
+.disabled { background: #f2f2f2; color: #919191; }
+.description { color: #797979; font-size: 12px; line-height: 1.8; margin: 8px 0 13px; }
 .card dl { font-size: 12px; margin: 14px 0; }
 .card dl > div { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin: 9px 0; }
-.card dt { color: #a38a77; flex-shrink: 0; }
+.card dt { color: #8e8e8e; flex-shrink: 0; }
 .card dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
 .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
-.page button { border: 0; background: transparent; color: #a45e32; font-size: 12px; padding: 10px 8px; cursor: pointer; border-radius: 8px; }
+.page button { border: 0; background: transparent; color: #6a6a6a; font-size: 12px; padding: 10px 8px; cursor: pointer; border-radius: 8px; }
 .page button:disabled { opacity: .45; cursor: default; }
-.page .primary { background: #f87b24; color: #fff; padding: 11px 13px; }
-.page .danger { color: #b05c43; }
-.hint { font-size: 11px; color: #a48c7a; line-height: 1.8; margin: 12px 0 0; }
+.page .primary { background: #171717; color: #fff; padding: 11px 13px; }
+.page .danger { color: #6c6c6c; }
+.hint { font-size: 11px; color: #909090; line-height: 1.8; margin: 12px 0 0; }
 .key { margin-top: 15px; }
 .key label { display: block; font-size: 12px; margin-bottom: 7px; }
 .key > div { display: flex; gap: 4px; }
-.key input { min-width: 0; flex: 1; border: 1px solid #ecd4c0; border-radius: 8px; padding: 8px; font-size: 16px; }
+.key input { min-width: 0; flex: 1; border: 1px solid #d8d8d8; border-radius: 8px; padding: 8px; font-size: 16px; }
 .key button { flex-shrink: 0; }
-.field { display: block; font-size: 12px; color: #a38a77; }
-.field code { display: block; color: #714d35; background: #fff7ef; padding: 10px; border-radius: 8px; font-size: 12px; line-height: 1.7; margin-top: 7px; overflow-wrap: anywhere; }
+.field { display: block; font-size: 12px; color: #8e8e8e; }
+.field code { display: block; color: #535353; background: #f8f8f8; padding: 10px; border-radius: 8px; font-size: 12px; line-height: 1.7; margin-top: 7px; overflow-wrap: anywhere; }
 .card code { font-size: 11px; }
-.card details { margin: 14px 0; font-size: 12px; color: #a45e32; }
-.card pre { background: #fff7ef; padding: 10px; border-radius: 8px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 10px; line-height: 1.7; color: #714d35; }
-.page .secondary { background: #fff0e3; padding: 11px 13px; }
-.card ul { margin: 10px 0 0; padding-left: 16px; font-size: 12px; line-height: 2; color: #8f7563; }
-.widgetLink { text-decoration: none; display: flex; justify-content: space-between; padding: 18px 15px; background: #fff; border: 1px solid #f2e5da; border-radius: 14px; font-size: 13px; color: #714d35; }
-.widgetLink span:last-child { font-size: 12px; color: #ac8b71; }
-.version { display: block; margin-top: 16px; color: #796558; font-size: 12px; text-align: center; }
-.notice, .error { position: sticky; bottom: 16px; padding: 12px 14px; border-radius: 10px; background: #fff0e3; color: #955326; font-size: 12px; line-height: 1.7; margin-top: 12px; box-shadow: 0 4px 18px #6e3d1512; }
-.error { background: #fff0ed; color: #ad4935; }
-.manualCopy { width: 100%; margin-top: 12px; font-size: 12px; border: 1px solid #ecd4c0; border-radius: 8px; }
+.card details { margin: 14px 0; font-size: 12px; color: #6a6a6a; }
+.card pre { background: #f8f8f8; padding: 10px; border-radius: 8px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 10px; line-height: 1.7; color: #535353; }
+.page .secondary { background: #f2f2f2; padding: 11px 13px; }
+.card ul { margin: 10px 0 0; padding-left: 16px; font-size: 12px; line-height: 2; color: #797979; }
+.widgetLink { text-decoration: none; display: flex; justify-content: space-between; padding: 18px 15px; background: #fff; border: 1px solid #e7e7e7; border-radius: 14px; font-size: 13px; color: #535353; }
+.widgetLink span:last-child { font-size: 12px; color: #909090; }
+.version { display: block; margin-top: 16px; color: #686868; font-size: 12px; text-align: center; }
+.notice, .error { position: sticky; bottom: 16px; padding: 12px 14px; border-radius: 10px; background: #f2f2f2; color: #5e5e5e; font-size: 12px; line-height: 1.7; margin-top: 12px; box-shadow: 0 4px 18px #45454512; }
+.error { background: #f3f3f3; color: #5d5d5d; }
+.manualCopy { width: 100%; margin-top: 12px; font-size: 12px; border: 1px solid #d8d8d8; border-radius: 8px; }

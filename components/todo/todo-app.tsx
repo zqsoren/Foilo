@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { ArrowUp, CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, Circle, Menu, Repeat2, MessageSquare, Plus, Undo2, X } from "lucide-react";
 import { addDays, displayDate, weekBounds } from "@/lib/life-date";
-import { durationLabel, statusOf, isPending, minutes, shanghaiNow, type TodoEvent, type TodoRequest, type TodoState } from "@/lib/todo/model";
+import { durationLabel, statusOf, isPending, shanghaiNow, type TodoEvent, type TodoRequest, type TodoState } from "@/lib/todo/model";
 import { eventsForDate, occurrenceOn, repeatLabel } from "@/lib/todo/recurrence";
 import { TaskStatusButton } from "./task-status-button";
+import { initialSlot } from "@/lib/todo/mobile-time";
 import { InlineSchedule } from "./inline-schedule";
 import { EventEditor } from "./event-editor";
 import { VoiceInput } from "./voice-input";
@@ -77,15 +78,7 @@ export function TodoApp({ initialState, today: initialToday, aiConfigured: initi
   }
 
   function createEvent() {
-    const now = shanghaiNow();
-    const currentMinutes = date === now.date ? Math.ceil(minutes(now.clock) / 5) * 5 : 9 * 60;
-    let start = Math.min(currentMinutes, 23 * 60);
-    for (const event of scheduled) {
-      if (!event.completed && minutes(event.start!) < start + 60 && minutes(event.end!) + 5 > start) start = minutes(event.end!) + 5;
-    }
-    const toClock = (value: number) => `${String(Math.floor(value / 60)).padStart(2, "0")}:${String(value % 60).padStart(2, "0")}`;
-    const fits = start + 60 < 1440 && (date !== now.date || start >= minutes(now.clock));
-    openEditor({ id: crypto.randomUUID(), title: "", date, start: fits ? toClock(start) : null, end: fits ? toClock(start + 60) : null, notes: "", fixed: false, completed: false });
+    openEditor({ id: crypto.randomUUID(), title: "", ...initialSlot(date, scheduled), notes: "", fixed: false, completed: false });
   }
   async function send(event: FormEvent) {
     event.preventDefault();
@@ -100,7 +93,7 @@ export function TodoApp({ initialState, today: initialToday, aiConfigured: initi
     return <div className={`${styles.eventCard} ${styles[statusOf(event)] ?? ""} ${current ? styles.current : ""} ${compact ? styles.compact : ""}`}>
       <TaskStatusButton event={event} disabled={busy} onStatus={status => { void mutate({ action: "status", id: event.id, occurrenceDate: event.occurrenceDate, date: event.date, status }); }} />
       {compact ? <span className={styles.compactTime}>{event.start ?? "待安排"}<br />{event.end}</span> : null}
-      <button type="button" className={styles.eventBody} onClick={() => openEditor(event)}><strong>{event.title}</strong><span>{durationLabel(event)}{event.repeat ? <><Repeat2 size={11} />{repeatLabel(event)}</> : null}{current ? <em>进行中</em> : null}</span></button>
+      <button type="button" className={styles.eventBody} onClick={() => openEditor(event)}><strong>{event.title}</strong><span>{!compact && event.notes ? event.notes : durationLabel(event)}{event.repeat ? <><Repeat2 size={11} />{repeatLabel(event)}</> : null}{current ? <em>进行中</em> : null}</span></button>
       <button type="button" className={styles.eventArrow} aria-label={`编辑：${event.title}`} onClick={() => openEditor(event)}><ChevronRight size={17} /></button>
     </div>;
   }
@@ -118,9 +111,9 @@ export function TodoApp({ initialState, today: initialToday, aiConfigured: initi
         <div className={styles.sectionHeading}><span>{done}/{dayEvents.length} 已完成</span></div>
         <div className={styles.progressTrack} role="progressbar" aria-label="完成进度" aria-valuenow={done} aria-valuemin={0} aria-valuemax={dayEvents.length || 1}><i style={{ width: `${dayEvents.length ? done / dayEvents.length * 100 : 0}%` }} /></div>
         {dayEvents.length ? <div className={styles.timeline}>{scheduled.map(event => <div key={`${event.id}:${event.date}`} className={styles.timelineRow}><div className={styles.timeLabel}><i /><strong>{event.start}</strong><span>{event.end}</span></div>{eventCard(event)}</div>)}
-          {unscheduled.length ? <><h3 className={styles.unscheduledHeading}>待安排 <span>{unscheduled.length}</span></h3>{unscheduled.map((event) => <div key={event.id} className={styles.unscheduled}>{eventCard(event)}</div>)}</> : null}
-        </div> : null}
-        <InlineSchedule key={date} date={date} busy={busy} onSave={event => mutate({ action: "save", event })} />
+          </div> : null}
+        <InlineSchedule key={date} date={date} events={scheduled} busy={busy} onSave={event => mutate({ action: "save", event })} />
+        {unscheduled.length ? <div><h3 className={styles.unscheduledHeading}>待安排 <span>{unscheduled.length}</span></h3>{unscheduled.map((event) => <div key={event.id} className={styles.unscheduled}>{eventCard(event)}</div>)}</div> : null}
         {state.undo ? <button className={styles.undo} disabled={busy} onClick={async () => { if (await mutate({ action: "undo" })) setNotice("已撤销上一次修改"); }}><Undo2 size={14} />撤销上一次修改</button> : null}
       </> : <div className={styles.chat}>
         {!aiConfigured ? <p className={styles.configNotice}>还没有找到 AI 配置。<Link href="/settings">前往工作台设置</Link>后即可使用。</p> : null}

@@ -53,9 +53,9 @@ describe("健身模块数据库", () => {
     expect(db.prepare("SELECT count(*) n FROM gym_set_stages").get()).toEqual({n:0});
     expect(dashboard(db,41,"2026-11").plans).toHaveLength(1);
   });
-  it("精选目录包含334个编号动作和三个原图动作", () => {
+  it("精选目录包含334个编号动作及六个保留或新增动作", () => {
     const list = exercises(db);
-    expect(list).toHaveLength(337);
+    expect(list).toHaveLength(340);
     expect(new Set(list.filter(e=>e.code).map(e=>e.code)).size).toBe(334);
     for (const id of [101,102,105]) {
       expect(list.find(e=>e.id===id)?.imageId).toBe(1000+id);

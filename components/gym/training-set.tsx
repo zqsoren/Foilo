@@ -5,26 +5,28 @@ import { emptyValues, type Mode, type SetRow, type Values } from "@/lib/gym/mode
 import { Sheet } from "./parts";
 
 type Props = {
-  row: SetRow; number: number; mode: Mode; busy: boolean; canCopy: boolean; message: string;
+  unit?: "km" | "层"; row: SetRow; number: number; mode: Mode; busy: boolean; canCopy: boolean; message: string;
   save: (stages: Values[], done: boolean, after?: () => void, quiet?: boolean) => void;
   copy: () => void;
 };
 
-export function TrainingSet({ row, number, mode, busy, canCopy, message, save, copy }: Props) {
+export function TrainingSet({ unit, row, number, mode, busy, canCopy, message, save, copy }: Props) {
   const [menu, setMenu] = useState(false);
   const form = useRef<HTMLDivElement>(null);
   const stages = [row, ...row.stages];
   const drop = stages.length > 1;
-  const hasValue = (v: Values) => mode === "time" ? v.seconds > 0 : v.reps + v.rightReps > 0;
+  const hasValue = (v: Values) => mode === "time" ? v.seconds > 0 || (v.measure ?? 0)>0 : v.reps + v.rightReps > 0;
   function readFields() {
-    const next = stages.map(({kg,reps,rightKg,rightReps,seconds}) => ({kg,reps,rightKg,rightReps,seconds}));
+    const next: Values[] = stages.map(({kg,reps,rightKg,rightReps,seconds,measure}) => ({kg,reps,rightKg,rightReps,seconds,measure}));
     for (const input of form.current?.querySelectorAll<HTMLInputElement>("input[data-field]") ?? []) {
-      next[Number(input.dataset.stage)][input.dataset.field as keyof Values] = Number(input.value);
+      const stage=next[Number(input.dataset.stage)];
+      if (input.dataset.field==="measure") stage.measure=input.value==="" ? null : Number(input.value);
+      else stage[input.dataset.field as "kg"|"rightKg"|"reps"|"rightReps"|"seconds"] = Number(input.value);
     }
     return next;
   }
-  function field(i: number, key: keyof Values, label: string, caption = label) {
-    const weight = key === "kg" || key === "rightKg";
+  function field(i: number, key: Exclude<keyof Values,"measureUnit">, label: string, caption = label) {
+    const weight = key === "kg" || key === "rightKg" || (key==="measure" && unit==="km");
     return <label className="inline-number" key={key}><small>{caption}</small>
       <input key={row.id + ":" + i + ":" + key} data-field={key} data-stage={i}
         aria-label={"第 " + number + " 组，第 " + (i+1) + " 段，" + label}
@@ -60,7 +62,7 @@ export function TrainingSet({ row, number, mode, busy, canCopy, message, save, c
   return <div className="set-block" data-mode={mode} ref={form}>
     {stages.map((stage, i) => <div className={"set-line" + (i ? " set-stage" : "")} key={i}>
       <span className="set-number">{drop ? (i ? "递 " + (i + 1) : number + " · 递1") : String(number).padStart(2,"0")}</span>
-      {mode === "time" ? <div className="set-field timed">{field(i,"seconds","时长（秒）","秒")}</div> :
+      {mode === "time" ? <div className="set-field timed">{field(i,"seconds","时长（秒）","秒")}{unit && field(i,"measure",unit,unit)}</div> :
         <>
           <div className="set-field">{field(i,"kg",mode==="sides"?"左 kg":mode==="pair"?"单只 kg":mode==="assist"?"辅助 kg":mode==="body"?"额外 kg":"kg")}{mode==="sides" && field(i,"rightKg","右 kg")}</div>
           <div className="set-field">{field(i,"reps",mode==="sides"?"左 次":"次")}{mode==="sides" && field(i,"rightReps","右 次")}</div>

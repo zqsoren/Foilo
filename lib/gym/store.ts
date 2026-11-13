@@ -2,7 +2,7 @@ import curated from "./catalog.curated.json";
 import type Database from "better-sqlite3";
 import { epochToLocalInput } from "../life-date";
 import {
-  capacity,
+  capacity, cardioUnit,
   type Dashboard,
   type Exercise,
   type Plan,
@@ -49,7 +49,7 @@ export function workout(
     .all(id) as WorkoutItem[];
   const rows = db
     .prepare(
-      `SELECT s.item_id AS itemId,s.id,s.kind,s.kg,s.reps,s.right_kg AS rightKg,s.right_reps AS rightReps,s.seconds,s.done,s.volume
+      `SELECT s.item_id AS itemId,s.id,s.kind,s.measure,s.measure_unit AS measureUnit,s.kg,s.reps,s.right_kg AS rightKg,s.right_reps AS rightReps,s.seconds,s.done,s.volume
     FROM gym_sets s JOIN gym_workout_items i ON i.id=s.item_id WHERE i.workout_id=? ORDER BY i.position,s.position`,
     )
     .all(id) as (SetRow & { itemId: number })[];
@@ -64,7 +64,7 @@ export function workout(
     row.stages = [];
     byItem.get(row.itemId)!.sets.push(row);
   }
-  const stages = db.prepare(`SELECT t.set_id AS setId,t.kg,t.reps,t.right_kg AS rightKg,t.right_reps AS rightReps,t.seconds
+  const stages = db.prepare(`SELECT t.set_id AS setId,t.kg,t.reps,t.right_kg AS rightKg,t.right_reps AS rightReps,t.seconds,t.measure,t.measure_unit AS measureUnit
     FROM gym_set_stages t JOIN gym_sets s ON s.id=t.set_id JOIN gym_workout_items i ON i.id=s.item_id
     WHERE i.workout_id=? ORDER BY t.set_id,t.position`).all(id) as (Values & {setId:number})[];
   for (const stage of stages) bySet.get(stage.setId)!.stages.push(stage);
@@ -78,7 +78,8 @@ export function previousExercise(db: Database.Database, userId: number, exercise
     ORDER BY w.finished DESC,w.id DESC LIMIT 1`).get(userId,exerciseId) as {id:number} | undefined;
   if (!last) return null;
   const session = workout(db,userId,last.id);
-  const item = session.items.find(i=>i.exerciseId===exerciseId)!;
+  const matches = session.items.filter(i=>i.exerciseId===exerciseId && i.sets.some(s=>s.done));
+  const item = matches[matches.length-1];
   return { day:session.day, mode:item.mode, sets:item.sets.map((s,i)=>({...s,number:i+1})).filter(s=>s.done) };
 }
 
@@ -120,6 +121,9 @@ export function dashboard(
     .all(userId, historyStart, month + "-31") as Summary[];
   return {
     plans,
+    archivedPlans: db.prepare(`SELECT p.id,p.name,count(w.id) sessions FROM gym_plans p
+      LEFT JOIN gym_workouts w ON w.plan_id=p.id AND w.user_id=p.user_id AND w.finished IS NOT NULL
+      WHERE p.user_id=? AND p.archived=1 GROUP BY p.id ORDER BY p.id`).all(userId) as Dashboard["archivedPlans"],
     active: active ? workout(db, userId, active.id) : null,
     history,
     muscleLoad: readMuscleLoad(db, userId, { start: historyStart, end: month + "-31" }),
@@ -152,6 +156,11 @@ function apply(
   c: Command,
   now: number,
 ): number {
+  if (c.type === "archivePlan") {
+    const result=db.prepare("UPDATE gym_plans SET archived=1,revision=revision+1 WHERE id=? AND user_id=? AND revision=? AND archived=0").run(c.planId,uid,c.revision);
+    if (!result.changes) throw Error("计划已更新，请刷新后重试");
+    return c.planId;
+  }
   if (c.type === "savePlan") {
     let id = c.planId;
     if (id) {
@@ -219,24 +228,19 @@ function apply(
     .run(wid, uid, c.revision);
   if (!lock.changes) throw Error("训练状态已更新，请刷新后重试");
   switch (c.type) {
+    case "cardioHeartRate": {
+      const changed=db.prepare(`UPDATE gym_sets SET heart_rate=? WHERE id=? AND item_id IN
+        (SELECT i.id FROM gym_workout_items i JOIN gym_exercises e ON e.id=i.exercise_id WHERE i.workout_id=? AND e.region='有氧')`).run(JSON.stringify({bpm:c.bpm}),c.setId,wid);
+      if (!changed.changes) throw Error("找不到本次有氧训练组");
+      break;
+    }
     case "itemNote": {
       const result = db.prepare("UPDATE gym_workout_items SET note=? WHERE id=? AND workout_id=?").run(c.text,c.itemId,wid);
       if (!result.changes) throw Error("找不到本次训练的动作");
       break;
     }
     case "append": {
-      const present = db
-        .prepare("SELECT exercise_id FROM gym_workout_items WHERE workout_id=?")
-        .all(wid) as { exercise_id: number }[];
-      const seen = new Set(present.map((x) => x.exercise_id));
-      addItems(
-        db,
-        wid,
-        c.exerciseIds
-          .filter((id) => !seen.has(id))
-          .map((exerciseId) => ({ exerciseId, sets: 1 })),
-        1,
-      );
+      addItems(db, wid, c.exerciseIds.map(exerciseId => ({exerciseId,sets:1})), 1);
       break;
     }
     case "addSet": {
@@ -263,32 +267,34 @@ function apply(
       // Move later rows in two passes to respect the unique position constraint.
       db.prepare("UPDATE gym_sets SET position=position+100 WHERE item_id=? AND position>?").run(row.item_id,row.position);
       db.prepare("UPDATE gym_sets SET position=position-99 WHERE item_id=? AND position>=100").run(row.item_id);
-      const copy = db.prepare(`INSERT INTO gym_sets(item_id,position,kind,kg,reps,right_kg,right_reps,seconds)
-        SELECT item_id,position+1,kind,kg,reps,right_kg,right_reps,seconds FROM gym_sets WHERE id=?`).run(c.setId);
-      db.prepare(`INSERT INTO gym_set_stages SELECT ?,position,kg,reps,right_kg,right_reps,seconds FROM gym_set_stages WHERE set_id=?`).run(copy.lastInsertRowid,c.setId);
+      const copy = db.prepare(`INSERT INTO gym_sets(item_id,position,kind,kg,reps,right_kg,right_reps,seconds,measure,measure_unit)
+        SELECT item_id,position+1,kind,kg,reps,right_kg,right_reps,seconds,measure,measure_unit FROM gym_sets WHERE id=?`).run(c.setId);
+      db.prepare(`INSERT INTO gym_set_stages SELECT ?,position,kg,reps,right_kg,right_reps,seconds,measure,measure_unit FROM gym_set_stages WHERE set_id=?`).run(copy.lastInsertRowid,c.setId);
       break;
     }
     case "recordStages":
     case "record": {
-      const row = db.prepare(`SELECT i.mode,s.kind FROM gym_sets s JOIN gym_workout_items i ON i.id=s.item_id
-        WHERE s.id=? AND i.workout_id=?`).get(c.setId,wid) as {mode:Mode;kind:string} | undefined;
+      const row = db.prepare(`SELECT i.mode,s.kind,e.source_code AS code FROM gym_sets s JOIN gym_workout_items i ON i.id=s.item_id JOIN gym_exercises e ON e.id=i.exercise_id
+        WHERE s.id=? AND i.workout_id=?`).get(c.setId,wid) as {mode:Mode;kind:string;code:string|null} | undefined;
       if (!row) throw Error("找不到训练组");
       if (c.type === "record" && row.kind !== "normal") throw Error("请刷新页面后编辑递减组");
       const mode = row.mode;
+      const unit=cardioUnit(row.code);
       const values = (c.type === "record" ? [c] : c.stages).map(v => ({
+        measure: unit && "measure" in v && typeof v.measure==="number" ? v.measure : null,
         kg: mode === "time" ? 0 : v.kg, reps: mode === "time" ? 0 : v.reps,
         rightKg: mode === "sides" ? v.rightKg : 0, rightReps: mode === "sides" ? v.rightReps : 0,
         seconds: mode === "time" ? v.seconds : 0,
       }));
-      if (c.done && values.some(v => mode === "time" ? !v.seconds : !(v.reps + v.rightReps)))
+      if (c.done && values.some(v => mode === "time" ? !(v.seconds || v.measure) : !(v.reps + v.rightReps)))
         throw Error(mode === "time" ? "请为每段填写时长" : "请为每段填写实际次数");
       const first = values[0];
       const volume = c.done ? Math.round(values.reduce((sum,v) => sum+capacity(mode,v),0)*100)/100 : 0;
-      db.prepare("UPDATE gym_sets SET kind=?,kg=?,reps=?,right_kg=?,right_reps=?,seconds=?,done=?,volume=? WHERE id=?")
-        .run(values.length>1?"drop":"normal",first.kg,first.reps,first.rightKg,first.rightReps,first.seconds,Number(c.done),volume,c.setId);
+      db.prepare("UPDATE gym_sets SET kind=?,kg=?,reps=?,right_kg=?,right_reps=?,seconds=?,measure=?,measure_unit=?,done=?,volume=? WHERE id=?")
+        .run(values.length>1?"drop":"normal",first.kg,first.reps,first.rightKg,first.rightReps,first.seconds,first.measure,unit??null,Number(c.done),volume,c.setId);
       db.prepare("DELETE FROM gym_set_stages WHERE set_id=?").run(c.setId);
-      const insert = db.prepare("INSERT INTO gym_set_stages VALUES(?,?,?,?,?,?,?)");
-      values.slice(1).forEach((v,i)=>insert.run(c.setId,i+1,v.kg,v.reps,v.rightKg,v.rightReps,v.seconds));
+      const insert = db.prepare("INSERT INTO gym_set_stages(set_id,position,kg,reps,right_kg,right_reps,seconds,measure,measure_unit) VALUES(?,?,?,?,?,?,?,?,?)");
+      values.slice(1).forEach((v,i)=>insert.run(c.setId,i+1,v.kg,v.reps,v.rightKg,v.rightReps,v.seconds,v.measure,unit??null));
       break;
     }
     case "note":

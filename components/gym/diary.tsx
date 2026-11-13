@@ -36,7 +36,8 @@ export function Overview({
             {set.stages.map((stage,j)=><small key={j}>{setLabel(item.mode,stage)}</small>)}</div>:null)}</div></div>
         {item.note && <p className="gym-note"><b>本次动作心得</b>{item.note}</p>}
       </article>)}</div>)}</div>
-      {skipped.length>0 && <section className="summary-skipped"><h2>未训练</h2>{skipped.map(i=><p key={i.id}>{i.name}{i.note && <small> · 本次动作心得　{i.note}</small>}</p>)}</section>}
+      {skipped.length>0 && <section className="summary-skipped"><h2>未训练</h2>{skipped.map(i=><div key={i.id}>{i.sets.some(s=>s.seconds || s.measure!=null) ? <details><summary>{i.name}</summary>
+        {i.sets.map((s,j)=><small key={s.id}>第 {j+1} 组　{setLabel(i.mode,s)}　未勾选<br/></small>)}</details> : i.name}{i.note && <small> · 本次动作心得　{i.note}</small>}</div>)}</section>}
       <MuscleMap entries={work.muscleLoad} period="session" />
       {work.note && (
         <>
@@ -204,8 +205,7 @@ export function Diary({
                   {list.length > 0 && (
                     <>
                       <em>
-                        {list[0].name}
-                        {list.length > 1 ? " +" + (list.length - 1) : ""}
+                        {[...new Set(list.map(row=>row.name))].join("、")}
                       </em>
                       <small>
                         {Number(

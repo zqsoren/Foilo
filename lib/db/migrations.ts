@@ -3,6 +3,8 @@ import { gymCatalogUpdate } from "../gym/catalog-update";
 import { muscleLoadMigration } from "../gym/muscle-storage";
 import { curatedMigration } from "../gym/catalog-curated";
 
+import { historyImportMigration } from "../gym/history-migration";
+
 export const migrations = [
   {
     version: 1,
@@ -574,4 +576,5 @@ export const migrations = [
   },
   muscleLoadMigration,
   curatedMigration,
+  historyImportMigration,
 ] as const;

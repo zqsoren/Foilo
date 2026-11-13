@@ -24,7 +24,14 @@ export type Plan = {
   revision: number;
   items: PlanItem[];
 };
+export type CardioUnit = "km" | "层";
+export function cardioUnit(code?: string | null): CardioUnit | undefined {
+  if (code === "2311" || code === "3666") return "层";
+  if (code === "0684" || code === "0685" || code === "0798") return "km";
+}
 export type Values = {
+  measure?: number | null;
+  measureUnit?: CardioUnit | null;
   kg: number;
   reps: number;
   rightKg: number;
@@ -64,6 +71,7 @@ export type Summary = {
 };
 export type Dashboard = {
   plans: Plan[];
+  archivedPlans: { id: number; name: string; sessions: number }[];
   active: Workout | null;
   history: Summary[];
   muscleLoad: LoadEntry[];
@@ -89,7 +97,7 @@ export function capacity(mode: Mode, v: Values) {
   return Math.round(total * 100) / 100;
 }
 export function setLabel(mode: Mode, v: Values) {
-  if (mode === "time") return v.seconds + " 秒";
+  if (mode === "time") return [v.seconds ? v.seconds + " 秒" : "", v.measure != null && v.measureUnit ? v.measure + " " + v.measureUnit : ""].filter(Boolean).join(" · ") || "0 秒";
   if (mode === "sides")
     return (
       "左 " +

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { readPreviousExercise } from "@/app/gym/actions";
 import type { Command } from "@/lib/gym/commands";
-import { setLabel, totals, type Exercise, type Mode, type Workout } from "@/lib/gym/model";
+import { cardioUnit, setLabel, totals, type Exercise, type Mode, type Workout } from "@/lib/gym/model";
 import { Elapsed, modeLabels, Sheet, Thumb } from "./parts";
 import { TrainingSet } from "./training-set";
 
@@ -72,9 +72,9 @@ export function WorkoutLedger({ active,catalog,focused,focus,finish,minimize,app
           <PreviousSets exerciseId={item.exerciseId}/>
         </div>
         {item.note && <button className="gym-item-note" onClick={actions.note}>动作心得　{item.note}</button>}
-        <div className="ledger-columns"><span>组</span>{item.mode==="time" ? <span className="timed">时长（秒）</span> :
+        <div className="ledger-columns"><span>组</span>{item.mode==="time" ? <span className="timed">时长（秒）{cardioUnit(exercise?.code) && " / "+cardioUnit(exercise?.code)}</span> :
           <><span>{weightLabel[item.mode]}</span><span>次数</span></>}<span>完成</span></div>
-        {item.sets.map((row,i)=><TrainingSet key={row.id+":"+row.stages.length} row={row} number={i+1} mode={item.mode} busy={busy} canCopy={item.sets.length<30} message={message}
+        {item.sets.map((row,i)=><TrainingSet key={row.id+":"+row.stages.length} unit={cardioUnit(exercise?.code)} row={row} number={i+1} mode={item.mode} busy={busy} canCopy={item.sets.length<30} message={message}
           copy={()=>send({type:"copySet",...ref,setId:row.id})}
           save={(stages,done,after,quiet)=>send({type:"recordStages",...ref,setId:row.id,stages,done},after,quiet)}/>)}
         <button className="ledger-add" disabled={busy || item.sets.length>=30} onClick={()=>send({type:"addSet",...ref,itemId:item.id})}>＋ 添加一组</button>

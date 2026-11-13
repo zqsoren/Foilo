@@ -3,7 +3,7 @@ import Image from "next/image";
 import { GymNavigation } from "./navigation";
 import { Pencil } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { changeGym, readGym, readWorkout } from "@/app/gym/actions";
+import { changeGym, readGym, readPlanHistory, readWorkout } from "@/app/gym/actions";
 import { loginUrl } from "@/lib/login-routing";
 import type { Command } from "@/lib/gym/commands";
 import type {
@@ -53,6 +53,7 @@ export default function GymApp({
     [detail, setDetail] = useState<Workout | null>(null),
     [finished, setFinished] = useState(false);
   const [preview, setPreview] = useState<Plan | null>(null);
+  const [archive, setArchive] = useState<{name:string; rows:Awaited<ReturnType<typeof readPlanHistory>>} | null>(null);
   const [noteItemId, setNoteItemId] = useState<number | null>(null);
   const [focused, focus] = useState<number | null>(null);
   const writeQueue = useRef(Promise.resolve()),
@@ -188,7 +189,7 @@ export default function GymApp({
         (_, next) => {
           go("work");
           focus(
-            next.active?.items.find((i) => i.exerciseId === picked[0])?.id ??
+            next.active?.items.slice(active.items.length).find((i) => i.exerciseId === picked[0])?.id ??
               null,
           );
         },
@@ -284,6 +285,14 @@ export default function GymApp({
             >
               <span aria-hidden="true">＋</span><Image unoptimized src="/folio/gym-titles/new-plan.svg" alt="新建计划" width={67} height={16}/>
             </button>
+            {data.archivedPlans.length>0 && <details className="archived-plans"><summary>历史计划</summary>
+              {data.archivedPlans.map(p=><button key={p.id} disabled={busy} onClick={async()=>{
+                try {setBusy(true);setArchive({name:p.name,rows:await readPlanHistory(p.id)});} catch(e){report(e);} finally {setBusy(false);}
+              }}>{p.name}<small>{p.sessions} 次训练 ›</small></button>)}</details>}
+            {archive && <Sheet title={archive.name+" · 历史计划"} close={()=>setArchive(null)}>
+              {archive.rows.length===0 && <p>暂无已完成训练</p>}
+              {archive.rows.map(r=><button className="wide" key={r.id} onClick={()=>{setArchive(null);void openRecord(r.id);}}>{r.day}　{r.name} ›</button>)}
+            </Sheet>}
             {active && (
               <button className="gym-resume" onClick={() => go("work")}>
                 <span>{active.name} · 训练中</span>
@@ -299,11 +308,7 @@ export default function GymApp({
             editing={!!editId}
             catalog={catalog}
             selected={picked}
-            blocked={
-              view === "append"
-                ? (active?.items.map((i) => i.exerciseId) ?? [])
-                : []
-            }
+            blocked={[]}
             onToggle={toggle}
             busy={busy}
             navigate={go}
@@ -392,6 +397,10 @@ export default function GymApp({
             <button className="wide" onClick={() => openPicker("plan", true)}>
               选择动作
             </button>
+            {editId!==null && <button className="wide" disabled={busy} onClick={()=>{
+              const plan=data.plans.find(p=>p.id===editId);
+              if(plan) void send({type:"archivePlan",planId:plan.id,revision:plan.revision},()=>go("home"));
+            }}>设为历史计划</button>}
           </>
         )}
         {view === "work" && active && <WorkoutLedger active={active} catalog={byId} focused={focused} focus={focus}

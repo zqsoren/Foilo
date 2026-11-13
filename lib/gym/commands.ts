@@ -14,6 +14,8 @@ const item = z.object({
 });
 const current = { workoutId: id, revision: rev };
 export const gymCommand = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("archivePlan"), planId:id, revision:rev }),
+  z.object({ type: z.literal("cardioHeartRate"), ...current, setId:id, bpm:z.number().positive().max(300) }),
   z.object({ type: z.literal("itemNote"), ...current, itemId:id, text:z.string().trim().max(2000) }),
   z.object({
     type: z.literal("savePlan"),
@@ -49,7 +51,7 @@ export const gymCommand = z.discriminatedUnion("type", [
   z.object({ type: z.literal("deleteHistory"), ...current }),
   z.object({
     type: z.literal("recordStages"), ...current, setId: id, done: z.boolean(),
-    stages: z.array(z.object({ kg, reps, rightKg: kg, rightReps: reps, seconds: z.number().int().min(0).max(86400) })).min(1).max(30),
+    stages: z.array(z.object({ kg, reps, rightKg: kg, rightReps: reps, measure:z.number().nonnegative().max(100000).nullable().optional(), seconds: z.number().int().min(0).max(86400) })).min(1).max(30),
   }),
   z.object({ type: z.literal("finish"), ...current }),
   z.object({ type: z.literal("discard"), ...current }),

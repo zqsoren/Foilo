@@ -10,6 +10,14 @@ export async function readGym(month: string) {
   if (!user) throw Error("请重新登录");
   return dashboard(sqlite, user.id, month);
 }
+export async function readPlanHistory(planId:number) {
+  const user=await getCurrentUser();
+  if (!user || !Number.isSafeInteger(planId)) throw Error("无法读取计划");
+  return sqlite.prepare(`SELECT w.id,w.day,w.name FROM gym_workouts w JOIN gym_plans p ON p.id=w.plan_id
+    WHERE w.user_id=? AND p.user_id=w.user_id AND p.archived=1 AND p.id=? AND w.finished IS NOT NULL ORDER BY w.started DESC,w.id DESC`)
+    .all(user.id,planId) as {id:number;day:string;name:string}[];
+}
+
 export async function readWorkout(id: number) {
   const user = await getCurrentUser();
   if (!user || !Number.isSafeInteger(id)) throw Error("无法读取这次训练");

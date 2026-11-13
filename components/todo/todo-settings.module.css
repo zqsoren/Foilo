@@ -2,7 +2,7 @@
 .header { display: flex; align-items: center; gap: 24px; padding: 20px 0; }
 .header a { text-decoration: none; color: #6a6a6a; font-size: 13px; }
 .header h1 { font-size: 17px; margin: 0; }
-.intro { padding: 10px 2px 19px; }
+.intro { padding: 17px 2px 34px; }
 .intro > span { font-size: 10px; letter-spacing: 1.8px; color: #8c8c8c; }
 .intro h2 { font-size: 23px; letter-spacing: -.5px; margin: 8px 0; }
 .intro p { color: #7b7b7b; font-size: 12px; line-height: 1.8; margin: 0; }

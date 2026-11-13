@@ -1,11 +1,16 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { type TodoEvent } from "@/lib/todo/model";
 import { initialSlot } from "@/lib/todo/mobile-time";
 import styles from "./todo.module.css";
-export function InlineSchedule({ date, events, busy, onSave }: { date: string; events: TodoEvent[]; busy: boolean; onSave: (event: TodoEvent) => Promise<boolean> }) {
+export function InlineSchedule({ date, events, onOpenChange, busy, onSave }: { onOpenChange: (open: boolean) => void; date: string; events: TodoEvent[]; busy: boolean; onSave: (event: TodoEvent) => Promise<boolean> }) {
   const [draft, setDraft] = useState<TodoEvent | null>(null);
   const lock = useRef(false), titleRef = useRef<HTMLInputElement>(null);
+  const open = draft !== null;
+  useEffect(() => {
+    onOpenChange(open);
+    return () => onOpenChange(false);
+  }, [open, onOpenChange]);
   function activate() {
     if (draft) return;
     setDraft({ id: crypto.randomUUID(), title: "", notes: "", ...initialSlot(date, events), completed: false, fixed: false });

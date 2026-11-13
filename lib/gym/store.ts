@@ -1,3 +1,4 @@
+import curated from "./catalog.curated.json";
 import type Database from "better-sqlite3";
 import { epochToLocalInput } from "../life-date";
 import {
@@ -19,7 +20,6 @@ import { readMuscleLoad, snapshotMuscles } from "./muscle-storage";
 export function gymMonth(now = Date.now()) {
   return epochToLocalInput(now).slice(0, 7);
 }
-import curated from "./catalog.curated.json";
 const catalogOrder = new Map(curated.map((e,i)=>[e.dbId,{index:i,english:e.english}]));
 
 export function exercises(db: Database.Database) {

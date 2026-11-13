@@ -282,7 +282,7 @@ export default function GymApp({
               className="primary new-plan"
               onClick={() => openPicker("plan")}
             >
-              <span aria-hidden="true">＋</span><Image unoptimized src="/folio/gym-titles/new-plan.svg" alt="新建计划" width={68} height={20}/>
+              <span aria-hidden="true">＋</span><Image unoptimized src="/folio/gym-titles/new-plan.svg" alt="新建计划" width={67} height={16}/>
             </button>
             {active && (
               <button className="gym-resume" onClick={() => go("work")}>
@@ -426,10 +426,10 @@ export default function GymApp({
         {navVisible && (
           <GymNavigation current={isDiary ? "diary" : "home"} navigate={go} />
         )}
-        {preview && <Sheet title={preview.name} close={()=>setPreview(null)}>
+        {preview && <Sheet iconClose title={preview.name} close={()=>setPreview(null)}>
           <div className="plan-preview">
             <small>{preview.items.length} 个动作 | {preview.items.reduce((n,i)=>n+i.sets,0)} 组训练</small>
-            {preview.items.map(i=><article key={i.exerciseId}><Thumb exercise={byId.get(i.exerciseId)}/><div><b>{byId.get(i.exerciseId)?.name}</b><small>{i.sets} 组</small></div></article>)}
+            {preview.items.map(i=><article key={i.exerciseId}><Thumb exercise={byId.get(i.exerciseId)}/><div><b>{byId.get(i.exerciseId)?.name}</b><small>{byId.get(i.exerciseId)?.region}</small></div><span className="preview-sets"><b>{i.sets}</b> 组</span></article>)}
           </div>
           <button disabled={busy} className="primary wide" aria-label="开始训练" onClick={()=>{setPreview(null);begin(preview);}}>STAR　→</button>
         </Sheet>}

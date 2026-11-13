@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { ChevronDown, MoreHorizontal } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { readPreviousExercise } from "@/app/gym/actions";
 import type { Command } from "@/lib/gym/commands";
 import { setLabel, totals, type Exercise, type Mode, type Workout } from "@/lib/gym/model";
@@ -68,8 +68,7 @@ export function WorkoutLedger({ active,catalog,focused,focus,finish,minimize,app
       </nav>
       <div key={item.id} className="ledger-main">
         <div className="ledger-exercise">
-          <Thumb exercise={exercise}/><h2>{item.name}</h2>
-          <button className="ledger-info" aria-label="动作信息" onClick={()=>setInfo(true)}><MoreHorizontal size={20}/></button>
+          <button className="exercise-info-art" aria-label="动作信息" onClick={()=>setInfo(true)}><Thumb exercise={exercise}/></button><h2>{item.name}</h2>
           <PreviousSets exerciseId={item.exerciseId}/>
         </div>
         {item.note && <button className="gym-item-note" onClick={actions.note}>动作心得　{item.note}</button>}

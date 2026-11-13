@@ -37,11 +37,13 @@ export function Sheet({
   close,
   children,
   message,
+  iconClose = false,
 }: {
   title: string;
   close: () => void;
   children: ReactNode;
   message?: string;
+  iconClose?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -61,7 +63,7 @@ export function Sheet({
       <div className="sheet-heading">
         <h2>{title}</h2>
         <button onClick={close} aria-label="关闭弹层">
-          关闭
+          {iconClose ? "×" : "关闭"}
         </button>
       </div>
       {children}

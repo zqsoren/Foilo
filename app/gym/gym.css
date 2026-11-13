@@ -776,7 +776,7 @@ html:has(.gym) {
 .gym .gym-switch button { flex:1; min-height:0; padding:0; border-radius:22px; background:transparent; font-size:14px; font-weight:600; color:#666; }
 .gym .gym-switch button[aria-pressed=true] { color:#111; background:#e6e6e6; }
 .gym-month { gap:0; height:50px; margin:16px 0 10px; align-items:center; }
-.gym-month b { margin:0; font:700 38px/50px Inter,-apple-system,sans-serif; }.gym-month b small { font-size:17px; color:#222; margin:0 8px 0 12px; font-weight:500; }
+.gym-month b { margin:0; font:700 38px/50px Inter,-apple-system,sans-serif; letter-spacing:-1.5px; }.gym-month b small { font-size:17px; color:#222; margin:0 4px 0 8px; font-weight:500; letter-spacing:normal; }
 .gym .gym-month button { min-height:38px; width:38px; padding:0; background:transparent; font-size:14px; color:#222; }.gym-month>span { margin-left:auto; padding-right:6px; color:#666; font-size:14px; }
 .gym-cal { border:0; padding:0; grid-template-rows:33px repeat(6,58px); }
 .gym-cal>small { border-bottom:1px solid #ddd; font-size:13px; padding:7px 0; }
@@ -805,7 +805,7 @@ html:has(.gym) {
 .set-dots { display:flex; flex-wrap:wrap; gap:3px; }.set-dots i { width:8px; height:8px; border-radius:50%; background:#ccc; }.set-dots i[data-done="1"] { background:#242424; }
 .summary-columns .gym-note { margin-top:8px; font-size:10px; }.gym-note b { margin-right:4px; }.summary-skipped { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; padding:12px; border-radius:12px; background:#f5f5f5; }
 .gym .summary-skipped h2,.summary-skipped p { margin:0; font-size:13px; }
-.summary-actions { display:flex; gap:16px; margin-top:20px; }.summary-actions button { min-height:49px; flex:1; }
+.gym-summary-actions { display:flex; gap:16px; margin-top:20px; }.gym-summary-actions button { min-height:49px; flex:1; }
 @media (max-width:360px) { .library-body { grid-template-columns:80px minmax(0,1fr); gap:10px; }.gym .exercise-card { grid-template-columns:56px minmax(0,1fr); }.exercise-card .gym-thumb { width:56px; height:56px; } }
 
 .exercise-details h1 { font-family:"Folio Shuhei","PingFang SC",sans-serif; }

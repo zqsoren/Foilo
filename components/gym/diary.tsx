@@ -44,7 +44,7 @@ export function Overview({
           <p className="gym-note">{work.note}</p>
         </>
       )}
-      <div className="summary-actions"><button onClick={back}>训练日记</button>
+      <div className="gym-summary-actions"><button onClick={back}>训练日记</button>
         <button className="primary" onClick={justFinished ? home : remove}>{justFinished ? "回到首页" : "删除记录"}</button></div>
     </>
   );

@@ -8,7 +8,7 @@ import { WebAppRegistration } from "@/components/todo/web-app-registration";
 import { todoWebAppMetadata } from "@/lib/todo/web-app";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { ...todoWebAppMetadata, title: "DIGTODO", description: "说出今天要做的事，让 AI 帮你安排时间。" };
+export const metadata: Metadata = { ...todoWebAppMetadata, title: "在侧TODO", description: "说出今天要做的事，让 AI 帮你安排时间。" };
 
 export default async function TodoPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
   const isChat = (await searchParams).tab === "chat";

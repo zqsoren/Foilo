@@ -16,7 +16,7 @@ export async function generateMetadata({ searchParams }: LoginProps): Promise<Me
   return {
     ...(mobile && todoWebAppMetadata),
     title: "在侧 Folio · 登录",
-    icons: { ...(mobile && todoWebAppMetadata.icons), icon: "/folio/icon.svg" },
+    icons: mobile ? todoWebAppMetadata.icons : { icon: "/folio/icon.svg" },
   };
 }
 

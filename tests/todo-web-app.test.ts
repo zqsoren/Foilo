@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
+import { todoWebAppMetadata } from "../lib/todo/web-app";
 import { describe, expect, it, vi } from "vitest";
 import { isMobileTodoDestination, loginDestination, loginUrl } from "../lib/login-routing";
 
@@ -20,7 +21,14 @@ describe("桌面启动与网络恢复", () => {
   it("固定日程入口、独立窗口及不透明纯色图标配置", () => {
     const manifest = JSON.parse(readFileSync("public/todo.webmanifest", "utf8"));
     expect(manifest).toMatchObject({ id: "/todo", start_url: "/todo", scope: "/", display: "standalone" });
-    for (const icon of manifest.icons) expect(readFileSync(`public${icon.src}`).subarray(1, 4).toString()).toBe("PNG");
+    expect(manifest.name).toBe("在侧TODO");
+    expect(manifest.short_name).toBe(todoWebAppMetadata.appleWebApp.title);
+    expect(manifest.icons.some((icon: {purpose: string}) => icon.purpose === "maskable")).toBe(true);
+    for (const icon of [...manifest.icons, ...todoWebAppMetadata.icons.apple.map(icon => ({...icon, src: icon.url}))]) {
+      const png = readFileSync("public" + new URL(icon.src, "https://example.test").pathname);
+      expect(png.subarray(1,4).toString()).toBe("PNG");
+      expect(png.readUInt32BE(16) + "x" + png.readUInt32BE(20)).toBe(icon.sizes);
+    }
     expect(readFileSync("public/todo-icons/apple-touch-icon.png").readUInt32BE(16)).toBe(180);
   });
   it("登录只能返回受支持的站内入口，阻止外站跳转", () => {

@@ -1,0 +1,160 @@
+{
+  "date": "2026-11-16",
+  "fileName": "在侧-资产",
+  "fileKey": null,
+  "pages": {
+    "screens": "0:1",
+    "widgets": "2:150"
+  },
+  "roots": [
+    {
+      "id": "1:3",
+      "name": "01 · 数据概览",
+      "width": 1912,
+      "height": 1320,
+      "fonts": [
+        "{\"family\":\"Alimama ShuHeiTi\",\"style\":\"Bold\"}",
+        "{\"family\":\"Microsoft YaHei\",\"style\":\"Regular\"}",
+        "{\"family\":\"Bahnschrift\",\"style\":\"Regular\",\"variationSettings\":{\"wght\":400,\"wdth\":100}}"
+      ],
+      "out": [],
+      "instances": [
+        {
+          "id": "2:157",
+          "component": {
+            "id": "2:151",
+            "name": "资产摘要 · 1830×200",
+            "key": "c50f6a6d19fc1eee13fdf77e57b29dca927d53f1"
+          }
+        },
+        {
+          "id": "2:174",
+          "component": {
+            "id": "2:152",
+            "name": "资产变化 · 1215×420",
+            "key": "906d95eccb5c5d105cf8034ee6e2faac8c06d55b"
+          }
+        },
+        {
+          "id": "2:204",
+          "component": {
+            "id": "2:153",
+            "name": "资产构成 · 600×420",
+            "key": "1ddeaf74738077d3189466822cd2c56a51186f85"
+          }
+        },
+        {
+          "id": "2:227",
+          "component": {
+            "id": "2:154",
+            "name": "账户分布 · 600×420",
+            "key": "e1b45390f120b4e406ca69edf102bd80292b69c6"
+          }
+        },
+        {
+          "id": "2:249",
+          "component": {
+            "id": "2:155",
+            "name": "币种分布 · 600×420",
+            "key": "dc871ede23ba88819707afeda628974c72b39b14"
+          }
+        },
+        {
+          "id": "2:267",
+          "component": {
+            "id": "2:156",
+            "name": "负债概况 · 600×420",
+            "key": "fdb532506d329d18f71d1ef666347173ba08b74d"
+          }
+        }
+      ]
+    },
+    {
+      "id": "1:16",
+      "name": "02 · 数据录入",
+      "width": 1912,
+      "height": 1000,
+      "fonts": [
+        "{\"family\":\"Alimama ShuHeiTi\",\"style\":\"Bold\"}",
+        "{\"family\":\"Microsoft YaHei\",\"style\":\"Regular\"}",
+        "{\"family\":\"Bahnschrift\",\"style\":\"Regular\",\"variationSettings\":{\"wght\":400,\"wdth\":100}}"
+      ],
+      "out": [],
+      "instances": []
+    },
+    {
+      "id": "2:9",
+      "name": "03 · 资产总览",
+      "width": 1912,
+      "height": 1000,
+      "fonts": [
+        "{\"family\":\"Alimama ShuHeiTi\",\"style\":\"Bold\"}",
+        "{\"family\":\"Microsoft YaHei\",\"style\":\"Regular\"}",
+        "{\"family\":\"Bahnschrift\",\"style\":\"Regular\",\"variationSettings\":{\"wght\":400,\"wdth\":100}}"
+      ],
+      "out": [],
+      "instances": []
+    },
+    {
+      "id": "2:455",
+      "name": "02b · 数据录入 · 投资",
+      "width": 1912,
+      "height": 1000,
+      "fonts": [
+        "{\"family\":\"Alimama ShuHeiTi\",\"style\":\"Bold\"}",
+        "{\"family\":\"Microsoft YaHei\",\"style\":\"Regular\"}",
+        "{\"family\":\"Bahnschrift\",\"style\":\"Regular\",\"variationSettings\":{\"wght\":400,\"wdth\":100}}"
+      ],
+      "out": [],
+      "instances": []
+    },
+    {
+      "id": "2:526",
+      "name": "02c · 数据录入 · 负债",
+      "width": 1912,
+      "height": 1000,
+      "fonts": [
+        "{\"family\":\"Alimama ShuHeiTi\",\"style\":\"Bold\"}",
+        "{\"family\":\"Microsoft YaHei\",\"style\":\"Regular\"}",
+        "{\"family\":\"Bahnschrift\",\"style\":\"Regular\",\"variationSettings\":{\"wght\":400,\"wdth\":100}}"
+      ],
+      "out": [],
+      "instances": []
+    },
+    {
+      "id": "2:22",
+      "name": "网页小组件 · 主组件目录",
+      "width": 1912,
+      "height": 1420,
+      "fonts": [
+        "{\"family\":\"Alimama ShuHeiTi\",\"style\":\"Bold\"}",
+        "{\"family\":\"Microsoft YaHei\",\"style\":\"Regular\"}",
+        "{\"family\":\"Bahnschrift\",\"style\":\"Regular\",\"variationSettings\":{\"wght\":400,\"wdth\":100}}"
+      ],
+      "out": [],
+      "instances": []
+    },
+    {
+      "id": "2:603",
+      "name": "新建银行账户 · 弹窗",
+      "width": 600,
+      "height": 520,
+      "fonts": [
+        "{\"family\":\"Alimama ShuHeiTi\",\"style\":\"Bold\"}",
+        "{\"family\":\"Microsoft YaHei\",\"style\":\"Regular\"}"
+      ],
+      "out": [],
+      "instances": []
+    }
+  ],
+  "mainComponents": [
+    "2:151",
+    "2:152",
+    "2:153",
+    "2:154",
+    "2:155",
+    "2:156"
+  ],
+  "prototypeBindingsAdded": 19,
+  "status": "首稿待评审；静态原型，未接真实数据"
+}

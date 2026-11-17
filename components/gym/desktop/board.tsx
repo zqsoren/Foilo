@@ -190,7 +190,10 @@ export function GymDesktop({
     >
       <div className="gx-content">
         <header className="gx-toolbar">
-          <strong className="gx-user">{name}</strong>
+          <div className="gx-identity">
+            <strong className="gx-user">{name}</strong>
+            <span className="gx-module-name">健身</span>
+          </div>
           <nav className="gx-tabs" aria-label="健身页面">
             <i
               style={{
@@ -220,7 +223,9 @@ export function GymDesktop({
               </label>
             )}
             <button
-              className="gx-edit-button"
+              className={
+                "gx-edit-button" + (view === "plans" ? " gx-create-plan" : "")
+              }
               onClick={() => (view === "board" ? begin() : setCreating(true))}
             >
               {view === "board" ? "编辑页面" : "新建计划"}

@@ -1,5 +1,5 @@
 /* Fixed component canvases from “网页端所有小组件”, read 2026-11-17.
-   The board changes its column count before scaling these canvases. */
+   Responsive columns scale each canvas and its typography together. */
 .gx-widget {
   position: relative;
   overflow: hidden;
@@ -19,7 +19,7 @@
   left: 24px;
   top: 17px;
   margin: 0;
-  font: 600 20px/24px var(--widget-heading);
+  font: 600 16px/24px var(--widget-heading);
   display: flex;
   align-items: center;
   gap: 4px;

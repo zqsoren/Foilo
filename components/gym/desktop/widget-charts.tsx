@@ -4,6 +4,77 @@ import { Empty } from "./shared";
 
 type Point = { day: string; volume: number };
 
+/** The training-detail master uses a 654 × 147 plot below its section title. */
+export function TrainingTrend({ points }: { points: Point[] }) {
+  if (!points.length) return <Empty />;
+  const peak = Math.max(1, ...points.map((p) => p.volume)) * 1.2;
+  const step = 10 ** Math.floor(Math.log10(peak));
+  const max = Math.ceil(peak / step) * step;
+  const x = (i: number) =>
+    71 + (points.length === 1 ? 265.5 : (i * 531) / (points.length - 1));
+  const y = (volume: number) => 109 - (volume / max) * 93;
+  return (
+    <div
+      className="gx-training-trend"
+      role="img"
+      aria-label={points
+        .map((p) => `${p.day} ${number(p.volume)} kg`)
+        .join("，")}
+    >
+      <svg viewBox="0 0 654 147" preserveAspectRatio="none" aria-hidden>
+        {[0, 0.5, 1].map((v) => (
+          <line
+            key={v}
+            x1="40"
+            x2="654"
+            y1={y(max * v)}
+            y2={y(max * v)}
+            stroke="#E6E6E6"
+            strokeWidth="1"
+          />
+        ))}
+        <polyline
+          points={points.map((p, i) => `${x(i)},${y(p.volume)}`).join(" ")}
+          fill="none"
+          stroke="#686862"
+          strokeWidth="1.5"
+        />
+        {points.map((p, i) => (
+          <circle key={i} cx={x(i)} cy={y(p.volume)} r="4" fill="#686868" />
+        ))}
+      </svg>
+      {[0, 0.5, 1].map((v) => (
+        <span
+          className="gx-training-axis"
+          key={v}
+          style={{ top: y(max * v) - 8 }}
+        >
+          {number(max * v)}
+        </span>
+      ))}
+      {points.map((p, i) => (
+        <div key={i}>
+          <span
+            className="gx-training-value"
+            style={{
+              left: `calc(${(x(i) / 654) * 100}% - 9px)`,
+              top: y(p.volume) - 23,
+            }}
+          >
+            {number(p.volume)}
+          </span>
+          <span
+            className="gx-training-day"
+            style={{ left: `calc(${(x(i) / 654) * 100}% - 19px)` }}
+          >
+            {dateLabel(p.day)}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /** Geometry follows the fixed 600px widget masters; values remain live data. */
 export function MiniTrend({ points }: { points: Point[] }) {
   if (!points.length) return <Empty />;

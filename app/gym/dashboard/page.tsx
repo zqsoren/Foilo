@@ -9,6 +9,7 @@ import "./desktop.css";
 import "./widgets.css";
 import "./editor.css";
 import "./picker.css";
+import "./details.css";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "健身 · 在侧 Folio",

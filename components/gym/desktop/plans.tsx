@@ -16,7 +16,8 @@ import {
   type PlanItem,
   type Workout,
 } from "@/lib/gym/model";
-import { Chart, Empty } from "./shared";
+import { Empty } from "./shared";
+import { TrainingTrend } from "./widget-charts";
 export function PlanView({
   data,
   catalog,
@@ -72,6 +73,9 @@ export function PlanView({
       [...allSeries].reverse().find((r) => r.session.day === selectedDay) ??
       last;
   const wid = selected?.session.id;
+  const sameDay = allSeries.filter(
+    (r) => r.session.day === selected?.session.day,
+  );
   const loading = !!wid && detail?.id !== wid && failedId !== wid;
   useEffect(() => {
     let cancelled = false;
@@ -122,10 +126,9 @@ export function PlanView({
     }
   }
   return (
-    <div className="gx-plan-view">
+    <div className={"gx-plan-view" + (creating ? " gx-plan-creating" : "")}>
       <aside className="gx-card gx-plan-list">
         <h2>我的计划</h2>
-        <p className="gx-muted">全部计划</p>
         <button className="gx-outline" onClick={onCreate}>
           ＋ 新建计划
         </button>
@@ -146,11 +149,11 @@ export function PlanView({
                 aria-pressed={!creating && planId === p.id}
                 onClick={() => selectPlan(p.id)}
               >
-                <strong>{p.name}</strong>
+                <strong title={p.name}>{p.name}</strong>
                 <small>
                   {p.items.length} 个动作{p.archived ? " · 已归档" : ""} ·{" "}
                   {data.sessions.find((w) => w.planId === p.id)
-                    ? "最近 " +
+                    ? "最近训练 " +
                       dateLabel(
                         data.sessions.find((w) => w.planId === p.id)!.day,
                       )
@@ -233,8 +236,7 @@ export function PlanView({
           </>
         ) : (
           <>
-            <p className="gx-muted">选择动作查看个人训练记录</p>
-            <div>
+            <div className="gx-action-list">
               {[
                 ...new Set([
                   ...(plan?.items.map((i) => i.exerciseId) ?? []),
@@ -256,18 +258,18 @@ export function PlanView({
                     onClick={() => {
                       setExerciseId(id);
                       setSelectedDay("");
+                      setSelectedSessionId(0);
                     }}
                   >
                     <Thumb exercise={e} />
                     <span>
                       <small>主练 · {e?.region}</small>
-                      <strong>{e?.name ?? "历史动作"}</strong>
+                      <strong title={e?.name}>{e?.name ?? "历史动作"}</strong>
                     </span>
                   </button>
                 );
               })}
             </div>
-            <small className="gx-muted">历史数据以当前计划为范围</small>
           </>
         )}
       </section>
@@ -349,49 +351,49 @@ export function PlanView({
           </>
         ) : ex ? (
           <>
-            <header>
-              <div>
-                <h1>{ex.name}</h1>
-                <p className="gx-muted">{plan?.name} 内的个人训练记录</p>
+            <header className="gx-training-header">
+              <h1 title={ex.name}>{ex.name}</h1>
+              <div className="gx-detail-controls">
+                <label>
+                  <span className="gx-visually-hidden">月份</span>
+                  <input
+                    aria-label="详情月份"
+                    type="month"
+                    value={month}
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        setMonth(e.target.value);
+                        setSelectedDay("");
+                        setSelectedSessionId(0);
+                      }
+                    }}
+                  />
+                </label>
+                <label>
+                  <span className="gx-visually-hidden">计划版本</span>
+                  <select
+                    aria-label="计划版本"
+                    value={version}
+                    onChange={(e) => setVersion(e.target.value)}
+                  >
+                    <option value="all">全部版本</option>
+                    {versions.map((v) => (
+                      <option key={String(v)} value={String(v)}>
+                        {v === null ? "历史版本未记录" : "版本 " + v}
+                      </option>
+                    ))}
+                  </select>
+                </label>
               </div>
-              <label>
-                月份
-                <input
-                  aria-label="详情月份"
-                  type="month"
-                  value={month}
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      setMonth(e.target.value);
-                      setSelectedDay("");
-                      setSelectedSessionId(0);
-                    }
-                  }}
-                />
-              </label>
             </header>
-            <label className="gx-version">
-              计划版本
-              <select
-                aria-label="计划版本"
-                value={version}
-                onChange={(e) => setVersion(e.target.value)}
-              >
-                <option value="all">全部版本</option>
-                {versions.map((v) => (
-                  <option key={String(v)} value={String(v)}>
-                    {v === null ? "历史版本未记录" : "版本 " + v}
-                  </option>
-                ))}
-              </select>
-            </label>
             <div className="gx-detail-metrics">
               {[
                 ["最近容量", last ? number(last.volume) : "–", "kg"],
                 [
                   "较上次",
                   last && previous
-                    ? number(last.volume - previous.volume)
+                    ? (last.volume > previous.volume ? "+" : "") +
+                      number(last.volume - previous.volume)
                     : "–",
                   "kg",
                 ],
@@ -408,16 +410,18 @@ export function PlanView({
             </div>
             <div className="gx-detail-middle">
               <div>
-                <h2>每次训练容量</h2>
-                <p className="gx-muted">完成组外部容量 · kg</p>
-                <Chart
+                <h2>训练容量</h2>
+                <TrainingTrend
                   points={completed
                     .slice(-8)
                     .map((r) => ({ day: r.session.day, volume: r.volume }))}
                 />
               </div>
               <div>
-                <h2>这个动作，哪天练了</h2>
+                <div className="gx-training-calendar-heading">
+                  <h2>训练日历</h2>
+                  <span>{Number(month.slice(5))} 月</span>
+                </div>
                 <div className="gx-record-calendar">
                   {"一二三四五六日".split("").map((d) => (
                     <b key={d}>{d}</b>
@@ -454,31 +458,30 @@ export function PlanView({
                     );
                   })}
                 </div>
-                <small className="gx-muted">
+                <small className="gx-visually-hidden">
                   深灰：完成组 · 浅灰：零完成组
                 </small>
               </div>
             </div>
             <div className="gx-detail-bottom">
               <div>
-                <h2>
-                  {selected
-                    ? dateLabel(selected.session.day) + " · 逐组记录"
-                    : "逐组记录"}
-                </h2>
-                {selected && (
-                  <label className="gx-version">
-                    当日训练
-                    <select
-                      aria-label="当日训练场次"
-                      value={selected.session.id}
-                      onChange={(e) =>
-                        setSelectedSessionId(Number(e.target.value))
-                      }
-                    >
-                      {allSeries
-                        .filter((r) => r.session.day === selected.session.day)
-                        .map((r) => (
+                <div className="gx-record-heading">
+                  <h2>
+                    {selected
+                      ? dateLabel(selected.session.day) + " · 逐组记录"
+                      : "逐组记录"}
+                  </h2>
+                  {selected && sameDay.length > 1 && (
+                    <label className="gx-version">
+                      <span className="gx-visually-hidden">当日训练</span>
+                      <select
+                        aria-label="当日训练场次"
+                        value={selected.session.id}
+                        onChange={(e) =>
+                          setSelectedSessionId(Number(e.target.value))
+                        }
+                      >
+                        {sameDay.map((r) => (
                           <option key={r.session.id} value={r.session.id}>
                             {r.session.name} ·{" "}
                             {new Date(r.session.started).toLocaleTimeString(
@@ -491,35 +494,46 @@ export function PlanView({
                             )}
                           </option>
                         ))}
-                    </select>
-                  </label>
-                )}
-                {loading ? (
-                  <Empty>正在读取…</Empty>
-                ) : recordItems.length ? (
-                  recordItems.map((i) => (
-                    <div key={i.id}>
-                      {i.sets
-                        .filter((s) => s.done)
-                        .map((s, j) => (
-                          <p key={s.id}>
-                            ● 第 {j + 1} 组 <span>{setLabel(i.mode, s)}</span>
-                            {s.stages.map((v, k) => (
-                              <small key={k}>↳ {setLabel(i.mode, v)}</small>
-                            ))}
-                          </p>
-                        ))}
-                      {!i.sets.some((s) => s.done) && (
-                        <Empty>本次该动作零完成组</Empty>
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <Empty />
-                )}
+                      </select>
+                    </label>
+                  )}
+                </div>
+                <div className="gx-detail-records">
+                  {loading ? (
+                    <Empty>正在读取…</Empty>
+                  ) : recordItems.length ? (
+                    recordItems.map((i) => (
+                      <div key={i.id} className="gx-record-instance">
+                        {i.sets
+                          .filter((s) => s.done)
+                          .map((s, j) => (
+                            <div key={s.id} className="gx-detail-set">
+                              <i className="gx-set-dot" aria-hidden />
+                              <span className="gx-set-index">
+                                第 {j + 1} 组
+                              </span>
+                              <span className="gx-set-value">
+                                {setLabel(i.mode, s)}
+                              </span>
+                              {s.stages.map((v, k) => (
+                                <small className="gx-detail-stage" key={k}>
+                                  ↳ {setLabel(i.mode, v)}
+                                </small>
+                              ))}
+                            </div>
+                          ))}
+                        {!i.sets.some((s) => s.done) && (
+                          <Empty>本次该动作零完成组</Empty>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <Empty />
+                  )}
+                </div>
               </div>
-              <div>
-                <h2>这次的动作心得</h2>
+              <div className="gx-record-notes">
+                <h2>动作心得</h2>
                 {recordItems.some((i) => i.note) ? (
                   recordItems
                     .filter((i) => i.note)

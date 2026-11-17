@@ -1,0 +1,431 @@
+/* 02 · 训练详情 (56:10085), latest Figwright read 2026-11-17. */
+.gx-identity {
+  min-width: 0;
+  align-self: start;
+  margin-top: 44px;
+  padding-left: 14px;
+}
+.gx-identity .gx-user {
+  display: block;
+  padding-left: 0;
+  line-height: 31px;
+}
+.gx-module-name {
+  display: block;
+  margin-top: 3px;
+  font:
+    12px/18px "Microsoft YaHei",
+    "PingFang SC",
+    sans-serif;
+  color: #6e6e6e;
+}
+.gx-visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.gx .gx-create-plan {
+  height: 29px;
+  padding: 5px 9px;
+  border-radius: 7px;
+  background: #606060cc;
+  color: white;
+  font:
+    600 14px/19px "PingFang SC",
+    "Microsoft YaHei",
+    sans-serif;
+}
+.gx-toolbar .gx-search {
+  width: min(218px, 15vw);
+  height: 28px;
+  padding-inline: 12px;
+  gap: 12px;
+  border-color: #e4e4e7;
+  background: #f2f2f2;
+}
+.gx-search > svg {
+  width: 20px;
+  height: 20px;
+}
+.gx-search input {
+  padding: 0;
+  font:
+    10px/14px "PingFang SC",
+    "Microsoft YaHei",
+    sans-serif;
+  letter-spacing: 0.5px;
+}
+.gx-plan-view > .gx-card {
+  border: 0;
+  box-shadow:
+    inset 0 0 0 0.5px #e6e6e4,
+    var(--gx-shadow);
+}
+.gx-plan-view > .gx-plan-list > h2,
+.gx-plan-view > .gx-plan-actions > h2 {
+  font:
+    700 18px/26px "Folio Shuhei",
+    "Microsoft YaHei",
+    sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gx-plan-list > .gx-outline {
+  height: 36px;
+  margin-top: 14px;
+  margin-bottom: 22px;
+  border-color: #d5d5d5 !important;
+  border-radius: 7px;
+  font:
+    14px/18px "Microsoft YaHei",
+    "PingFang SC",
+    sans-serif;
+}
+.gx-plan-list > div > button {
+  padding: 8px 12px 15px;
+  margin-bottom: 17px;
+  border-radius: 8px;
+}
+.gx-plan-list strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gx-plan-list small {
+  margin-top: 9px;
+  line-height: 16px;
+}
+.gx-plan-view:not(.gx-plan-creating) > .gx-card {
+  height: 640px;
+  min-height: 0;
+  max-height: none;
+}
+.gx-action-list {
+  margin-top: 61px;
+}
+.gx-plan-actions .gx-action-row {
+  align-items: start;
+  min-height: 81px;
+  margin: 0 -12px 17px;
+  padding: 6px 12px !important;
+  gap: 14px;
+  border-radius: 8px;
+}
+.gx-plan-actions .gx-action-row .gym-thumb {
+  flex: none;
+  width: 66px;
+  height: 66px;
+}
+.gx-action-row > span:last-child {
+  min-width: 0;
+  padding-top: 4px;
+}
+.gx-action-row small {
+  font:
+    12px/16px "Microsoft YaHei",
+    "PingFang SC",
+    sans-serif;
+}
+.gx-action-row strong {
+  margin-top: 9px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gx-plan-view:not(.gx-plan-creating) > .gx-plan-detail {
+  padding: 20px 24px 36px;
+}
+.gx-training-header {
+  height: 65px;
+}
+.gx-training-header > h1 {
+  min-width: 0;
+  font-size: 26px;
+  line-height: 34px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gx-detail-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.gx-detail-controls input,
+.gx-detail-controls select {
+  max-width: 150px;
+  height: 28px;
+  padding: 3px 7px;
+  font-size: 11px;
+  color: #777;
+}
+.gx-detail-metrics {
+  height: 89px;
+  margin: 0;
+  padding: 16px 0 3px;
+  border-color: #e6e6e6;
+}
+.gx-detail-metrics small {
+  display: block;
+  font:
+    12px/16px "Microsoft YaHei",
+    "PingFang SC",
+    sans-serif;
+}
+.gx-detail-metrics p {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 10px;
+}
+.gx-detail-metrics strong {
+  font-size: 34px;
+  line-height: 42px;
+}
+.gx-detail-middle,
+.gx-detail-bottom {
+  grid-template-columns: minmax(0, 654fr) minmax(0, 449fr);
+  gap: 64px;
+}
+.gx-detail-middle h2,
+.gx-detail-bottom h2 {
+  font:
+    700 16px/24px "Folio Shuhei",
+    "Microsoft YaHei",
+    sans-serif;
+}
+.gx-detail-middle {
+  height: 199px;
+  margin-top: 31px;
+}
+.gx-detail-middle > div,
+.gx-detail-bottom > div {
+  position: relative;
+  min-width: 0;
+}
+.gx-detail-middle > div + div,
+.gx-detail-bottom > div + div {
+  border: 0;
+  padding-left: 0;
+}
+.gx-detail-middle > div + div::before,
+.gx-detail-bottom > div + div::before {
+  content: "";
+  position: absolute;
+  left: -31px;
+  top: 1px;
+  bottom: 0;
+  width: 1px;
+  background: #e6e6e6;
+}
+.gx-training-trend {
+  position: relative;
+  height: 147px;
+  margin-top: 28px;
+}
+.gx-training-trend > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.gx-training-trend span {
+  position: absolute;
+  font:
+    11px/15px Bahnschrift,
+    "Arial Narrow",
+    sans-serif;
+  color: #686868;
+}
+.gx-training-axis {
+  left: 0;
+}
+.gx-training-trend .gx-training-value {
+  color: #242424;
+  font-size: 12px;
+  line-height: 16px;
+}
+.gx-training-day {
+  top: 120px;
+}
+.gx-training-calendar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 47px;
+}
+.gx-training-calendar-heading > span {
+  font:
+    13px/17px "Microsoft YaHei",
+    "PingFang SC",
+    sans-serif;
+  color: #777;
+}
+.gx-record-calendar {
+  width: min(395px, 100%);
+  grid-template-columns: repeat(7, 29px);
+  grid-template-rows: 23px;
+  grid-auto-rows: 22px;
+  gap: 1px calc((100% - 203px) / 6);
+  margin: 12px 0 0;
+}
+.gx-record-calendar > b {
+  height: 15px;
+  font:
+    11px/15px "Microsoft YaHei",
+    "PingFang SC",
+    sans-serif;
+}
+.gx-record-calendar > button {
+  padding: 3px 6px;
+  min-height: 22px;
+  font:
+    11px/15px Bahnschrift,
+    "Arial Narrow",
+    sans-serif;
+  text-align: left;
+}
+.gx-detail-bottom {
+  margin-top: 39px;
+  border-color: #e6e6e6;
+  padding-top: 17px;
+}
+.gx-detail-bottom > div {
+  min-height: 143px;
+}
+.gx-record-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 24px;
+}
+.gx-record-heading > .gx-version {
+  margin: 0;
+}
+.gx-record-heading select {
+  max-width: 220px;
+  font-size: 11px;
+}
+.gx-detail-records {
+  margin-top: 16px;
+}
+.gx-record-instance {
+  display: grid;
+  gap: 14px;
+}
+.gx-record-instance + .gx-record-instance {
+  margin-top: 14px;
+}
+.gx-detail-set {
+  display: grid;
+  grid-template-columns: 24px 110px minmax(0, 1fr);
+  row-gap: 4px;
+}
+.gx-detail-bottom .gx-detail-set > span,
+.gx-detail-bottom .gx-detail-set > small {
+  margin-left: 0;
+}
+.gx-set-dot {
+  width: 6px;
+  height: 6px;
+  margin: 6px 0 0 4px;
+  border-radius: 50%;
+  background: #686868;
+}
+.gx-set-index {
+  font:
+    13px/17px "Microsoft YaHei",
+    "PingFang SC",
+    sans-serif;
+  color: #777;
+}
+.gx-set-value {
+  font:
+    15px/20px "Microsoft YaHei",
+    "PingFang SC",
+    sans-serif;
+  overflow-wrap: anywhere;
+}
+.gx-detail-stage {
+  grid-column: 3;
+  font-size: 12px;
+  line-height: 16px;
+}
+.gx-record-notes > p {
+  margin-top: 23px;
+  font:
+    16px/21px "Microsoft YaHei",
+    "PingFang SC",
+    sans-serif;
+}
+.gx-detail-bottom .gx-empty,
+.gx-training-trend > .gx-empty {
+  min-height: 0;
+  padding: 0;
+}
+@media (max-width: 1200px) {
+  .gx-detail-middle,
+  .gx-detail-bottom {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    height: auto;
+  }
+  .gx-detail-middle > div + div::before,
+  .gx-detail-bottom > div + div::before {
+    display: none;
+  }
+  .gx-training-header {
+    height: auto;
+    min-height: 65px;
+    flex-wrap: wrap;
+    padding-bottom: 16px;
+  }
+  .gx-training-header > h1 {
+    white-space: normal;
+  }
+  .gx-detail-controls {
+    justify-content: flex-start;
+  }
+  .gx-detail-metrics {
+    height: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding-bottom: 12px;
+  }
+}
+@media (max-width: 800px) {
+  .gx-identity {
+    align-self: center;
+    margin-top: 0;
+    padding-left: 0;
+  }
+  .gx-plan-view:not(.gx-plan-creating) > .gx-card {
+    height: auto;
+  }
+  .gx-plan-view .gx-plan-list > div > button {
+    min-width: 200px;
+    width: 200px;
+    margin: 0;
+  }
+  .gx-plan-view .gx-plan-actions .gx-action-list {
+    margin-top: 24px;
+  }
+  .gx-plan-actions .gx-action-row {
+    min-width: 240px;
+    width: 240px;
+    margin: 0;
+  }
+  .gx-detail-set {
+    grid-template-columns: 24px 74px minmax(0, 1fr);
+  }
+}

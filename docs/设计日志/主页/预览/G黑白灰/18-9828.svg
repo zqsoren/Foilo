@@ -1,39 +1,32 @@
-<svg width="352" height="300" viewBox="0 0 352 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_18_9828)">
-<rect x="312" width="40" height="40" rx="5" fill="#F2F2F2"/>
-<rect y="52" width="40" height="40" rx="5" fill="#F2F2F2"/>
-<rect x="52" y="52" width="40" height="40" rx="5" fill="#505050"/>
-<rect x="104" y="52" width="40" height="40" rx="5" fill="#505050"/>
-<rect x="156" y="52" width="40" height="40" rx="5" fill="#F2F2F2"/>
-<rect x="208" y="52" width="40" height="40" rx="5" fill="#505050"/>
-<rect x="260" y="52" width="40" height="40" rx="5" fill="#505050"/>
-<rect x="312" y="52" width="40" height="40" rx="5" fill="#F2F2F2"/>
-<rect y="104" width="40" height="40" rx="5" fill="#505050"/>
-<rect x="52" y="104" width="40" height="40" rx="5" fill="#F2F2F2"/>
-<rect x="104" y="104" width="40" height="40" rx="5" fill="#F2F2F2"/>
-<rect x="156" y="104" width="40" height="40" rx="5" fill="#F2F2F2"/>
-<rect x="208" y="104" width="40" height="40" rx="5" fill="#F2F2F2"/>
-<rect x="260" y="104" width="40" height="40" rx="5" fill="#505050"/>
-<rect x="312" y="104" width="40" height="40" rx="5" fill="#505050"/>
-<rect y="156" width="40" height="40" rx="5" fill="#505050"/>
-<rect x="52" y="156" width="40" height="40" rx="5" fill="#F2F2F2"/>
-<rect x="104" y="156" width="40" height="40" rx="5" fill="#3B3B3B"/>
-<rect x="156" y="156" width="40" height="40" rx="5" fill="#3B3B3B"/>
-<rect x="208" y="156" width="40" height="40" rx="5" fill="#3B3B3B"/>
-<rect x="260" y="156" width="40" height="40" rx="5" fill="#3B3B3B"/>
-<rect x="312" y="156" width="40" height="40" rx="5" fill="#3B3B3B"/>
-<rect y="208" width="40" height="40" rx="5" fill="#3B3B3B"/>
-<rect x="52" y="208" width="40" height="40" rx="5" fill="#3B3B3B"/>
-<rect x="104" y="208" width="40" height="40" rx="5" fill="#3B3B3B"/>
-<rect x="156" y="208" width="40" height="40" rx="5" fill="#3B3B3B"/>
-<rect x="208" y="208" width="40" height="40" rx="5" fill="#3B3B3B"/>
-<rect x="260" y="208" width="40" height="40" rx="5" fill="#3B3B3B"/>
-<rect x="312" y="208" width="40" height="40" rx="5" fill="#3B3B3B"/>
-<rect y="260" width="40" height="40" rx="5" fill="#3B3B3B"/>
-</g>
-<defs>
-<clipPath id="clip0_18_9828">
-<rect width="352" height="300" fill="white"/>
-</clipPath>
-</defs>
+<svg width="565" height="382" viewBox="0 0 565 382" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="484" y="8" width="55" height="47" rx="5" fill="#F2F2F2"/>
+<rect x="36" y="68" width="55" height="47" rx="5" fill="#F2F2F2"/>
+<rect x="111" y="68" width="55" height="47" rx="5" fill="#505050"/>
+<rect x="185" y="68" width="55" height="47" rx="5" fill="#505050"/>
+<rect x="260" y="68" width="55" height="47" rx="5" fill="#F2F2F2"/>
+<rect x="335" y="68" width="55" height="47" rx="5" fill="#505050"/>
+<rect x="409" y="68" width="55" height="47" rx="5" fill="#505050"/>
+<rect x="484" y="68" width="55" height="47" rx="5" fill="#F2F2F2"/>
+<rect x="36" y="129" width="55" height="47" rx="5" fill="#505050"/>
+<rect x="111" y="129" width="55" height="47" rx="5" fill="#F2F2F2"/>
+<rect x="185" y="129" width="55" height="47" rx="5" fill="#F2F2F2"/>
+<rect x="260" y="129" width="55" height="47" rx="5" fill="#F2F2F2"/>
+<rect x="335" y="129" width="55" height="47" rx="5" fill="#F2F2F2"/>
+<rect x="409" y="129" width="55" height="47" rx="5" fill="#505050"/>
+<rect x="484" y="129" width="55" height="47" rx="5" fill="#505050"/>
+<rect x="36" y="189" width="55" height="47" rx="5" fill="#505050"/>
+<rect x="111" y="189" width="55" height="47" rx="5" fill="#F2F2F2"/>
+<rect x="185" y="189" width="55" height="47" rx="5" fill="#3B3B3B"/>
+<rect x="260" y="189" width="55" height="47" rx="5" fill="#3B3B3B"/>
+<rect x="335" y="189" width="55" height="47" rx="5" fill="#3B3B3B"/>
+<rect x="409" y="189" width="55" height="47" rx="5" fill="#3B3B3B"/>
+<rect x="484" y="189" width="55" height="47" rx="5" fill="#3B3B3B"/>
+<rect x="36" y="250" width="55" height="47" rx="5" fill="#3B3B3B"/>
+<rect x="111" y="250" width="55" height="47" rx="5" fill="#3B3B3B"/>
+<rect x="185" y="250" width="55" height="47" rx="5" fill="#3B3B3B"/>
+<rect x="260" y="250" width="55" height="47" rx="5" fill="#3B3B3B"/>
+<rect x="335" y="250" width="55" height="47" rx="5" fill="#3B3B3B"/>
+<rect x="409" y="250" width="55" height="47" rx="5" fill="#3B3B3B"/>
+<rect x="484" y="250" width="55" height="47" rx="5" fill="#3B3B3B"/>
+<rect x="36" y="310" width="55" height="47" rx="5" fill="#3B3B3B"/>
 </svg>

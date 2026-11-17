@@ -1,0 +1,71 @@
+{
+  "date": "2026-11-17",
+  "file": "在侧-主页",
+  "nodeId": "11:7786",
+  "styleName": "Folio / 主页 / 卡片悬浮 · 黑白灰",
+  "styleId": "S:9ca4118847a0b9f49708576b1bda02733869e57d,",
+  "units": "Figma px; radius为Figma效果半径",
+  "cards": [
+    {
+      "id": "12:7813",
+      "name": "生活留痕",
+      "x": 64,
+      "y": 136,
+      "width": 880,
+      "height": 233
+    },
+    {
+      "id": "12:8199",
+      "name": "健身",
+      "x": 968,
+      "y": 136,
+      "width": 568,
+      "height": 502
+    },
+    {
+      "id": "12:8230",
+      "name": "日程",
+      "x": 64,
+      "y": 387,
+      "width": 424,
+      "height": 473
+    },
+    {
+      "id": "12:8249",
+      "name": "资产",
+      "x": 512,
+      "y": 387,
+      "width": 432,
+      "height": 473
+    },
+    {
+      "id": "12:8264",
+      "name": "添加板块",
+      "x": 968,
+      "y": 662,
+      "width": 568,
+      "height": 198
+    }
+  ],
+  "effects": [
+    {
+      "type": "DROP_SHADOW",
+      "color": "#242424",
+      "opacity": 0.12,
+      "offsetX": 0,
+      "offsetY": 8,
+      "radius": 24,
+      "spread": -6
+    },
+    {
+      "type": "DROP_SHADOW",
+      "color": "#242424",
+      "opacity": 0.07,
+      "offsetX": 0,
+      "offsetY": 2,
+      "radius": 4,
+      "spread": -1
+    }
+  ],
+  "verification": "除effects和效果样式绑定外，节点树与用户最新稿一致"
+}

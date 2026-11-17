@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { productVersions } from "@/lib/product-versions";
 import { Plus, RefreshCw, ArrowLeft } from "lucide-react";
 import { refreshWealth, writeWealth } from "@/app/wealth/dashboard/actions";
 import type { WealthData } from "@/lib/wealth/read";
@@ -229,7 +230,7 @@ export function WealthBoard({
               : "汇率待获取"
             : "默认折合人民币"}
         </span>
-        <span>手动记录余额 · 历史持续保留</span>
+        <span>手动记录余额 · 历史持续保留 · WEALTH | {productVersions.wealth}</span>
       </footer>
       {record !== null && (
         <BalanceDialog

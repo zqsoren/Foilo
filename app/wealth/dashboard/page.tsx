@@ -3,9 +3,10 @@ import { requireUser } from "@/lib/auth";
 import { sqlite } from "@/lib/db";
 import { readWealth } from "@/lib/wealth/read";
 import { WealthBoard } from "@/components/wealth/board";
+import { productVersions } from "@/lib/product-versions";
 import "./wealth.css";
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "资产 · 在侧 Folio" };
+export const metadata: Metadata = { title: "资产 · 在侧 Folio", other: { "folio-version": productVersions.wealth } };
 export default async function WealthDashboard({
   searchParams,
 }: {

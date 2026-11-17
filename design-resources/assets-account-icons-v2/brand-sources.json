@@ -1,0 +1,110 @@
+[
+  {
+    "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/f4/06/88/f4068821-cf5e-31bb-ac2b-1f49f8056ba7/AppIcon-0-0-1x_U007epad-0-1-0-85-220.png/1024x1024bb.png",
+    "retrieved": "2026-11-17",
+    "id": 333206289,
+    "key": "alipay",
+    "page": "https://apps.apple.com/cn/app/%E6%94%AF%E4%BB%98%E5%AE%9D-%E4%BD%A0%E7%9A%84ai%E7%94%9F%E6%B4%BB%E4%BC%99%E4%BC%B4/id333206289?uo=4",
+    "path": "alipay.png",
+    "name": "支付宝-你的AI生活伙伴"
+  },
+  {
+    "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/18/e6/06/18e6065a-128a-8f4b-55ac-77c7ddaae54c/AppIcon-0-0-1x_U007epad-0-1-0-85-220.png/1024x1024bb.png",
+    "retrieved": "2026-11-17",
+    "id": 1025628019,
+    "key": "antfortune",
+    "page": "https://apps.apple.com/cn/app/%E8%9A%82%E8%9A%81%E8%B4%A2%E5%AF%8C-%E5%9F%BA%E9%87%91-%E8%82%A1%E7%A5%A8/id1025628019?uo=4",
+    "path": "antfortune.png",
+    "name": "蚂蚁财富-基金、股票"
+  },
+  {
+    "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/84/6b/3a/846b3ab8-9dea-e3e5-861e-f6ecaa0b3387/AppIcon-0-0-1x_U007epad-0-1-0-sRGB-0-0-85-220.png/1024x1024bb.png",
+    "retrieved": "2026-11-17",
+    "id": 414478124,
+    "key": "wechat",
+    "page": "https://apps.apple.com/cn/app/%E5%BE%AE%E4%BF%A1/id414478124?uo=4",
+    "path": "wechat.png",
+    "name": "微信"
+  },
+  {
+    "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/e6/7f/b6/e67fb608-d48b-4366-e99f-ade6b3745728/AppIcon-1-0-0-1x_U007epad-0-1-0-sRGB-85-220.png/1024x1024bb.png",
+    "retrieved": "2026-11-17",
+    "id": 444934666,
+    "key": "qq",
+    "page": "https://apps.apple.com/cn/app/qq/id444934666?uo=4",
+    "path": "qq.png",
+    "name": "QQ"
+  },
+  {
+    "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/17/e6/90/17e690fe-f519-2fb8-5128-37a11d12c54b/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-85-220.png/1024x1024bb.png",
+    "retrieved": "2026-11-17",
+    "id": 1142110895,
+    "key": "douyin",
+    "page": "https://apps.apple.com/cn/app/%E6%8A%96%E9%9F%B3/id1142110895?uo=4",
+    "path": "douyin.png",
+    "name": "抖音"
+  },
+  {
+    "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/6e/41/a8/6e41a80d-8c37-7e7a-c9ca-37e9769d2310/AppIcon-1x_U007emarketing-0-8-0-0-85-220-0.png/1024x1024bb.png",
+    "retrieved": "2026-11-17",
+    "id": 1044283059,
+    "key": "pdd",
+    "page": "https://apps.apple.com/cn/app/%E6%8B%BC%E5%A4%9A%E5%A4%9A-%E5%A4%9A%E5%A4%9A%E4%B9%B0%E8%8F%9C-%E7%99%BE%E4%BA%BF%E8%A1%A5%E8%B4%B4/id1044283059?uo=4",
+    "path": "pdd.png",
+    "name": "拼多多 - 多多买菜，百亿补贴"
+  },
+  {
+    "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/c0/30/02/c03002f5-65ff-e14b-98ee-6dd7e2d7597e/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/1024x1024bb.png",
+    "retrieved": "2026-11-17",
+    "id": 1571652872,
+    "key": "ecny",
+    "page": "https://apps.apple.com/cn/app/%E6%95%B0%E5%AD%97%E4%BA%BA%E6%B0%91%E5%B8%81/id1571652872?uo=4",
+    "path": "ecny.png",
+    "name": "数字人民币"
+  },
+  {
+    "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/39/0c/ed/390ced4b-ee84-8b8c-5772-711910a1167d/AppIcon-0-1x_U007epad-0-1-0-85-220-0.png/1024x1024bb.png",
+    "retrieved": "2026-11-17",
+    "id": 895682747,
+    "key": "jd",
+    "page": "https://apps.apple.com/cn/app/%E4%BA%AC%E4%B8%9C%E9%87%91%E8%9E%8D-%E9%BB%84%E9%87%91%E5%9F%BA%E9%87%91%E7%90%86%E8%B4%A2%E5%80%9F%E8%B4%B7%E4%BF%9D%E9%99%A9%E4%B8%80%E7%AB%99%E5%BC%8F%E5%B9%B3%E5%8F%B0/id895682747?uo=4",
+    "path": "jd.png",
+    "name": "京东金融-黄金基金理财借贷保险一站式平台"
+  },
+  {
+    "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/f1/6a/4e/f16a4eb9-1de3-833f-0f56-df39c3df6d09/AppIcon-0-1x_U007ephone-0-1-0-sRGB-85-220-0.png/1024x1024bb.png",
+    "retrieved": "2026-11-17",
+    "id": 600273928,
+    "key": "unionpay",
+    "page": "https://apps.apple.com/cn/app/%E4%BA%91%E9%97%AA%E4%BB%98-%E9%93%B6%E8%A1%8C%E4%B8%9A%E7%BB%9F%E4%B8%80%E7%A7%BB%E5%8A%A8%E6%94%AF%E4%BB%98app/id600273928?uo=4",
+    "path": "unionpay.png",
+    "name": "云闪付-银行业统一移动支付App"
+  },
+  {
+    "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/c1/16/65/c1166517-71bb-d29d-d36e-516765f8a537/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-85-220.png/1024x1024bb.png",
+    "retrieved": "2026-11-17",
+    "id": 423084029,
+    "key": "meituan",
+    "page": "https://apps.apple.com/cn/app/%E7%BE%8E%E5%9B%A2-%E9%97%AE%E7%BE%8E%E5%9B%A2-%E9%83%BD%E5%AE%89%E6%8E%92/id423084029?uo=4",
+    "path": "meituan.png",
+    "name": "美团-问美团，都安排"
+  },
+  {
+    "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/9e/df/5a/9edf5aa0-9e00-98df-08d3-80dfde46d224/AppIcon-0-1x_U007epad-0-3-0-sRGB-85-220-0.png/1024x1024bb.png",
+    "retrieved": "2026-11-17",
+    "id": 1187801604,
+    "key": "tencentwealth",
+    "page": "https://apps.apple.com/cn/app/%E8%85%BE%E8%AE%AF%E7%90%86%E8%B4%A2%E9%80%9A-%E5%9F%BA%E9%87%91%E8%82%A1%E7%A5%A8%E9%BB%84%E9%87%91%E7%AD%89%E6%8A%95%E8%B5%84%E7%90%86%E8%B4%A2%E5%B9%B3%E5%8F%B0/id1187801604?uo=4",
+    "path": "tencentwealth.png",
+    "name": "腾讯理财通-基金股票黄金等投资理财平台"
+  },
+  {
+    "source": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/2c/00/5a/2c005a68-aae8-b46d-7017-88feffc9753a/AppIcon-0-0-1x_U007ephone-0-1-0-0-85-220.png/1024x1024bb.png",
+    "retrieved": "2026-11-17",
+    "id": 283646709,
+    "key": "paypal",
+    "page": "https://apps.apple.com/us/app/paypal-pay-send-save/id283646709?uo=4",
+    "path": "paypal.png",
+    "name": "PayPal - Pay, Send, Save"
+  }
+]

@@ -60,6 +60,10 @@ export function SettingsForm({
         .toLowerCase()
         .includes(search.toLowerCase()),
   );
+  if (ids) {
+    const order = new Map([...ids].map((id, index) => [id, index]));
+    choices.sort((a, b) => order.get(a.id)! - order.get(b.id)!);
+  }
   function setGoal(
     bucket: "monthGoals" | "weekGoals" | "planGoals",
     key: string,

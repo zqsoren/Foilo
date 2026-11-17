@@ -375,5 +375,17 @@
   "prototypePolicy": "仅储蓄卡和理财账户两条关键流程及银行选择；其他平台共用理财表单；顶部单行新建账户 > 添加资产。",
   "creditStart": "5:2076",
   "creditPage": "3:121",
-  "formPolicy": "信用卡与储蓄卡均银行加尾号自动命名；录入表单不放解释性小字"
+  "formPolicy": "正常态不显示账户信息已保存、待保存数量及逐笔提示；每笔右侧垃圾桶删除",
+  "accountNameRule": "储蓄卡、信用卡所有账户名称均银行＋尾号；工资卡等用途只放备注；新建账户不显示名称预览",
+  "deleteAsset": {
+    "componentId": "18:9492",
+    "instanceIds": [
+      "18:9497",
+      "18:9505",
+      "18:9513",
+      "18:9521"
+    ],
+    "realDeletionImplemented": false
+  },
+  "latestAudit": "account-name-audit.json"
 }

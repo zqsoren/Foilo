@@ -59,7 +59,7 @@ describe("资产独立存储及人民币汇总", () => {
     expect(loginDestination("/wealth/dashboard?view=wealth")).toBe(
       "/wealth/dashboard?view=wealth",
     );
-    expect(loginDestination("//bad.test/wealth")).toBe("/todo/dashboard");
+    expect(loginDestination("//bad.test/wealth")).toBe("/");
   });
   it("保留六类51个唯一账户类型及独立品牌图标", () => {
     expect(accountTypes).toHaveLength(51);

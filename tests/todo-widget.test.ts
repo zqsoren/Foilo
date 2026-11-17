@@ -43,7 +43,7 @@ describe("小组件独立只读凭证", () => {
     expect(widgetSameOrigin(request("https://app.test"))).toBe(true);
     for (const origin of [undefined, "null", "https://other.test", "https://app.test.other.test"]) expect(widgetSameOrigin(request(origin))).toBe(false);
     expect(loginDestination("/todo/widget")).toBe("/todo/widget");
-    expect(loginDestination("//evil.test/todo/widget")).toBe("/todo/dashboard");
+    expect(loginDestination("//evil.test/todo/widget")).toBe("/");
   });
 });
 

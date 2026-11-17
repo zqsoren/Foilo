@@ -1,4 +1,5 @@
 export const productVersions = {
+  home: "1.11.1",
   login: "1.11.1",
   todo: "1.11.7",
   gym: "1.11.13",

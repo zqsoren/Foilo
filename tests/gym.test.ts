@@ -160,6 +160,6 @@ describe("健身模块数据库", () => {
         ).searchParams.get("next"),
       ).toBe(p);
     }
-    expect(loginDestination("//other.test/gym")).toBe("/todo/dashboard");
+    expect(loginDestination("//other.test/gym")).toBe("/");
   });
 });

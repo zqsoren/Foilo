@@ -40,10 +40,10 @@ describe("桌面启动与网络恢复", () => {
       expect(loginUrl(path)).toBe("/login?next=%2Ftodo%2Fdashboard%3Fview%3Dtasks");
       expect(isMobileTodoDestination(loginDestination(path))).toBe(false);
     }
-    expect(loginUrl("/todo/dashboard")).toBe("/login");
+    expect(loginUrl("/todo/dashboard")).toBe("/login?next=%2Ftodo%2Fdashboard");
     expect(isMobileTodoDestination("/todo/dashboard")).toBe(false);
     expect(isMobileTodoDestination("/todo?tab=chat")).toBe(true);
-    for (const value of [undefined, "//other.example", "https://other.example", "/todo/../settings", ["/todo"]]) expect(loginDestination(value)).toBe("/todo/dashboard");
+    for (const value of [undefined, "//other.example", "https://other.example", "/todo/../settings", ["/todo"]]) expect(loginDestination(value)).toBe("/");
   });
   it("在线页面直接透传，不缓存用户数据", async () => {
     const response = new Response("private schedule");

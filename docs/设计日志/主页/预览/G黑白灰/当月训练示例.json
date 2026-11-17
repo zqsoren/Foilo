@@ -1,0 +1,159 @@
+{
+  "label": "合成设计示例，非用户数据",
+  "source": "../个人变化三版/素材/示例数据.json",
+  "period": "2026-11",
+  "asOf": "2026-11-17",
+  "rule": "当前自然月，不跨月；未来日期单独标记",
+  "days": [
+    {
+      "date": "2026-11-01",
+      "gym": 1,
+      "future": false
+    },
+    {
+      "date": "2026-11-02",
+      "gym": 1,
+      "future": false
+    },
+    {
+      "date": "2026-11-03",
+      "gym": 0,
+      "future": false
+    },
+    {
+      "date": "2026-11-04",
+      "gym": 0,
+      "future": false
+    },
+    {
+      "date": "2026-11-05",
+      "gym": 1,
+      "future": false
+    },
+    {
+      "date": "2026-11-06",
+      "gym": 0,
+      "future": false
+    },
+    {
+      "date": "2026-11-07",
+      "gym": 0,
+      "future": false
+    },
+    {
+      "date": "2026-11-08",
+      "gym": 1,
+      "future": false
+    },
+    {
+      "date": "2026-11-09",
+      "gym": 0,
+      "future": false
+    },
+    {
+      "date": "2026-11-10",
+      "gym": 1,
+      "future": false
+    },
+    {
+      "date": "2026-11-11",
+      "gym": 1,
+      "future": false
+    },
+    {
+      "date": "2026-11-12",
+      "gym": 1,
+      "future": false
+    },
+    {
+      "date": "2026-11-13",
+      "gym": 1,
+      "future": false
+    },
+    {
+      "date": "2026-11-14",
+      "gym": 0,
+      "future": false
+    },
+    {
+      "date": "2026-11-15",
+      "gym": 0,
+      "future": false
+    },
+    {
+      "date": "2026-11-16",
+      "gym": 0,
+      "future": false
+    },
+    {
+      "date": "2026-11-17",
+      "gym": 1,
+      "future": false
+    },
+    {
+      "date": "2026-11-18",
+      "gym": 0,
+      "future": true
+    },
+    {
+      "date": "2026-11-19",
+      "gym": 0,
+      "future": true
+    },
+    {
+      "date": "2026-11-20",
+      "gym": 0,
+      "future": true
+    },
+    {
+      "date": "2026-11-21",
+      "gym": 0,
+      "future": true
+    },
+    {
+      "date": "2026-11-22",
+      "gym": 0,
+      "future": true
+    },
+    {
+      "date": "2026-11-23",
+      "gym": 0,
+      "future": true
+    },
+    {
+      "date": "2026-11-24",
+      "gym": 0,
+      "future": true
+    },
+    {
+      "date": "2026-11-25",
+      "gym": 0,
+      "future": true
+    },
+    {
+      "date": "2026-11-26",
+      "gym": 0,
+      "future": true
+    },
+    {
+      "date": "2026-11-27",
+      "gym": 0,
+      "future": true
+    },
+    {
+      "date": "2026-11-28",
+      "gym": 0,
+      "future": true
+    },
+    {
+      "date": "2026-11-29",
+      "gym": 0,
+      "future": true
+    },
+    {
+      "date": "2026-11-30",
+      "gym": 0,
+      "future": true
+    }
+  ]
+}

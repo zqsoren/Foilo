@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { productVersions } from "@/lib/product-versions";
 import { Plus, RefreshCw, ArrowLeft } from "lucide-react";
@@ -16,42 +16,79 @@ export function WealthBoard({
   name,
   initial,
   initialView,
+  initialAccountId,
 }: {
   name: string;
   initial: WealthData;
   initialView: View;
+  initialAccountId: number | null;
 }) {
   const [data, setData] = useState(initial),
     [view, setView] = useState<View>(initialView);
   const [selected, setSelected] = useState<number | null>(
     initial.positions[0]?.id ?? null,
   );
-  const [addTo, setAddTo] = useState<number | null>(null),
+  const [addTo, setAddTo] = useState<number | null>(
+      initial.accounts.some((a) => a.id === initialAccountId)
+        ? initialAccountId
+        : null,
+    ),
     [record, setRecord] = useState<number | null>(null);
   const [busy, setBusy] = useState(false),
     [message, setMessage] = useState(""),
     [error, setError] = useState("");
   const request = useRef<{ payload: string; id: string } | null>(null);
   const locked = useRef(false);
-  function navigate(next: View) {
+  const dirty = useRef(false);
+  const [entryKey, setEntryKey] = useState(0);
+  const onDirty = useCallback((v: boolean) => {
+    dirty.current = v;
+  }, []);
+  function navigate(next: View, accountId: number | null = null) {
     if (locked.current) return;
+    if (dirty.current && !window.confirm("放弃尚未保存的内容？")) return;
+    dirty.current = false;
+    if (next === "entry") {
+      setEntryKey((k) => k + 1);
+      setAddTo(accountId);
+    }
     setView(next);
     setError("");
     setMessage("");
     window.history.pushState(
       null,
       "",
-      "/wealth/dashboard" + (next === "overview" ? "" : "?view=" + next),
+      "/wealth/dashboard" +
+        (next === "overview" ? "" : "?view=" + next) +
+        (next === "entry" && accountId ? "&account=" + accountId : ""),
     );
   }
   useEffect(() => {
+    function beforeUnload(e: BeforeUnloadEvent) {
+      if (dirty.current) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    }
+    window.addEventListener("beforeunload", beforeUnload);
     function back() {
+      if (dirty.current && !window.confirm("放弃尚未保存的内容？")) {
+        window.history.pushState(null, "", "/wealth/dashboard?view=entry");
+        return;
+      }
+      dirty.current = false;
       const v = new URLSearchParams(location.search).get("view");
       setView(v === "entry" ? "entry" : v === "wealth" ? "wealth" : "overview");
-      setAddTo(null);
+      const account = Number(
+        new URLSearchParams(location.search).get("account"),
+      );
+      setAddTo(account || null);
     }
     window.addEventListener("popstate", back);
-    return () => window.removeEventListener("popstate", back);
+    return () => {
+      window.removeEventListener("popstate", back);
+      window.removeEventListener("beforeunload", beforeUnload);
+    };
   }, []);
   async function refresh() {
     if (locked.current) return;
@@ -84,17 +121,30 @@ export function WealthBoard({
         return false;
       }
       setData(result.data);
-      setSelected(result.positionId);
-      setRecord(null);
-      setAddTo(null);
-      setView("wealth");
-      window.history.pushState(null, "", "/wealth/dashboard?view=wealth");
+      if (
+        command.type === "create-account" ||
+        command.type === "edit-account"
+      ) {
+        setAddTo(result.accountId);
+        window.history.replaceState(
+          null,
+          "",
+          "/wealth/dashboard?view=entry&account=" + result.accountId,
+        );
+      } else if (command.type === "delete-asset") {
+        setSelected(
+          result.data.positions.find((p) => p.id !== result.positionId)?.id ??
+            null,
+        );
+      } else {
+        dirty.current = false;
+        setSelected(result.positionId || null);
+        setRecord(null);
+        setAddTo(null);
+        setView("wealth");
+        window.history.pushState(null, "", "/wealth/dashboard?view=wealth");
+      }
       request.current = null;
-      setMessage(
-        command.type === "record"
-          ? "余额已记录，之前的历史仍保留"
-          : "账户明细已保存",
-      );
       return true;
     } catch {
       setError("网络暂时不可用，填写内容已保留，请重试保存");
@@ -143,7 +193,6 @@ export function WealthBoard({
               className="ax-primary"
               disabled={busy}
               onClick={() => {
-                setAddTo(null);
                 navigate("entry");
               }}
             >
@@ -185,7 +234,6 @@ export function WealthBoard({
           data={data}
           onWealth={() => navigate("wealth")}
           onCreate={() => {
-            setAddTo(null);
             navigate("entry");
           }}
         />
@@ -195,12 +243,12 @@ export function WealthBoard({
           selected={selected}
           onSelect={setSelected}
           onRecord={setRecord}
+          busy={busy}
+          save={save}
           onAdd={(id) => {
-            setAddTo(id);
-            navigate("entry");
+            navigate("entry", id);
           }}
           onCreate={() => {
-            setAddTo(null);
             navigate("entry");
           }}
         />
@@ -215,6 +263,8 @@ export function WealthBoard({
             返回财富总览
           </button>
           <WealthEntryForm
+            key={entryKey}
+            onDirty={onDirty}
             data={data}
             accountId={addTo}
             save={save}
@@ -230,7 +280,7 @@ export function WealthBoard({
               : "汇率待获取"
             : "默认折合人民币"}
         </span>
-        <span>手动记录余额 · 历史持续保留 · WEALTH | {productVersions.wealth}</span>
+        <span>WEALTH | {productVersions.wealth}</span>
       </footer>
       {record !== null && (
         <BalanceDialog

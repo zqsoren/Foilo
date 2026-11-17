@@ -1,5 +1,5 @@
 import { gymMigration } from "../gym/migration";
-import { wealthMigration } from "../wealth/migration";
+import { wealthMigration, wealthFlowMigration } from "../wealth/migration";
 import { homeMigration } from "../home/migration";
 import { gymCatalogUpdate } from "../gym/catalog-update";
 import { muscleLoadMigration } from "../gym/muscle-storage";
@@ -585,5 +585,6 @@ export const migrations = [
     ALTER TABLE gym_workouts ADD COLUMN plan_revision INTEGER;
   `},
   wealthMigration,
+  wealthFlowMigration,
   homeMigration,
 ] as const;

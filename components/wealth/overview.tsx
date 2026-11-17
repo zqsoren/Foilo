@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { categories, currencies } from "@/lib/wealth/catalog";
+import { categories, currencies, accountName } from "@/lib/wealth/catalog";
 import type { WealthData } from "@/lib/wealth/read";
 import { money } from "@/lib/wealth/money";
 
@@ -48,10 +48,8 @@ export function WealthOverview({
     .filter((row) => row.value > 0n);
   const byAccount = data.accounts
     .map((a) => ({
-      name: a.name,
-      sub: [a.institution, a.card_last4 && "尾号 " + a.card_last4]
-        .filter(Boolean)
-        .join(" · "),
+      name: accountName(a),
+      sub: a.note,
       value: assets
         .filter((p) => p.account_id === a.id && p.cny !== null)
         .reduce((s, p) => s + BigInt(p.cny!), 0n),
@@ -84,7 +82,7 @@ export function WealthOverview({
               value: data.liabilities,
               sub: `${debts.length} 笔负债`,
             },
-            { label: "已记录净额", value: data.net, sub: "资产减去负债" },
+            { label: "已记录净额", value: data.net, sub: "" },
           ].map((m) => (
             <div key={m.label}>
               <span>{m.label}</span>
@@ -109,17 +107,10 @@ export function WealthOverview({
         </div>
       )}
       <div className="ax-dashboard-grid">
-        <Widget
-          title="资产变化"
-          wide
-          footer="余额变化包含进出与估值变化，不等于投资收益；历史按当日参考汇率折算。"
-        >
+        <Widget title="资产变化" wide>
           <Trend data={data} />
         </Widget>
-        <Widget
-          title="资产构成"
-          footer="按资产类别统计 · 不含负债及未计入汇总的明细"
-        >
+        <Widget title="资产构成">
           {byCategory.length ? (
             <div className="ax-bars">
               {byCategory.map((row) => (
@@ -152,7 +143,7 @@ export function WealthOverview({
                 <div key={i}>
                   <span>
                     <b>{a.name}</b>
-                    <small>{a.sub || "资产账户"}</small>
+                    {a.sub && <small>{a.sub}</small>}
                   </span>
                   <meter
                     min={0}
@@ -165,7 +156,7 @@ export function WealthOverview({
               ))}
             </div>
           ) : (
-            <Empty>账户金额由下面的明细汇总</Empty>
+            <Empty>暂无资产记录</Empty>
           )}
         </Widget>
         <Widget
@@ -205,10 +196,7 @@ export function WealthOverview({
             {!assets.length && <Empty>支持人民币、美元、日元等币种</Empty>}
           </div>
         </Widget>
-        <Widget
-          title="负债概况"
-          footer="仅统计当前欠款，不包含尚未使用的授信额度"
-        >
+        <Widget title="负债概况">
           <small>当前欠款</small>
           <div className="ax-metric">
             <strong>{money(data.liabilities)}</strong>
@@ -218,7 +206,9 @@ export function WealthOverview({
             {debts.slice(0, 5).map((p) => (
               <div key={p.id}>
                 <span>
-                  {data.accounts.find((a) => a.id === p.account_id)?.name}
+                  {accountName(
+                    data.accounts.find((a) => a.id === p.account_id)!,
+                  )}
                   <small>{p.name}</small>
                 </span>
                 <strong>

@@ -89,7 +89,7 @@ export type AccountType = {
   side: "asset" | "liability";
   category: Category;
 };
-export const accountTypes: AccountType[] = source.flatMap((group, gi) =>
+const originalTypes: AccountType[] = source.flatMap((group, gi) =>
   group.items.map((item, i) => {
     const code = codes[gi][i];
     const debt = gi === 1 || gi === 5;
@@ -129,6 +129,78 @@ export const accountTypes: AccountType[] = source.flatMap((group, gi) =>
     };
   }),
 );
+const movedPlatforms = ["antfortune", "jd", "tencentwealth"];
+export const platformCodes = [
+  ...movedPlatforms,
+  "ths",
+  "eastmoney",
+  "ttfund",
+  "bocsecurities",
+  "pasecurities",
+  "sinafinance",
+];
+export const accountTypes: AccountType[] = [
+  ...originalTypes.map((t) =>
+    movedPlatforms.includes(t.code)
+      ? { ...t, group: 3, category: "investment" as Category }
+      : t,
+  ),
+  ...[
+    ["ths", "同花顺"],
+    ["eastmoney", "东方财富"],
+    ["ttfund", "天天基金"],
+    ["bocsecurities", "中银证券"],
+    ["pasecurities", "平安证券"],
+    ["sinafinance", "新浪财经"],
+  ].map(([code, name]) => ({
+    code,
+    name,
+    group: 3,
+    icon: `/folio/assets/icons/${code}.png`,
+    bank: false,
+    side: "asset" as const,
+    category: "investment" as Category,
+  })),
+];
+export const defaultAccountNames: Record<string, string> = {
+  cash: "现金钱包",
+  pension: "养老金",
+  medical: "医保卡",
+  "housing-fund": "公积金",
+};
+export function accountName(a: {
+  name: string;
+  institution: string;
+  card_last4: string;
+  type_code: string;
+}) {
+  return typeFor(a.type_code)?.bank && a.institution && a.card_last4
+    ? `${a.institution} · 尾号${a.card_last4}`
+    : a.name;
+}
+export function bankIcon(name: string) {
+  const codes = [
+    "icbc",
+    "abc",
+    "boc",
+    "ccb",
+    "bocom",
+    "psbc",
+    "cmb",
+    "citic",
+    "spdb",
+    "cib",
+    "cmbc",
+    "ceb",
+    "pab",
+    "hxb",
+    "cgb",
+  ];
+  const index = banks.indexOf(name);
+  return index >= 0 && index < codes.length
+    ? `/folio/assets/icons/${codes[index]}.png`
+    : typeFor("loan")!.icon;
+}
 export const currencies = {
   CNY: "人民币",
   USD: "美元",

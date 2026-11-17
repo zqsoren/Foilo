@@ -33,3 +33,21 @@ CREATE TABLE assets_requests (
 CREATE TABLE assets_fx_cache (cache_key TEXT PRIMARY KEY, payload TEXT, fetched_at INTEGER NOT NULL DEFAULT 0, attempted_at INTEGER NOT NULL, failed INTEGER NOT NULL DEFAULT 0);
 `,
 };
+
+export const wealthFlowMigration = {
+  version: 16,
+  name: "wealth_separate_accounts_assets",
+  sql: `
+ ALTER TABLE assets_positions ADD COLUMN bookkeeping_enabled INTEGER NOT NULL DEFAULT 0 CHECK(bookkeeping_enabled IN (0,1));
+ ALTER TABLE assets_positions ADD COLUMN deleted_at INTEGER;
+ UPDATE assets_positions SET bookkeeping_enabled=(SELECT bookkeeping_enabled FROM assets_accounts WHERE id=account_id);
+ UPDATE assets_accounts SET note=CASE
+   WHEN name=institution || ' · 尾号' || card_last4 THEN note
+   WHEN trim(note)='' THEN name
+   WHEN instr(note,name)>0 THEN note
+   ELSE name || '，' || note END,
+   name=institution || ' · 尾号' || card_last4
+ WHERE type_code IN ('debit-card','credit-card') AND institution<>'' AND length(card_last4)=4;
+ CREATE INDEX assets_positions_active ON assets_positions(user_id,deleted_at,account_id);
+ `,
+};

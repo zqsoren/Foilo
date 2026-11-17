@@ -1,5 +1,5 @@
 export const homeMigration = {
-  version: 16,
+  version: 17,
   name: "home_user_modules",
   sql: `
     -- Legacy ToDo created this table lazily. Fresh installations may not have it.

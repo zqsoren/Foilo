@@ -6,11 +6,14 @@ import { WealthBoard } from "@/components/wealth/board";
 import { productVersions } from "@/lib/product-versions";
 import "./wealth.css";
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "资产 · 在侧 Folio", other: { "folio-version": productVersions.wealth } };
+export const metadata: Metadata = {
+  title: "资产 · 在侧 Folio",
+  other: { "folio-version": productVersions.wealth },
+};
 export default async function WealthDashboard({
   searchParams,
 }: {
-  searchParams: Promise<{ view?: string }>;
+  searchParams: Promise<{ view?: string; account?: string }>;
 }) {
   const query = await searchParams;
   const view =
@@ -27,6 +30,11 @@ export default async function WealthDashboard({
       name={user.name}
       initial={await readWealth(sqlite, user.id)}
       initialView={view}
+      initialAccountId={
+        query.account && /^\d+$/.test(query.account)
+          ? Number(query.account)
+          : null
+      }
     />
   );
 }

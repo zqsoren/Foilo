@@ -10,7 +10,7 @@ html:has(.gx) {
   background: #f8f8f8;
 }
 .gx {
-  --gx-shadow: 0 6px 21.18px -3px #171b2117, 0 1px 3.53px #171b210e;
+  --gx-shadow: 0 6px 15.3px -3px #171b2117, 0 1px 2.55px #171b210e;
   --gx-muted: #777;
   --gx-line: #e6e6e6;
   --gx-panel: 20;
@@ -222,17 +222,6 @@ html:has(.gx) {
   background: #fff;
   box-shadow: var(--gx-shadow);
 }
-.gx-widget {
-  padding: 17px 24px 20px;
-  position: relative;
-  overflow: hidden;
-}
-.gx-widget > h2 {
-  margin-bottom: 21px;
-}
-.gx-widget .gx-empty {
-  min-height: 100px;
-}
 .gx-empty {
   display: grid;
   place-content: center;
@@ -272,66 +261,6 @@ html:has(.gx) {
   right: 24px;
   top: 17px;
 }
-.gx-widget-month > h2,
-.gx-widget-week > h2 {
-  margin-bottom: 5px;
-}
-.gx-widget-month .gx-big,
-.gx-widget-week .gx-big {
-  display: inline-block;
-  margin: 6px 0 12px;
-}
-.gx-widget-phase > h2 {
-  margin-bottom: 7px;
-}
-.gx-widget-phase .gx-phase {
-  display: grid;
-  grid-template-columns: 190px 220px 1fr;
-  align-items: end;
-  gap: 16px;
-  margin: 14px 0 8px;
-}
-.gx-phase-months {
-  display: flex;
-  gap: 28px;
-  overflow: auto;
-  max-height: 72px;
-}
-.gx-phase-months > div {
-  min-width: 110px;
-}
-.gx-phase-months strong {
-  display: block;
-  font:
-    26px/30px Bahnschrift,
-    sans-serif;
-}
-.gx-phase-months small {
-  font-size: 14px;
-}
-.gx-plan-trends {
-  margin-top: 31px;
-  height: 300px;
-  overflow: auto;
-}
-.gx-plan-trends > div {
-  display: grid;
-  grid-template-columns: 175px 1fr;
-  gap: 18px;
-  align-items: center;
-  min-height: 100px;
-  border-bottom: 0.5px solid #eee;
-}
-.gx-plan-trends > div:last-child {
-  border: 0;
-}
-.gx-plan-trends h3 {
-  margin-bottom: 2px;
-}
-.gx-plan-trends .gx-muted {
-  font-size: 11px;
-  margin-top: 4px;
-}
 .gx-chart {
   width: 100%;
   height: auto;
@@ -341,29 +270,6 @@ html:has(.gx) {
 .gx-chart text {
   font-size: 11px;
   fill: #555;
-}
-.gx-ex-head {
-  display: grid;
-  grid-template-columns: 96px 1fr 136px;
-  gap: 20px;
-  align-items: start;
-  min-height: 134px;
-  border-bottom: 0.5px solid #eee;
-  padding-top: 3px;
-  margin-bottom: 18px;
-}
-.gx-ex-head h3 {
-  font-size: 24px;
-  line-height: 32px;
-  margin: 3px 0 5px;
-}
-.gx-ex-head .gym-thumb {
-  width: 96px;
-  height: 96px;
-}
-.gx-ex-head .gx-number {
-  font-size: 34px;
-  line-height: 42px;
 }
 .gx .gym-thumb {
   display: inline-flex;
@@ -383,159 +289,8 @@ html:has(.gx) {
 .gx .gym-thumb > span {
   color: #aaa;
 }
-.gx-heat-controls {
-  position: absolute;
-  right: 24px;
-  top: 17px;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.gx-heat-controls button {
-  width: 36px;
-  background: #f2f2f2;
-  border-radius: 7px;
-  font-size: 12px;
-}
-.gx-heat-controls button[aria-pressed="true"] {
-  background: #ddd;
-}
-.gx-heat-controls input {
-  font-size: 11px;
-  padding: 3px;
-  width: 96px;
-}
-.gx-heat {
-  display: grid;
-  grid-template-rows: repeat(7, 1fr);
-  grid-auto-flow: column;
-  gap: 3px;
-  height: 90px;
-  margin-top: 42px;
-}
-.gx-heat i {
-  border-radius: 2px;
-  min-width: 0;
-}
-.gx-month-nav {
-  position: absolute;
-  top: 17px;
-  right: 24px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  font-size: 13px;
-}
-.gx-month-nav button {
-  font-size: 22px;
-  padding: 0 8px;
-}
-.gx-calendar {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: 28px repeat(6, 54px);
-  margin-top: 6px;
-}
-.gx-calendar > b {
-  font-size: 12px;
-  color: #777;
-  font-weight: 400;
-  text-align: center;
-  border-bottom: 0.5px solid #eee;
-}
-.gx-calendar > div {
-  text-align: center;
-  font:
-    13px/18px Bahnschrift,
-    sans-serif;
-  padding-top: 6px;
-  min-width: 0;
-}
-.gx-calendar span {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  line-height: 24px;
-}
-.gx-calendar .today {
-  border: 1px solid #444;
-  border-radius: 50%;
-}
-.gx-calendar small {
-  display: block;
-  width: 62px;
-  max-width: 100%;
-  margin: auto;
-  background: #f1f1f1;
-  border-radius: 4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font:
-    10px/15px "Microsoft YaHei",
-    sans-serif;
-}
-.gx-calendar em {
-  display: block;
-  font-size: 10px;
-  font-style: normal;
-  color: #777;
-}
 .gx .outside {
   visibility: hidden;
-}
-.gx-summary {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  margin-top: 16px;
-}
-.gx-summary > div {
-  border-right: 1px solid #eee;
-  padding: 0 12px;
-}
-.gx-summary > div:first-child {
-  padding-left: 0;
-}
-.gx-summary > div:last-child {
-  border: 0;
-}
-.gx-summary small {
-  display: block;
-}
-.gx-summary strong {
-  display: block;
-  font-size: 34px;
-  line-height: 42px;
-  margin: 6px 0;
-}
-.gx-goal-row {
-  margin: 24px 0 32px;
-}
-.gx-goal-row h3 {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 22px;
-}
-.gx-goal-row span {
-  font:
-    22px/30px Bahnschrift,
-    sans-serif;
-}
-.gx-rhythm {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-top: 12px;
-}
-.gx-rhythm > div > div {
-  display: flex;
-  gap: 4px;
-  margin: 6px 0;
-}
-.gx-rhythm i {
-  width: 12px;
-  height: 26px;
-  border-radius: 4px;
 }
 .gx table {
   width: 100%;
@@ -555,73 +310,6 @@ html:has(.gx) {
   background: #eee;
   border-radius: 4px;
   text-align: center;
-}
-.gx-recent-summary {
-  margin: 15px 0;
-  font:
-    22px/30px Bahnschrift,
-    sans-serif;
-}
-.gx-recent-items {
-  columns: 2;
-  column-gap: 12px;
-  max-height: 450px;
-  overflow: auto;
-}
-.gx-recent-items > div {
-  break-inside: avoid;
-  border: 0.7px solid #e5e5e5;
-  box-shadow: 0 2px 5px #0000000b;
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 12px;
-}
-.gx-recent-items .gym-thumb {
-  float: left;
-  width: 48px;
-  height: 48px;
-  margin-right: 8px;
-}
-.gx-recent-items h3 {
-  font-size: 14px;
-  margin-bottom: 12px;
-}
-.gx-recent-items p {
-  font-size: 12px;
-  clear: both;
-  margin-top: 6px;
-  overflow-wrap: anywhere;
-}
-.gx-recent-items small {
-  display: block;
-  padding-left: 12px;
-}
-.gx-body {
-  display: grid;
-  grid-template-columns: 245px 1fr;
-  gap: 25px;
-  margin-top: 12px;
-}
-.gx-figures {
-  display: flex;
-  justify-content: space-around;
-}
-.gx-figures figure {
-  width: 110px;
-  text-align: center;
-}
-.gx-figures svg {
-  width: 100%;
-  height: 250px;
-}
-.gx-figures figcaption {
-  font-size: 14px;
-}
-.gx-body dl > div {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 0.5px solid #eee;
-  padding: 10px 0;
 }
 .gx-footer {
   min-height: 60px;
@@ -720,13 +408,13 @@ html:has(.gx) {
   animation: gx-appear 240ms ease-out;
 }
 .gx-removing {
-  animation: gx-remove 160ms ease-in forwards;
+  animation: gx-remove 160ms ease-out forwards;
 }
 .gx-closing .gx-tray {
   animation: gx-rise-out 180ms ease-in forwards;
 }
 .gx-closing .gx-scrim {
-  animation: gx-fade-out 180ms ease-in forwards;
+  animation: gx-fade-out 180ms ease-out forwards;
 }
 .gx-notice {
   position: fixed;
@@ -1356,20 +1044,6 @@ html:has(.gx) {
     font-size: 12px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .gx *,
-  .gx *::before,
-  .gx *::after,
-  .gx-modal::backdrop {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-  .gx button:active:not(:disabled) {
-    transform: none;
-  }
-}
-
 .gx-version {
   white-space: nowrap;
   flex-wrap: wrap;

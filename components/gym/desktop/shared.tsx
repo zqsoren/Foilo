@@ -1,19 +1,37 @@
 "use client";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { X } from "lucide-react";
 import { number, dateLabel } from "@/lib/gym/desktop";
+const ModalCloseContext = createContext<(() => void) | undefined>(undefined);
+export function useModalClose() {
+  return useContext(ModalCloseContext);
+}
 export function Modal({
   title,
   close,
   children,
   busy = false,
+  description,
+  variant,
 }: {
   title: string;
   close: () => void;
   children: ReactNode;
   busy?: boolean;
+  description?: string;
+  variant?: "focus";
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const titleId = useId(),
+    descriptionId = useId();
   const [closing, setClosing] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dismiss = () => {
@@ -31,7 +49,13 @@ export function Modal({
   }, []);
   return (
     <dialog
-      className={"gx-modal" + (closing ? " gx-dialog-closing" : "")}
+      className={
+        "gx-modal" +
+        (variant === "focus" ? " gx-focus-modal" : "") +
+        (closing ? " gx-dialog-closing" : "")
+      }
+      aria-labelledby={titleId}
+      aria-describedby={description ? descriptionId : undefined}
       ref={ref}
       onCancel={(e) => {
         e.preventDefault();
@@ -42,12 +66,15 @@ export function Modal({
       }}
     >
       <header>
-        <h2>{title}</h2>
+        <h2 id={titleId}>{title}</h2>
+        {description && <p id={descriptionId}>{description}</p>}
         <button aria-label="关闭" disabled={busy} onClick={dismiss}>
           <X size={22} />
         </button>
       </header>
-      {children}
+      <ModalCloseContext.Provider value={dismiss}>
+        {children}
+      </ModalCloseContext.Provider>
     </dialog>
   );
 }

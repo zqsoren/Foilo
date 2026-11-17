@@ -6,7 +6,7 @@ import {
   useState,
   type CSSProperties,
 } from "react";
-import { Settings, Search, X } from "lucide-react";
+import { Settings, Search, X, ChevronDown, ChevronUp } from "lucide-react";
 import { refreshGymDesktop, saveGymDesktop } from "@/app/gym/dashboard/actions";
 import { logoutAction } from "@/app/auth-actions";
 import { productVersions } from "@/lib/product-versions";
@@ -22,6 +22,8 @@ import { WidgetFace } from "./widgets";
 import { PlanView } from "./plans";
 import { SettingsForm } from "./settings";
 import { Modal, Empty } from "./shared";
+import { EditableGrid } from "./editable-grid";
+import { boardDimensions } from "@/lib/gym/desktop-layout";
 export function GymDesktop({
   name,
   initial,
@@ -37,6 +39,7 @@ export function GymDesktop({
     live = useRef(initial),
     [view, setView] = useState(initialView),
     [draft, setDraft] = useState<Widget[] | null>(null),
+    [trayCollapsed, setTrayCollapsed] = useState(false),
     base = useRef(initial.revision),
     [busy, setBusy] = useState(false),
     busyRef = useRef(false),
@@ -44,6 +47,7 @@ export function GymDesktop({
     [fresh, setFresh] = useState<Widget | null>(null),
     [removing, setRemoving] = useState<Widget | null>(null),
     [editor, setEditor] = useState<Widget | "settings" | null>(null),
+    [editorPeriod, setEditorPeriod] = useState<string | undefined>(),
     [message, setMessage] = useState(""),
     [creating, setCreating] = useState(false),
     [search, setSearch] = useState(""),
@@ -146,7 +150,7 @@ export function GymDesktop({
   useEffect(() => {
     if (!draft) return;
     const key = (e: KeyboardEvent) => {
-      if (e.key === "Escape") void finish();
+      if (e.key === "Escape" && !e.defaultPrevented) void finish();
     };
     window.addEventListener("keydown", key);
     return () => window.removeEventListener("keydown", key);
@@ -162,19 +166,26 @@ export function GymDesktop({
   }
   function begin() {
     base.current = live.current.revision;
+    setTrayCollapsed(false);
     setDraft([...live.current.settings.layout]);
   }
-  const columns = width >= 1170 ? 3 : width >= 740 ? 2 : 1,
-    scale = width / (columns * 600 + (columns - 1) * 15),
-    layout = draft ?? data.settings.layout,
+  const openWidget = useCallback((kind: Widget, period?: string) => {
+    setEditorPeriod(period);
+    setEditor(kind);
+  }, []);
+  const { columns, scale, canvasWidth } = boardDimensions(width);
+  const layout = draft ?? data.settings.layout,
     trayScale = Math.min(1, win / 1912);
   const face = (kind: Widget) => (
-    <WidgetFace kind={kind} data={data} catalog={catalog} edit={setEditor} />
+    <WidgetFace kind={kind} data={data} catalog={catalog} edit={openWidget} />
   );
   return (
     <main
       className={
-        "gx" + (draft ? " gx-editing" : "") + (closing ? " gx-closing" : "")
+        "gx" +
+        (draft ? " gx-editing" : "") +
+        (closing ? " gx-closing" : "") +
+        (draft && trayCollapsed ? " gx-tray-collapsed" : "")
       }
     >
       <div className="gx-content">
@@ -221,66 +232,33 @@ export function GymDesktop({
         </header>
         <div ref={container}>
           {view === "board" ? (
-            <section
-              className="gx-grid"
-              aria-label="健身数据概览"
-              style={{
-                gridTemplateColumns: `repeat(${columns},minmax(0,1fr))`,
-                gridAutoRows: 200 * scale,
-                columnGap: 15 * scale,
-                rowGap: 20 * scale,
+            <EditableGrid
+              layout={layout}
+              columns={columns}
+              scale={scale}
+              canvasWidth={canvasWidth}
+              editing={draft !== null}
+              editable={
+                draft !== null &&
+                trayCollapsed &&
+                !busy &&
+                !closing &&
+                !removing
+              }
+              busy={busy || closing}
+              fresh={fresh}
+              removing={removing}
+              face={face}
+              change={(next) => setDraft((old) => (old ? next : old))}
+              empty={begin}
+              remove={(kind) => {
+                setRemoving(kind);
+                setTimeout(() => {
+                  setDraft((old) => old?.filter((k) => k !== kind) ?? null);
+                  setRemoving(null);
+                }, 160);
               }}
-            >
-              {layout.map((kind) => {
-                const [, w, h] = widgets[kind],
-                  localScale = w > 600 && columns === 1 ? width / w : scale;
-                return (
-                  <div
-                    key={kind}
-                    className={
-                      "gx-slot" +
-                      (fresh === kind ? " gx-fresh" : "") +
-                      (removing === kind ? " gx-removing" : "")
-                    }
-                    style={{
-                      gridColumn: `span ${w > 600 && columns > 1 ? 2 : 1}`,
-                      gridRow: `span ${columns === 1 && w > 600 ? 1 : (h + 20) / 220}`,
-                    }}
-                  >
-                    <div
-                      inert={draft !== null}
-                      className="gx-scaled"
-                      style={{ transform: `scale(${localScale})` }}
-                    >
-                      {face(kind)}
-                    </div>
-                    {draft && (
-                      <button
-                        className="gx-remove"
-                        disabled={busy || closing || !!removing}
-                        aria-label={"移除" + widgets[kind][0]}
-                        onClick={() => {
-                          setRemoving(kind);
-                          setTimeout(() => {
-                            setDraft(
-                              (old) => old?.filter((k) => k !== kind) ?? null,
-                            );
-                            setRemoving(null);
-                          }, 160);
-                        }}
-                      >
-                        <X size={14} />
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
-              {!layout.length && (
-                <button className="gx-add-empty" onClick={begin}>
-                  ＋ 添加小组件
-                </button>
-              )}
-            </section>
+            />
           ) : (
             <PlanView
               data={data}
@@ -311,15 +289,37 @@ export function GymDesktop({
             aria-label="收起并保存布局"
           />
           <aside
-            className="gx-tray"
+            className={"gx-tray" + (trayCollapsed ? " gx-tray--collapsed" : "")}
             aria-label="添加小组件"
             aria-busy={busy}
             style={{ "--tray-scale": trayScale } as CSSProperties}
           >
             <i className="gx-handle" />
-            <h2>{busy ? "正在保存布局…" : "添加小组件"}</h2>
+            <div className="gx-tray-heading">
+              <h2>{busy ? "正在保存布局…" : "添加小组件"}</h2>
+              {trayCollapsed && (
+                <small className="gx-edit-hint">拖动卡片调整位置</small>
+              )}
+              <button
+                className="gx-tray-toggle"
+                aria-label={trayCollapsed ? "展开组件栏" : "收起组件栏"}
+                aria-expanded={!trayCollapsed}
+                aria-controls="gx-widget-shelf"
+                disabled={busy || closing}
+                onClick={() => setTrayCollapsed((old) => !old)}
+              >
+                {trayCollapsed ? (
+                  <ChevronUp size={17} />
+                ) : (
+                  <ChevronDown size={17} />
+                )}
+                {trayCollapsed ? "展开" : "收起"}
+              </button>
+            </div>
             <div
+              id="gx-widget-shelf"
               className="gx-shelf"
+              inert={trayCollapsed}
               onWheel={(e) => {
                 if (!e.deltaX && e.deltaY)
                   e.currentTarget.scrollLeft += e.deltaY;
@@ -371,12 +371,20 @@ export function GymDesktop({
       {editor && (
         <Modal
           busy={busy}
+          variant={editor === "exercise" ? "focus" : undefined}
+          description={
+            editor === "exercise"
+              ? "从动作库浏览，也可以从自己的计划里快速找到"
+              : undefined
+          }
           title={
             editor === "settings"
               ? "设置"
               : editor === "exercise"
                 ? "选择关注动作"
-                : widgets[editor][0]
+                : editor === "week"
+                  ? "周训练目标"
+                  : widgets[editor][0]
           }
           close={() => {
             if (!busy) setEditor(null);
@@ -400,6 +408,7 @@ export function GymDesktop({
           ) : (
             <SettingsForm
               kind={editor}
+              period={editorPeriod}
               data={data}
               catalog={catalog}
               busy={busy}

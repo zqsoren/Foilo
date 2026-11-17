@@ -6,6 +6,9 @@ import { exercises } from "@/lib/gym/store";
 import { productVersions } from "@/lib/product-versions";
 import { GymDesktop } from "@/components/gym/desktop/board";
 import "./desktop.css";
+import "./widgets.css";
+import "./editor.css";
+import "./picker.css";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "健身 · 在侧 Folio",

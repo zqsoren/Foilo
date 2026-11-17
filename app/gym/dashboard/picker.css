@@ -1,0 +1,479 @@
+.gx-modal:not(.gx-focus-modal) > header > h2 {
+  font:
+    600 20px/24px "PingFang SC",
+    "Microsoft YaHei",
+    sans-serif;
+}
+.gx-focus-modal {
+  width: min(960px, calc(100vw - 32px));
+  height: min(640px, calc(100dvh - 40px));
+  padding: 0;
+  border: 0;
+  box-shadow:
+    inset 0 0 0 0.7px #d8d8d8,
+    0 15px 45px #00000025;
+}
+.gx-focus-modal[open] {
+  display: grid;
+  grid-template-rows: 89px minmax(0, 1fr);
+}
+.gx-focus-modal > header {
+  position: relative;
+  display: block;
+  height: 89px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+.gx-focus-modal > header::after {
+  content: "";
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 0;
+  height: 0.7px;
+  background: #e6e6e6;
+}
+.gx-focus-modal > header h2 {
+  position: absolute;
+  left: 28px;
+  top: 24px;
+  font:
+    700 24px/30px "Folio Shuhei",
+    "Microsoft YaHei",
+    sans-serif;
+}
+.gx-focus-modal > header p {
+  position: absolute;
+  left: 28px;
+  top: 59px;
+  margin: 0;
+  font:
+    12px/18px "Microsoft YaHei",
+    "PingFang SC",
+    sans-serif;
+  color: #777;
+}
+.gx-focus-modal > header button {
+  position: absolute;
+  right: 24px;
+  top: 24px;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: #f6f6f6;
+  color: #666;
+  border-radius: 12px;
+}
+.gx-focus-form {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) 82px;
+  min-height: 0;
+  padding: 0 24px;
+}
+.gx-focus-form .gx-picker {
+  display: grid;
+  grid-template-columns: 196px minmax(0, 1fr);
+  gap: 16px;
+  margin-right: 16px;
+  min-height: 0;
+}
+.gx-focus-form .gx-picker > aside {
+  position: relative;
+  display: block;
+  height: 424px;
+  margin-top: 23px;
+  padding: 0 24px 0 4px;
+  border-right: 0.7px solid #e6e6e6;
+  max-height: none;
+  overflow: visible;
+}
+.gx-focus-form .gx-picker aside > small {
+  position: absolute;
+  left: 8px;
+  margin: 0;
+  font:
+    11px/17px "Microsoft YaHei",
+    sans-serif;
+  color: #888;
+}
+.gx-picker-source-label {
+  top: 8px;
+}
+.gx-picker-plans-label {
+  top: 105px;
+}
+.gx-picker-hint {
+  bottom: 19px;
+}
+.gx-focus-form .gx-picker aside > button {
+  position: absolute;
+  left: 4px;
+  top: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 172px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 10px;
+  font:
+    700 15px/20px "Folio Shuhei",
+    "Microsoft YaHei",
+    sans-serif;
+}
+.gx-focus-form .gx-picker aside button[aria-pressed="true"] {
+  color: white;
+  background: #272727;
+}
+.gx-picker-plans {
+  position: absolute;
+  top: 134px;
+  left: 4px;
+  right: 20px;
+  max-height: 231px;
+  overflow: auto;
+  display: grid;
+  gap: 14px;
+}
+.gx-picker-plans button {
+  min-height: 44px;
+  padding: 8px 16px !important;
+  width: 172px;
+  font:
+    17px/24px "Microsoft YaHei",
+    sans-serif;
+  color: #555;
+}
+.gx-focus-form .gx-picker > section {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+.gx-picker-heading {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 15px;
+  height: 38px;
+  padding-right: 260px;
+  display: flex;
+  gap: 20px;
+  align-items: start;
+}
+.gx-picker-heading h3 {
+  margin: 3px 0 0;
+  min-width: 0;
+  max-width: 340px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font:
+    700 20px/26px "Folio Shuhei",
+    "Microsoft YaHei",
+    sans-serif;
+}
+.gx-picker-heading > span {
+  flex: none;
+  margin-top: 9px;
+  font:
+    12px/18px "Microsoft YaHei",
+    sans-serif;
+  color: #777;
+  white-space: nowrap;
+}
+.gx-focus-form .gx-picker-heading > .gx-search {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 240px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 0.7px solid #d5d5d5;
+  border-radius: 8px;
+}
+.gx-focus-form .gx-search svg {
+  display: none;
+}
+.gx-focus-form .gx-search input {
+  padding: 0;
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font:
+    12px/18px "Microsoft YaHei",
+    sans-serif;
+}
+.gx-focus-form .gx-filters {
+  position: absolute;
+  top: 69px;
+  left: 0;
+  right: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+}
+.gx-focus-form .gx-filters button {
+  flex: 0 0 62px;
+  padding: 0;
+  height: 30px;
+  border-radius: 7px;
+  color: #888;
+  font:
+    12px/18px "Microsoft YaHei",
+    sans-serif;
+}
+.gx-focus-form .gx-filters button[aria-pressed="true"] {
+  color: #555;
+  background: #e6e6e6;
+}
+.gx-focus-form .gx-exercise-choices {
+  position: absolute;
+  left: 0;
+  right: -16px;
+  top: 121px;
+  height: 306px;
+  max-height: none;
+  padding-right: 13px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 94px;
+  column-gap: 12px;
+  row-gap: 12px;
+  align-content: start;
+  overflow: auto;
+}
+.gx-focus-form .gx-exercise-choices::-webkit-scrollbar {
+  width: 3px;
+}
+.gx-focus-form .gx-exercise-choices::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.gx-focus-form .gx-exercise-choices::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background: #bdbdbd;
+}
+.gx-focus-form .gx-exercise-choices > button {
+  position: relative;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 10px;
+  height: 94px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 0;
+  text-align: left;
+  background: transparent;
+}
+.gx-focus-form .gx-exercise-choices > button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0.7px;
+  background: #e6e6e6;
+}
+.gx-focus-form .gx-exercise-choices > button[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 0.7px #777;
+  border-radius: 8px;
+}
+.gx-focus-form .gx-exercise-choices > button[aria-pressed="true"]::after {
+  display: none;
+}
+.gx-focus-form .gx-exercise-choices .gym-thumb {
+  width: 72px;
+  height: 72px;
+}
+.gx-focus-form .gx-exercise-choices strong {
+  padding-right: 12px;
+  font:
+    700 17px/24px "Folio Shuhei",
+    "Microsoft YaHei",
+    sans-serif;
+}
+.gx-focus-form .gx-exercise-choices small {
+  font:
+    12px/18px "Microsoft YaHei",
+    sans-serif;
+  color: #888;
+}
+.gx-focus-form .gx-exercise-choices strong + small {
+  margin-top: 2px;
+}
+.gx-picker-check {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #272727;
+  color: white;
+  display: grid;
+  place-items: center;
+}
+.gx-focus-form > footer {
+  display: grid;
+  grid-template-columns: 196px minmax(0, 1fr) 92px 140px;
+  column-gap: 12px;
+  align-items: start;
+  margin: 0;
+  padding: 19px 16px 0 4px;
+  border-top: 0.7px solid #e6e6e6;
+}
+.gx-picked small {
+  display: block;
+  font:
+    11px/17px "Microsoft YaHei",
+    sans-serif;
+  color: #888;
+}
+.gx-picked strong {
+  display: block;
+  margin-top: 3px;
+  max-width: 196px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font:
+    700 17px/23px "Folio Shuhei",
+    "Microsoft YaHei",
+    sans-serif;
+}
+.gx-picker-scope small {
+  display: block;
+  font:
+    10px/16px "Microsoft YaHei",
+    sans-serif;
+  color: #888;
+}
+.gx-picker-scope p {
+  margin-top: 5px;
+  font:
+    13px/18px "Microsoft YaHei",
+    sans-serif;
+  color: #888;
+}
+.gx-focus-form > footer button {
+  height: 38px;
+  margin-top: 6px;
+  padding: 0 !important;
+  border-radius: 10px;
+  font:
+    14px/20px "Microsoft YaHei",
+    sans-serif;
+}
+.gx-focus-form > footer .gx-picker-cancel {
+  background: #f4f4f4;
+  color: #555;
+}
+.gx-focus-form > footer .gx-primary {
+  font-family: "Folio Shuhei", "Microsoft YaHei", sans-serif;
+  font-weight: 700;
+  background: #272727;
+}
+.gx-focus-modal:has(> .gx-form-error) {
+  grid-template-rows: 89px auto minmax(0, 1fr);
+}
+.gx-focus-modal > .gx-form-error {
+  margin: 0 24px !important;
+}
+@media (max-width: 760px) {
+  .gx-focus-modal {
+    height: min(760px, calc(100dvh - 24px));
+  }
+  .gx-focus-modal > header p {
+    max-width: calc(100% - 64px);
+    font-size: 11px;
+  }
+  .gx-focus-form {
+    padding-inline: 16px;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+  .gx-focus-form .gx-picker {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 62px minmax(0, 1fr);
+    margin: 0;
+    gap: 0;
+  }
+  .gx-focus-form .gx-picker > aside {
+    display: flex;
+    gap: 8px;
+    height: 62px;
+    margin: 0;
+    padding: 8px 0;
+    border-right: 0;
+    overflow: auto;
+  }
+  .gx-focus-form .gx-picker aside > small {
+    display: none;
+  }
+  .gx-focus-form .gx-picker aside > button {
+    position: static;
+    flex: 0 0 90px;
+    width: 90px;
+  }
+  .gx-picker-plans {
+    display: flex;
+    position: static;
+    max-height: none;
+    overflow: visible;
+    gap: 8px;
+  }
+  .gx-picker-plans button {
+    width: auto;
+    min-width: 100px;
+    white-space: nowrap;
+    font-size: 14px;
+  }
+  .gx-picker-heading {
+    top: 2px;
+    padding-right: 0;
+    height: 72px;
+  }
+  .gx-picker-heading h3 {
+    margin-top: 0;
+    font-size: 17px;
+    line-height: 24px;
+  }
+  .gx-picker-heading > span {
+    display: none;
+  }
+  .gx-focus-form .gx-picker-heading > .gx-search {
+    top: 34px;
+    width: 100%;
+  }
+  .gx-focus-form .gx-filters {
+    top: 80px;
+    gap: 5px;
+    overflow: auto;
+  }
+  .gx-focus-form .gx-filters button {
+    flex-basis: 45px;
+  }
+  .gx-focus-form .gx-exercise-choices {
+    top: 122px;
+    right: 0;
+    height: calc(100% - 136px);
+    padding: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .gx-focus-form > footer {
+    grid-template-columns: minmax(0, 1fr) 74px 112px;
+    padding: 12px 0;
+    gap: 8px;
+  }
+  .gx-picker-scope {
+    display: none;
+  }
+  .gx-picked strong {
+    max-width: 110px;
+    font-size: 14px;
+  }
+}

@@ -349,15 +349,6 @@ export function ScheduleBoard({
         )}
         <footer className="dg-footer" inert={draft !== null}>
           <small className="dg-version">TODO | {productVersions.todo}</small>
-          {view === "board" && (
-            <nav className="dg-bottom" aria-label="模块导航">
-              {["日程", "健康", "饮食", "记账", "＋"].map((s) => (
-                <button aria-disabled="true" key={s}>
-                  {s}
-                </button>
-              ))}
-            </nav>
-          )}
         </footer>
       </div>
       {draft && (

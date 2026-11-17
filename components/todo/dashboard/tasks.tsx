@@ -112,6 +112,22 @@ export function TaskSearch({
     </div>
   );
 }
+function TaskNotes({ event, commit }: { event: TodoEvent; commit: Commit }) {
+  const [editing, setEditing] = useState(false);
+  if (!event.notes && !editing) return (
+    <button className="dg-add-note" onClick={() => setEditing(true)}>添加备注</button>
+  );
+  return (
+    <label className="dg-inline-note">
+      备注
+      <InlineField value={event.notes} label="任务备注" multi autoFocus={editing}
+        onFinish={() => setEditing(false)}
+        save={(notes) => commit({ action: "edit", ...identity(event), patch: { notes } })}
+      />
+    </label>
+  );
+}
+
 export function AllTasks({
   data,
   today,
@@ -212,27 +228,15 @@ export function AllTasks({
                           })
                         }
                       />
+                      <div className="dg-detail-meta">
                       <button
                         className="dg-detail-time"
                         onClick={() => edit({ kind: "time", event: e })}
                       >
                         时间　{e.start ? e.start + " – " + e.end : "待安排"}
                       </button>
-                      <label className="dg-inline-note">
-                        备注{" "}
-                        <InlineField
-                          value={e.notes}
-                          label="任务备注"
-                          multi
-                          save={(notes) =>
-                            commit({
-                              action: "edit",
-                              ...identity(e),
-                              patch: { notes },
-                            })
-                          }
-                        />
-                      </label>
+                      <TaskNotes event={e} commit={commit} />
+                      </div>
                     </div>
                   </article>
                 ))}

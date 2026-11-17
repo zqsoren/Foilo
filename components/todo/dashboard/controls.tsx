@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, Minus, X } from "lucide-react";
 import { statusOf, type TodoEvent, type TaskStatus } from "@/lib/todo/model";
 import { shortDate, weekName, monthCells } from "@/lib/todo/dashboard";
@@ -258,17 +258,39 @@ export function InlineField({
   label,
   save,
   multi = false,
+  autoFocus = false,
+  onFinish,
 }: {
   value: string;
   label: string;
   save: (v: string) => Promise<boolean>;
   multi?: boolean;
+  autoFocus?: boolean;
+  onFinish?: () => void;
 }) {
   const [draft, set] = useState(value),
     [active, focus] = useState(false);
   const cancel = useRef(false);
+  const textarea = useRef<HTMLTextAreaElement>(null);
+  const text = active ? draft : value;
+  useLayoutEffect(() => {
+    const el = textarea.current;
+    if (!el) return;
+    const fit = () => {
+      el.style.height = "0px";
+      el.style.height = `${el.scrollHeight}px`;
+    };
+    fit();
+    let width = el.clientWidth;
+    const observer = new ResizeObserver(() => {
+      if (el.clientWidth !== width) { width = el.clientWidth; fit(); }
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [text]);
   const props = {
-    value: active ? draft : value,
+    value: text,
+    autoFocus,
     "aria-label": label,
     placeholder: multi ? "添加备注" : "任务名称",
     maxLength: multi ? 2000 : 160,
@@ -280,7 +302,8 @@ export function InlineField({
       set(e.target.value),
     onBlur: () => {
       focus(false);
-      if (!cancel.current && draft !== value) void save(draft);
+      if (!cancel.current && draft !== value) void save(draft).then(() => onFinish?.());
+      else onFinish?.();
       cancel.current = false;
     },
     onKeyDown: (
@@ -297,7 +320,7 @@ export function InlineField({
       }
     },
   };
-  return multi ? <textarea rows={1} {...props} /> : <input {...props} />;
+  return multi ? <textarea ref={textarea} rows={1} {...props} /> : <input {...props} />;
 }
 export function DayHeading({ day }: { day: string }) {
   return (

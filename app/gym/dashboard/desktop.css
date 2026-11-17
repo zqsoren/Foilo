@@ -1,6 +1,7 @@
 @font-face {
   font-family: "Folio Shuhei";
-  src: url("/folio/gym-titles/shuhei.woff2") format("woff2");
+  src: url("/folio/gym-titles/alimama-shuhei-bold-1.002.ttf") format("truetype");
+  font-style: normal;
   font-weight: 700;
   font-display: swap;
 }
@@ -83,7 +84,7 @@ html:has(.gx) {
 .gx h1,
 .gx h2,
 .gx h3 {
-  font-family: "Folio Shuhei", "Microsoft YaHei", sans-serif;
+  font-family: "Folio Shuhei", "Microsoft YaHei", "PingFang SC", sans-serif;
   font-weight: 700;
 }
 .gx h1 {
@@ -128,7 +129,8 @@ html:has(.gx) {
   gap: 20px;
 }
 .gx-user {
-  font-family: "Folio Shuhei", sans-serif;
+  font-family: "Folio Shuhei", "Microsoft YaHei", "PingFang SC", sans-serif;
+  font-weight: 700;
   font-size: 23px;
   padding-left: 14px;
   overflow: hidden;
@@ -157,7 +159,9 @@ html:has(.gx) {
   flex: 1;
   z-index: 1;
   font:
-    19px/24px "Folio Shuhei",
+    700 19px/24px "Folio Shuhei",
+    "Microsoft YaHei",
+    "PingFang SC",
     sans-serif;
   color: #777;
 }
@@ -919,7 +923,9 @@ html:has(.gx) {
 }
 .gx-plan-list strong {
   font:
-    17px/25px "Folio Shuhei",
+    700 17px/25px "Folio Shuhei",
+    "Microsoft YaHei",
+    "PingFang SC",
     sans-serif;
 }
 .gx-plan-list small {
@@ -968,7 +974,9 @@ html:has(.gx) {
 }
 .gx-action-row strong {
   font:
-    16px/24px "Folio Shuhei",
+    700 16px/24px "Folio Shuhei",
+    "Microsoft YaHei",
+    "PingFang SC",
     sans-serif;
   margin-top: 8px;
 }
@@ -1125,7 +1133,9 @@ html:has(.gx) {
 }
 .gx-library-grid strong {
   font:
-    18px/26px "Folio Shuhei",
+    700 18px/26px "Folio Shuhei",
+    "Microsoft YaHei",
+    "PingFang SC",
     sans-serif;
   display: block;
 }

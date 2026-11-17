@@ -6,7 +6,7 @@ import {
   useState,
   type CSSProperties,
 } from "react";
-import { Settings, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Settings, X } from "lucide-react";
 import {
   refreshBoard,
   updateBoard,
@@ -23,6 +23,7 @@ import {
 import { WidgetFace } from "./widgets";
 import { TaskPopup, TaskSearch, AllTasks } from "./tasks";
 import { type Editor } from "./controls";
+import { useWidgetSort } from "./use-widget-sort";
 
 const choices: Widget[] = [
   "trend",
@@ -62,6 +63,10 @@ export function ScheduleBoard({
   const [draft, setDraft] = useState<Widget[] | null>(null),
     layoutBase = useRef(0),
     closing = useRef(false);
+  const [trayOpen, setTrayOpen] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const layout = draft ?? data.layout;
+  const sort = useWidgetSort(layout, setDraft, draft !== null && !trayOpen && !saving);
   const [fresh, setFresh] = useState<Widget | null>(null),
     [highlight, setHighlight] = useState("");
   const container = useRef<HTMLDivElement>(null),
@@ -152,8 +157,9 @@ export function ScheduleBoard({
     [publish],
   );
   const finish = useCallback(async () => {
-    if (!draft || closing.current) return;
+    if (!draft || closing.current || sort.isDragging()) return;
     closing.current = true;
+    setSaving(true);
     try {
       if (
         JSON.stringify(draft) === JSON.stringify(live.current.layout) ||
@@ -161,14 +167,15 @@ export function ScheduleBoard({
       ) {
         setDraft(null);
         setFresh(null);
-      } else {
+      } else if (layoutBase.current !== live.current.layoutRevision) {
         layoutBase.current = live.current.layoutRevision;
         setDraft([...live.current.layout]);
       }
     } finally {
       closing.current = false;
+      setSaving(false);
     }
-  }, [draft, commit]);
+  }, [draft, commit, sort]);
   useEffect(() => {
     if (!draft) return;
     const esc = (e: KeyboardEvent) => {
@@ -187,9 +194,9 @@ export function ScheduleBoard({
   const begin = () => {
     layoutBase.current = live.current.layoutRevision;
     setDraft([...live.current.layout]);
+    setTrayOpen(true);
   };
-  const layout = draft ?? data.layout,
-    { columns, scale } = measure(width);
+  const { columns, scale } = measure(width);
   const trayScale = Math.min(1, win / 1912),
     card = (kind: Widget) => (
       <WidgetFace
@@ -204,9 +211,9 @@ export function ScheduleBoard({
     );
   const candidates = choices.filter((w) => !layout.includes(w));
   return (
-    <main className={"dg dg-board" + (draft ? " dg-editing" : "")}>
+    <main className={"dg dg-board" + (draft ? " dg-editing" : "") + (draft && !trayOpen ? " dg-sorting" : "")}>
       <div ref={container} className="dg-content" data-view={view}>
-        <header className="dg-toolbar">
+        <header className="dg-toolbar" inert={draft !== null}>
           <strong className="dg-user">{name}</strong>
           <nav className="dg-view-tabs" aria-label="日程页面">
             {(["board", "tasks"] as const).map((v, i) => (
@@ -280,14 +287,17 @@ export function ScheduleBoard({
                 return (
                   <div
                     key={kind}
+                    ref={(node) => { if (node) sort.slots.current.set(kind, node); else sort.slots.current.delete(kind); }}
+                    data-widget={kind}
                     className={
-                      "dg-slot " + (fresh === kind ? "dg-appeared" : "")
+                      "dg-slot " + (fresh === kind ? "dg-appeared " : "") + (sort.dragging === kind ? "dg-dragging" : "")
                     }
                     style={{
                       gridColumn: "span " + span,
                       gridRow: "span " + (h === 420 ? 2 : 1),
                     }}
                   >
+                    <div className="dg-sortable">
                     <div
                       inert={draft !== null}
                       className="dg-scaled"
@@ -295,10 +305,26 @@ export function ScheduleBoard({
                     >
                       {card(kind)}
                     </div>
+                    {draft && !trayOpen && (
+                      <button
+                        className="dg-drag-handle"
+                        aria-label={"拖动排序：" + widgets[kind][0]}
+                        aria-describedby="dg-sort-help"
+                        disabled={saving}
+                        onPointerDown={(e) => sort.pointerDown(e, kind)}
+                        onKeyDown={(e) => {
+                          if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)) {
+                            e.preventDefault();
+                            sort.keyboardMove(kind, e.key);
+                          }
+                        }}
+                      />
+                    )}
                     {draft && (
                       <button
                         className="dg-remove"
                         aria-label={"移除" + widgets[kind][0]}
+                        disabled={saving || sort.dragging !== null}
                         onClick={() => {
                           if (!closing.current)
                             setDraft(
@@ -309,6 +335,7 @@ export function ScheduleBoard({
                         <X size={14} />
                       </button>
                     )}
+                    </div>
                   </div>
                 );
               })}
@@ -320,7 +347,7 @@ export function ScheduleBoard({
             )}
           </>
         )}
-        <footer className="dg-footer">
+        <footer className="dg-footer" inert={draft !== null}>
           <small className="dg-version">TODO | {productVersions.todo}</small>
           {view === "board" && (
             <nav className="dg-bottom" aria-label="模块导航">
@@ -337,16 +364,24 @@ export function ScheduleBoard({
         <>
           <div
             className="dg-scrim"
-            onClick={() => void finish()}
+            onClick={() => { if (!sort.suppressClick.current) void finish(); }}
             aria-label="收起并保存布局"
           />
           <aside
-            className="dg-tray"
+            className={"dg-tray" + (!trayOpen ? " dg-tray-collapsed" : "")}
             aria-label="添加小组件"
+            aria-busy={saving}
             style={{ "--tray-scale": trayScale } as CSSProperties}
           >
             <i className="dg-handle" />
-            <h2>添加小组件</h2>
+            <div className="dg-tray-heading">
+              <h2>添加小组件</h2>
+              <span className="dg-edit-hint" role="status">{saving ? "正在保存…" : trayOpen ? "收起后可拖动排序" : "拖动排序，点空白保存"}</span>
+              <button className="dg-tray-toggle" aria-expanded={trayOpen} aria-controls="dg-widget-shelf" disabled={saving || sort.dragging !== null} onClick={() => setTrayOpen((v) => !v)}>
+                {trayOpen ? "收起" : "展开"}{trayOpen ? <ChevronDown size={17} /> : <ChevronUp size={17} />}
+              </button>
+            </div>
+            <div id="dg-widget-shelf" inert={!trayOpen || saving} aria-hidden={!trayOpen}>
             {candidates.length ? (
               <div
                 className="dg-shelf"
@@ -378,6 +413,7 @@ export function ScheduleBoard({
                       </div>
                       <button
                         aria-label={"添加" + widgets[kind][0]}
+                        disabled={saving}
                         onClick={() => {
                           if (!closing.current) {
                             setFresh(kind);
@@ -394,7 +430,10 @@ export function ScheduleBoard({
             ) : (
               <p className="dg-empty">所有小组件均已添加</p>
             )}
+            </div>
           </aside>
+          <span id="dg-sort-help" className="dg-sr-only">拖动卡片调整顺序，或聚焦后按方向键移动、Home 置首、End 置尾。Escape 取消拖动；点空白处保存并退出编辑。</span>
+          <span className="dg-sr-only" role="status" aria-live="polite">{sort.announcement}</span>
         </>
       )}
       {editor && (

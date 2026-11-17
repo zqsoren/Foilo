@@ -1,0 +1,395 @@
+[
+  {
+    "category": "资金账户",
+    "frame": "3:120",
+    "items": [
+      {
+        "name": "现金钱包",
+        "choiceComponent": "3:871",
+        "iconComponent": "5:2284",
+        "asset": "generic-01.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "储蓄卡",
+        "choiceComponent": "3:876",
+        "iconComponent": "5:2292",
+        "asset": "generic-02.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "支付宝",
+        "choiceComponent": "3:881",
+        "iconComponent": "5:2299",
+        "asset": "alipay.png",
+        "kind": "app-store-image"
+      },
+      {
+        "name": "余额宝",
+        "choiceComponent": "3:886",
+        "iconComponent": "5:2303",
+        "asset": "yuebao-koi.svg",
+        "kind": "brand-vector"
+      },
+      {
+        "name": "余利宝",
+        "choiceComponent": "3:891",
+        "iconComponent": "5:2308",
+        "asset": "yulibao.svg",
+        "kind": "brand-vector"
+      },
+      {
+        "name": "小荷包",
+        "choiceComponent": "3:896",
+        "iconComponent": "5:2312",
+        "asset": "xiaohebao.svg",
+        "kind": "brand-vector"
+      },
+      {
+        "name": "蚂蚁财富",
+        "choiceComponent": "3:901",
+        "iconComponent": "5:2316",
+        "asset": "antfortune.png",
+        "kind": "app-store-image"
+      },
+      {
+        "name": "微信钱包",
+        "choiceComponent": "3:906",
+        "iconComponent": "5:2320",
+        "asset": "wechat.png",
+        "kind": "app-store-image"
+      },
+      {
+        "name": "微信零钱通",
+        "choiceComponent": "3:911",
+        "iconComponent": "5:2324",
+        "asset": "lingqiantong.svg",
+        "kind": "brand-vector"
+      },
+      {
+        "name": "腾讯理财通",
+        "choiceComponent": "3:916",
+        "iconComponent": "5:2328",
+        "asset": "tencentwealth.png",
+        "kind": "app-store-image"
+      },
+      {
+        "name": "QQ钱包",
+        "choiceComponent": "3:921",
+        "iconComponent": "5:2332",
+        "asset": "qq.png",
+        "kind": "app-store-image"
+      },
+      {
+        "name": "抖音钱包",
+        "choiceComponent": "3:926",
+        "iconComponent": "5:2336",
+        "asset": "douyin.png",
+        "kind": "app-store-image"
+      },
+      {
+        "name": "多多钱包",
+        "choiceComponent": "3:931",
+        "iconComponent": "5:2340",
+        "asset": "pdd.png",
+        "kind": "app-store-image"
+      },
+      {
+        "name": "数字人民币",
+        "choiceComponent": "3:956",
+        "iconComponent": "5:2344",
+        "asset": "ecny.png",
+        "kind": "app-store-image"
+      },
+      {
+        "name": "京东金融",
+        "choiceComponent": "3:961",
+        "iconComponent": "5:2348",
+        "asset": "jd.png",
+        "kind": "app-store-image"
+      },
+      {
+        "name": "京东小金库",
+        "choiceComponent": "3:966",
+        "iconComponent": "5:2352",
+        "asset": "jd-xiaojinku.svg",
+        "kind": "brand-vector"
+      },
+      {
+        "name": "云闪付",
+        "choiceComponent": "3:971",
+        "iconComponent": "5:2356",
+        "asset": "unionpay.png",
+        "kind": "app-store-image"
+      },
+      {
+        "name": "PayPal",
+        "choiceComponent": "3:986",
+        "iconComponent": "5:2360",
+        "asset": "paypal.png",
+        "kind": "app-store-image"
+      },
+      {
+        "name": "公积金",
+        "choiceComponent": "3:1021",
+        "iconComponent": "5:2364",
+        "asset": "generic-03.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "医保卡",
+        "choiceComponent": "3:1026",
+        "iconComponent": "5:2371",
+        "asset": "generic-04.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "养老金",
+        "choiceComponent": "3:1031",
+        "iconComponent": "5:2378",
+        "asset": "generic-05.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "存折",
+        "choiceComponent": "3:1036",
+        "iconComponent": "5:2385",
+        "asset": "generic-06.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "其他资产",
+        "choiceComponent": "3:1041",
+        "iconComponent": "5:2391",
+        "asset": "generic-07.svg",
+        "kind": "original-vector"
+      }
+    ]
+  },
+  {
+    "category": "信用账户",
+    "frame": "3:121",
+    "items": [
+      {
+        "name": "信用卡",
+        "choiceComponent": "3:1046",
+        "iconComponent": "5:2397",
+        "asset": "generic-08.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "贷款",
+        "choiceComponent": "3:1051",
+        "iconComponent": "5:2404",
+        "asset": "generic-09.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "蚂蚁花呗",
+        "choiceComponent": "3:1056",
+        "iconComponent": "5:2410",
+        "asset": "huabei.svg",
+        "kind": "brand-vector"
+      },
+      {
+        "name": "京东白条",
+        "choiceComponent": "3:1061",
+        "iconComponent": "5:2416",
+        "asset": "jd-baitiao.svg",
+        "kind": "brand-vector"
+      },
+      {
+        "name": "借呗",
+        "choiceComponent": "3:1071",
+        "iconComponent": "5:2420",
+        "asset": "jiebei.svg",
+        "kind": "brand-vector"
+      },
+      {
+        "name": "美团月付",
+        "choiceComponent": "3:1086",
+        "iconComponent": "5:2425",
+        "asset": "meituan.png",
+        "kind": "app-store-image"
+      },
+      {
+        "name": "抖音月付",
+        "choiceComponent": "3:1096",
+        "iconComponent": "5:2429",
+        "asset": "douyin.png",
+        "kind": "app-store-image"
+      },
+      {
+        "name": "微信分付",
+        "choiceComponent": "3:1101",
+        "iconComponent": "5:2433",
+        "asset": "wechat-fenfu.svg",
+        "kind": "brand-vector"
+      },
+      {
+        "name": "其他信用",
+        "choiceComponent": "3:1116",
+        "iconComponent": "5:2437",
+        "asset": "generic-10.svg",
+        "kind": "original-vector"
+      }
+    ]
+  },
+  {
+    "category": "充值账户",
+    "frame": "3:122",
+    "items": [
+      {
+        "name": "公交卡",
+        "choiceComponent": "3:1121",
+        "iconComponent": "5:2443",
+        "asset": "generic-11.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "饭卡",
+        "choiceComponent": "3:1126",
+        "iconComponent": "5:2452",
+        "asset": "generic-12.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "话费",
+        "choiceComponent": "3:1131",
+        "iconComponent": "5:2459",
+        "asset": "generic-13.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "会员卡",
+        "choiceComponent": "3:1136",
+        "iconComponent": "5:2466",
+        "asset": "generic-14.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "加油卡",
+        "choiceComponent": "3:1141",
+        "iconComponent": "5:2473",
+        "asset": "generic-15.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "押金",
+        "choiceComponent": "3:1146",
+        "iconComponent": "5:2479",
+        "asset": "generic-16.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "其他充值卡",
+        "choiceComponent": "3:1206",
+        "iconComponent": "5:2487",
+        "asset": "generic-17.svg",
+        "kind": "original-vector"
+      }
+    ]
+  },
+  {
+    "category": "理财账户",
+    "frame": "3:123",
+    "items": [
+      {
+        "name": "股票",
+        "choiceComponent": "3:1211",
+        "iconComponent": "5:2494",
+        "asset": "generic-18.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "基金",
+        "choiceComponent": "3:1216",
+        "iconComponent": "5:2503",
+        "asset": "generic-19.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "黄金",
+        "choiceComponent": "3:1221",
+        "iconComponent": "5:2509",
+        "asset": "generic-20.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "保险",
+        "choiceComponent": "3:1226",
+        "iconComponent": "5:2515",
+        "asset": "generic-21.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "期货",
+        "choiceComponent": "3:1231",
+        "iconComponent": "5:2521",
+        "asset": "generic-22.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "数字货币",
+        "choiceComponent": "3:1236",
+        "iconComponent": "5:2528",
+        "asset": "generic-23.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "定期存款",
+        "choiceComponent": "3:1241",
+        "iconComponent": "5:2534",
+        "asset": "generic-24.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "其他理财",
+        "choiceComponent": "3:1246",
+        "iconComponent": "5:2541",
+        "asset": "generic-25.svg",
+        "kind": "original-vector"
+      }
+    ]
+  },
+  {
+    "category": "应收账户",
+    "frame": "3:124",
+    "items": [
+      {
+        "name": "借出",
+        "choiceComponent": "3:1251",
+        "iconComponent": "5:2551",
+        "asset": "generic-26.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "其他应收",
+        "choiceComponent": "3:1256",
+        "iconComponent": "5:2557",
+        "asset": "generic-27.svg",
+        "kind": "original-vector"
+      }
+    ]
+  },
+  {
+    "category": "应付账户",
+    "frame": "3:125",
+    "items": [
+      {
+        "name": "借入",
+        "choiceComponent": "3:1261",
+        "iconComponent": "5:2564",
+        "asset": "generic-28.svg",
+        "kind": "original-vector"
+      },
+      {
+        "name": "其他应付",
+        "choiceComponent": "3:1266",
+        "iconComponent": "5:2570",
+        "asset": "generic-29.svg",
+        "kind": "original-vector"
+      }
+    ]
+  }
+]

@@ -1,4 +1,5 @@
 import { gymMigration } from "../gym/migration";
+import { wealthMigration } from "../wealth/migration";
 import { gymCatalogUpdate } from "../gym/catalog-update";
 import { muscleLoadMigration } from "../gym/muscle-storage";
 import { curatedMigration } from "../gym/catalog-curated";
@@ -582,4 +583,5 @@ export const migrations = [
     CREATE TABLE gym_dashboard_requests (user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, request_id TEXT NOT NULL, created INTEGER NOT NULL, PRIMARY KEY(user_id,request_id));
     ALTER TABLE gym_workouts ADD COLUMN plan_revision INTEGER;
   `},
+  wealthMigration,
 ] as const;

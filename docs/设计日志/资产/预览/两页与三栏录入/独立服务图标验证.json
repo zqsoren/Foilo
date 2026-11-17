@@ -1,0 +1,142 @@
+{
+  "date": "2026-11-17",
+  "figmaFile": "在侧-资产",
+  "page": "所有小组件",
+  "directory": "5:2282",
+  "verification": "7 original component IDs retained; nested choice instances read back; funds and credit screenshots inspected",
+  "icons": [
+    {
+      "name": "余利宝",
+      "componentId": "5:2308",
+      "source": "yulibao.svg",
+      "width": 40,
+      "height": 40,
+      "children": [
+        {
+          "id": "5:2919",
+          "type": "FRAME",
+          "width": 40,
+          "height": 40,
+          "constraints": {
+            "horizontal": "SCALE",
+            "vertical": "SCALE"
+          }
+        }
+      ]
+    },
+    {
+      "name": "小荷包",
+      "componentId": "5:2312",
+      "source": "xiaohebao.svg",
+      "width": 40,
+      "height": 40,
+      "children": [
+        {
+          "id": "5:2924",
+          "type": "FRAME",
+          "width": 40,
+          "height": 40,
+          "constraints": {
+            "horizontal": "SCALE",
+            "vertical": "SCALE"
+          }
+        }
+      ]
+    },
+    {
+      "name": "微信零钱通",
+      "componentId": "5:2324",
+      "source": "lingqiantong.svg",
+      "width": 40,
+      "height": 40,
+      "children": [
+        {
+          "id": "5:2930",
+          "type": "FRAME",
+          "width": 40,
+          "height": 40,
+          "constraints": {
+            "horizontal": "SCALE",
+            "vertical": "SCALE"
+          }
+        }
+      ]
+    },
+    {
+      "name": "京东小金库",
+      "componentId": "5:2352",
+      "source": "jd-xiaojinku.svg",
+      "width": 40,
+      "height": 40,
+      "children": [
+        {
+          "id": "5:2934",
+          "type": "FRAME",
+          "width": 40,
+          "height": 40,
+          "constraints": {
+            "horizontal": "SCALE",
+            "vertical": "SCALE"
+          }
+        }
+      ]
+    },
+    {
+      "name": "京东白条",
+      "componentId": "5:2416",
+      "source": "jd-baitiao.svg",
+      "width": 40,
+      "height": 40,
+      "children": [
+        {
+          "id": "5:2939",
+          "type": "FRAME",
+          "width": 40,
+          "height": 40,
+          "constraints": {
+            "horizontal": "SCALE",
+            "vertical": "SCALE"
+          }
+        }
+      ]
+    },
+    {
+      "name": "微信分付",
+      "componentId": "5:2433",
+      "source": "wechat-fenfu.svg",
+      "width": 40,
+      "height": 40,
+      "children": [
+        {
+          "id": "5:2966",
+          "type": "FRAME",
+          "width": 40,
+          "height": 40,
+          "constraints": {
+            "horizontal": "SCALE",
+            "vertical": "SCALE"
+          }
+        }
+      ]
+    },
+    {
+      "name": "余额宝",
+      "componentId": "5:2303",
+      "source": "yuebao-koi.svg",
+      "width": 40,
+      "height": 40,
+      "children": [
+        {
+          "id": "5:2961",
+          "type": "FRAME",
+          "width": 40,
+          "height": 40,
+          "constraints": {
+            "horizontal": "SCALE",
+            "vertical": "SCALE"
+          }
+        }
+      ]
+    }
+  ]
+}

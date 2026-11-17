@@ -28,22 +28,22 @@
         "name": "余额宝",
         "choiceComponent": "3:886",
         "iconComponent": "5:2303",
-        "asset": "yuebao.svg",
+        "asset": "yuebao-koi.svg",
         "kind": "brand-vector"
       },
       {
         "name": "余利宝",
         "choiceComponent": "3:891",
         "iconComponent": "5:2308",
-        "asset": "alipay.png",
-        "kind": "app-store-image"
+        "asset": "yulibao.svg",
+        "kind": "brand-vector"
       },
       {
         "name": "小荷包",
         "choiceComponent": "3:896",
         "iconComponent": "5:2312",
-        "asset": "alipay.png",
-        "kind": "app-store-image"
+        "asset": "xiaohebao.svg",
+        "kind": "brand-vector"
       },
       {
         "name": "蚂蚁财富",
@@ -63,8 +63,8 @@
         "name": "微信零钱通",
         "choiceComponent": "3:911",
         "iconComponent": "5:2324",
-        "asset": "wechat.png",
-        "kind": "app-store-image"
+        "asset": "lingqiantong.svg",
+        "kind": "brand-vector"
       },
       {
         "name": "腾讯理财通",
@@ -112,8 +112,8 @@
         "name": "京东小金库",
         "choiceComponent": "3:966",
         "iconComponent": "5:2352",
-        "asset": "jd.png",
-        "kind": "app-store-image"
+        "asset": "jd-xiaojinku.svg",
+        "kind": "brand-vector"
       },
       {
         "name": "云闪付",
@@ -195,8 +195,8 @@
         "name": "京东白条",
         "choiceComponent": "3:1061",
         "iconComponent": "5:2416",
-        "asset": "jd.png",
-        "kind": "app-store-image"
+        "asset": "jd-baitiao.svg",
+        "kind": "brand-vector"
       },
       {
         "name": "借呗",
@@ -223,8 +223,8 @@
         "name": "微信分付",
         "choiceComponent": "3:1101",
         "iconComponent": "5:2433",
-        "asset": "wechat.png",
-        "kind": "app-store-image"
+        "asset": "wechat-fenfu.svg",
+        "kind": "brand-vector"
       },
       {
         "name": "其他信用",

@@ -61,14 +61,14 @@ describe("资产独立存储及人民币汇总", () => {
     );
     expect(loginDestination("//bad.test/wealth")).toBe("/todo/dashboard");
   });
-  it("保留六类51个唯一账户类型及独立品牌图标", () => {
-    expect(accountTypes).toHaveLength(51);
-    expect(new Set(accountTypes.map((t) => t.code)).size).toBe(51);
+  it("保留六类57个唯一账户类型及独立品牌图标", () => {
+    expect(accountTypes).toHaveLength(57);
+    expect(new Set(accountTypes.map((t) => t.code)).size).toBe(57);
     expect(
       [0, 1, 2, 3, 4, 5].map(
         (g) => accountTypes.filter((t) => t.group === g).length,
       ),
-    ).toEqual([23, 9, 7, 8, 2, 2]);
+    ).toEqual([20, 9, 7, 17, 2, 2]);
     expect(accountTypes.find((t) => t.code === "lingqiantong")!.icon).toContain(
       "lingqiantong.svg",
     );

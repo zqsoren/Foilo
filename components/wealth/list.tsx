@@ -1,16 +1,43 @@
 import { useState } from "react";
 import Image from "next/image";
 import { ChevronDown, ChevronRight, Plus } from "lucide-react";
-import { categories, currencies, typeFor } from "@/lib/wealth/catalog";
+import {
+  categories,
+  currencies,
+  typeFor,
+  accountName,
+  bankIcon,
+} from "@/lib/wealth/catalog";
 import { money } from "@/lib/wealth/money";
 import type { WealthData } from "@/lib/wealth/read";
-export function AccountIcon({ code }: { code: string }) {
+import type { Save } from "./board";
+export function DeleteAssetIcon() {
+  return (
+    <Image
+      src="/folio/assets/icons/delete-asset.svg"
+      alt=""
+      width={32}
+      height={32}
+      unoptimized
+    />
+  );
+}
+export function AccountIcon({
+  code,
+  institution,
+}: {
+  code: string;
+  institution?: string;
+}) {
   const type = typeFor(code);
   // Local, pre-audited SVGs and original-resolution brand assets from Figma's master directory.
   return (
     <Image
       className="ax-account-icon"
-      src={type?.icon ?? "/folio/assets/icons/generic-07.svg"}
+      src={
+        (type?.bank && institution ? bankIcon(institution) : type?.icon) ??
+        "/folio/assets/icons/generic-07.svg"
+      }
       unoptimized
       width="40"
       height="40"
@@ -25,6 +52,8 @@ export function WealthList({
   onRecord,
   onAdd,
   onCreate,
+  save,
+  busy,
 }: {
   data: WealthData;
   selected: number | null;
@@ -32,6 +61,8 @@ export function WealthList({
   onRecord: (id: number) => void;
   onAdd: (id: number) => void;
   onCreate: () => void;
+  save: Save;
+  busy: boolean;
 }) {
   const [query, setQuery] = useState(""),
     [currency, setCurrency] = useState(""),
@@ -43,7 +74,7 @@ export function WealthList({
     const a = data.accounts.find((a) => a.id === p.account_id)!;
     return (
       (!currency || p.currency_code === currency) &&
-      [p.name, a.name, a.institution, a.card_last4].some((v) =>
+      [p.name, accountName(a), a.note, a.institution, a.card_last4].some((v) =>
         v.toLowerCase().includes(query.toLowerCase()),
       )
     );
@@ -52,7 +83,7 @@ export function WealthList({
     grouping === "account"
       ? data.accounts.map((a) => ({
           key: a.id,
-          name: [a.name, a.card_last4].filter(Boolean).join(" · "),
+          name: accountName(a),
           account: a,
           rows: rows.filter((p) => p.account_id === a.id),
         }))
@@ -62,6 +93,15 @@ export function WealthList({
           account: null,
           rows: rows.filter((p) => p.category_code === key),
         }));
+  const visibleGroups = groups.filter(
+    (g) =>
+      g.rows.length ||
+      (g.account &&
+        !currency &&
+        [accountName(g.account), g.account.note].some((v) =>
+          v.toLowerCase().includes(query.toLowerCase()),
+        )),
+  );
   return (
     <div className="ax-wealth-grid">
       <section className="ax-card ax-ledger">
@@ -107,9 +147,9 @@ export function WealthList({
               录入资产
             </button>
           </div>
-        ) : !rows.length ? (
+        ) : !visibleGroups.length ? (
           <div className="ax-empty">
-            没有找到匹配的明细
+            没有找到匹配的资产
             <button
               onClick={() => {
                 setQuery("");
@@ -132,41 +172,39 @@ export function WealthList({
                 </tr>
               </thead>
               <tbody>
-                {groups
-                  .filter((g) => g.rows.length)
-                  .map((g) => {
-                    const total = g.rows.some((p) => p.cny === null)
-                      ? null
-                      : g.rows
-                          .reduce(
-                            (s, p) =>
-                              s +
-                              (p.side === "asset" ? 1n : -1n) * BigInt(p.cny!),
-                            0n,
-                          )
-                          .toString();
-                    return (
-                      <GroupRows
-                        key={g.key}
-                        closed={closed.includes(g.key)}
-                        onToggle={() =>
-                          setClosed((prev) =>
-                            prev.includes(g.key)
-                              ? prev.filter((k) => k !== g.key)
-                              : [...prev, g.key],
-                          )
-                        }
-                        name={g.name}
-                        total={total}
-                        rows={g.rows}
-                        selected={selected}
-                        onSelect={onSelect}
-                        onAdd={
-                          g.account ? () => onAdd(g.account!.id) : undefined
-                        }
-                      />
-                    );
-                  })}
+                {visibleGroups.map((g) => {
+                  const total = g.rows.some((p) => p.cny === null)
+                    ? null
+                    : g.rows
+                        .reduce(
+                          (s, p) =>
+                            s +
+                            (p.side === "asset" ? 1n : -1n) * BigInt(p.cny!),
+                          0n,
+                        )
+                        .toString();
+                  return (
+                    <GroupRows
+                      key={g.key}
+                      closed={closed.includes(g.key)}
+                      onToggle={() =>
+                        setClosed((prev) =>
+                          prev.includes(g.key)
+                            ? prev.filter((k) => k !== g.key)
+                            : [...prev, g.key],
+                        )
+                      }
+                      name={g.name}
+                      note={g.account?.note}
+                      busy={busy}
+                      total={total}
+                      rows={g.rows}
+                      selected={selected}
+                      onSelect={onSelect}
+                      onAdd={g.account ? () => onAdd(g.account!.id) : undefined}
+                    />
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -176,14 +214,10 @@ export function WealthList({
         {p && a ? (
           <>
             <div className="ax-detail-title">
-              <AccountIcon code={a.type_code} />
+              <AccountIcon code={a.type_code} institution={a.institution} />
               <div>
                 <h1>{p.name}</h1>
-                <p>
-                  {[a.name, a.institution, a.card_last4]
-                    .filter(Boolean)
-                    .join(" · ")}
-                </p>
+                <p>{accountName(a)}</p>
               </div>
             </div>
             <small>{p.side === "liability" ? "当前欠款" : "当前余额"}</small>
@@ -220,7 +254,7 @@ export function WealthList({
               </div>
               <div>
                 <dt>记账可选</dt>
-                <dd>{a.bookkeeping_enabled ? "已开启" : "已关闭"}</dd>
+                <dd>{p.bookkeeping_enabled ? "已开启" : "已关闭"}</dd>
               </div>
               {a.note && (
                 <div>
@@ -257,17 +291,36 @@ export function WealthList({
                 ))}
             </ol>
             <div className="ax-detail-actions">
-              <button onClick={() => onAdd(a.id)}>
-                <Plus size={15} />
-                添加明细
+              <button
+                className="ax-trash"
+                disabled={busy}
+                aria-label={`删除${p.name}`}
+                onClick={async () => {
+                  if (window.confirm(`删除“${p.name}”？`))
+                    await save({
+                      type: "delete-asset",
+                      positionId: p.id,
+                      revision: p.revision,
+                    });
+                }}
+              >
+                <DeleteAssetIcon />
               </button>
-              <button className="ax-primary" onClick={() => onRecord(p.id)}>
-                更新这笔
+              <button disabled={busy} onClick={() => onAdd(a.id)}>
+                <Plus size={15} />
+                添加一笔资产
+              </button>
+              <button
+                className="ax-primary"
+                disabled={busy}
+                onClick={() => onRecord(p.id)}
+              >
+                更新余额
               </button>
             </div>
           </>
         ) : (
-          <div className="ax-empty">选择一笔明细，查看余额和历史</div>
+          <div className="ax-empty">选择一笔资产，查看余额和历史</div>
         )}
       </aside>
     </div>
@@ -275,6 +328,8 @@ export function WealthList({
 }
 function GroupRows({
   name,
+  note,
+  busy,
   total,
   rows,
   closed,
@@ -284,6 +339,8 @@ function GroupRows({
   onAdd,
 }: {
   name: string;
+  note?: string;
+  busy: boolean;
   total: string | null;
   rows: WealthData["positions"];
   closed: boolean;
@@ -298,13 +355,17 @@ function GroupRows({
         <th colSpan={3}>
           <button aria-expanded={!closed} onClick={onToggle}>
             {closed ? <ChevronRight size={13} /> : <ChevronDown size={13} />}
-            <span>{name}</span>
+            <span>
+              {name}
+              {note && <small className="ax-account-note">{note}</small>}
+            </span>
           </button>
           {onAdd && (
             <button
               className="ax-add-small"
+              disabled={busy}
               onClick={onAdd}
-              aria-label={"向" + name + "添加明细"}
+              aria-label={"向" + name + "添加一笔资产"}
             >
               <Plus size={13} />
             </button>

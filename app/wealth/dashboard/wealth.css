@@ -1124,3 +1124,250 @@ body:has(.ax) {
       sans-serif;
   }
 }
+/* Account identity and per-asset entry follow the master Figma components. */
+.ax-steps {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  color: #949494;
+  font:
+    700 20px/30px FolioWealthTitle,
+    "Microsoft YaHei",
+    sans-serif;
+  margin-bottom: 56px;
+}
+.ax-steps .is-active {
+  color: var(--ax-ink);
+}
+.ax-account-form .ax-selected-type {
+  margin: 0 0 32px;
+  gap: 16px;
+}
+.ax-account-form .ax-selected-type .ax-account-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+}
+.ax-account-form .ax-selected-type strong {
+  font-size: 16px;
+}
+.ax-account-form label {
+  font-size: 13px;
+  color: #5c5c5c;
+}
+.ax-account-form input,
+.ax-account-form select,
+.ax-account-form textarea {
+  min-height: 48px;
+  border-radius: 8px;
+}
+.ax-create-account fieldset {
+  gap: 24px;
+}
+.ax-create-account .ax-save {
+  margin-top: auto;
+  margin-bottom: 96px;
+}
+.ax-create-account {
+  min-height: 820px;
+}
+.ax-account-form .ax-bank-trigger {
+  width: 100%;
+  min-height: 48px;
+  background: #f0f0f0;
+  margin-top: 6px;
+  padding: 8px 12px;
+  justify-content: flex-start;
+  font-size: 14px;
+  color: var(--ax-ink);
+}
+.ax-bank-trigger img {
+  border-radius: 7px;
+  object-fit: contain;
+}
+.ax-bank-trigger svg {
+  margin-left: auto;
+}
+.ax-bank-dialog {
+  max-width: 740px;
+}
+.ax-bank-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+.ax-bank-grid button {
+  min-height: 60px;
+  justify-content: flex-start;
+  text-align: left;
+}
+.ax-bank-grid button[aria-pressed="true"] {
+  background: #f0f0f0;
+}
+.ax-choice-section {
+  margin: 24px 0 12px !important;
+}
+.ax-account-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 32px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #ebebeb;
+}
+.ax-account-summary > div {
+  flex: 1;
+  min-width: 0;
+}
+.ax-account-summary h2 {
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+.ax-account-summary p {
+  font-size: 12px;
+  color: #666;
+  margin-top: 3px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ax-account-summary button {
+  padding: 0;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.ax-add-assets {
+  min-height: 960px;
+}
+.ax-add-assets > fieldset {
+  display: flex;
+  gap: 0;
+  padding: 0;
+}
+.ax-asset-item {
+  padding: 24px 0;
+  border-bottom: 1px solid #ebebeb;
+  min-width: 0;
+}
+.ax-asset-item:last-child {
+  border-bottom: 0;
+}
+.ax-asset-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.ax-asset-heading h2 {
+  font-size: 16px;
+}
+.ax-asset-heading .ax-asset-expand {
+  padding: 0;
+  min-height: 32px;
+  justify-content: flex-start;
+  text-align: left;
+}
+.ax .ax-trash {
+  width: 32px;
+  min-height: 32px;
+  height: 32px;
+  padding: 6px;
+  color: #666;
+  flex-shrink: 0;
+}
+.ax-asset-item > p {
+  font-size: 13px;
+  color: #666;
+}
+.ax-asset-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 24px;
+}
+.ax-asset-fields .ax-field-pair {
+  gap: 24px;
+}
+.ax-asset-fields .ax-amount-pair {
+  grid-template-columns: minmax(0, 326fr) minmax(0, 210fr);
+  gap: 16px;
+}
+.ax-account-form .ax-toggle {
+  border: 0;
+  padding: 0;
+  min-height: 36px;
+}
+.ax-account-form .ax-switch {
+  width: 54px;
+  height: 30px;
+  background: #bdbdbd;
+}
+.ax-account-form .ax-switch::after {
+  width: 24px;
+  height: 24px;
+}
+.ax-asset-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+.ax-asset-actions button {
+  min-height: 48px;
+  background: #f0f0f0;
+  padding-inline: 12px;
+}
+.ax-asset-actions .ax-primary {
+  background: #242424;
+}
+.ax-account-note {
+  display: block;
+  font-weight: 400;
+  white-space: pre-wrap;
+}
+@media (max-width: 1100px) {
+  .ax-create-account .ax-save {
+    margin-top: 80px;
+    margin-bottom: 0;
+  }
+  .ax-create-account {
+    min-height: 0;
+  }
+  .ax-steps {
+    margin-bottom: 40px;
+  }
+  .ax-add-assets > fieldset {
+    display: flex;
+  }
+  .ax-add-assets {
+    min-height: 0;
+  }
+}
+@media (max-width: 700px) {
+  .ax-steps {
+    font-size: 18px;
+  }
+  .ax-account-summary {
+    flex-wrap: wrap;
+  }
+  .ax-account-summary button {
+    margin-left: 56px;
+  }
+  .ax-bank-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ax-asset-actions {
+    gap: 12px;
+  }
+  .ax-asset-fields .ax-field-pair {
+    gap: 12px;
+  }
+  .ax-account-form .ax-toggle {
+    min-height: 44px;
+  }
+}
+.ax .ax-trash {
+  padding: 0;
+}
+.ax-category-list button:disabled,.ax-choice-grid button:disabled{opacity:1;cursor:default}

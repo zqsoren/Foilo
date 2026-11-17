@@ -1,0 +1,379 @@
+{
+  "date": "2026-11-17",
+  "file": "在侧-资产",
+  "designOnly": true,
+  "liveVersionUnchanged": "1.11.1",
+  "pages": {
+    "allComponents": "2:150",
+    "web": "0:1"
+  },
+  "iconComponents": {
+    "icbc": "13:3187",
+    "abc": "13:3191",
+    "boc": "13:3195",
+    "ccb": "13:3199",
+    "bocom": "13:3203",
+    "psbc": "13:3207",
+    "cmb": "13:3211",
+    "citic": "13:3215",
+    "spdb": "13:3219",
+    "cib": "13:3223",
+    "cmbc": "13:3227",
+    "ceb": "13:3231",
+    "pab": "13:3235",
+    "hxb": "13:3239",
+    "cgb": "13:3243",
+    "ths": "13:3247",
+    "eastmoney": "13:3251",
+    "ttfund": "13:3255",
+    "bocsecurities": "13:3259",
+    "pasecurities": "13:3263",
+    "sinafinance": "13:3267"
+  },
+  "newForms": {
+    "bankPending": {
+      "id": "14:3719"
+    },
+    "investPending": {
+      "id": "14:3765"
+    }
+  },
+  "bankStart": "5:2244",
+  "investmentStart": "5:2148",
+  "defaultForms": {
+    "养老金": "14:4199",
+    "医保卡": "14:4218",
+    "公积金": "14:4237",
+    "现金钱包": "14:4256"
+  },
+  "flowPages": {
+    "bankStart": {
+      "id": "5:1833",
+      "form": "5:2245"
+    },
+    "bankPending": {
+      "id": "14:4584",
+      "form": "14:4777"
+    },
+    "investmentStart": {
+      "id": "3:123",
+      "form": "5:2149"
+    },
+    "investPending": {
+      "id": "14:5692",
+      "form": "14:5840"
+    }
+  },
+  "bankPicker": {
+    "id": "14:6430",
+    "instance": "14:6531"
+  },
+  "otherBank": {
+    "component": "14:7442"
+  },
+  "groups": [
+    {
+      "name": "资金账户",
+      "types": [
+        {
+          "name": "现金钱包",
+          "componentId": "3:871"
+        },
+        {
+          "name": "储蓄卡",
+          "componentId": "3:876"
+        },
+        {
+          "name": "支付宝",
+          "componentId": "3:881"
+        },
+        {
+          "name": "余额宝",
+          "componentId": "3:886"
+        },
+        {
+          "name": "余利宝",
+          "componentId": "3:891"
+        },
+        {
+          "name": "小荷包",
+          "componentId": "3:896"
+        },
+        {
+          "name": "微信钱包",
+          "componentId": "3:906"
+        },
+        {
+          "name": "微信零钱通",
+          "componentId": "3:911"
+        },
+        {
+          "name": "QQ钱包",
+          "componentId": "3:921"
+        },
+        {
+          "name": "抖音钱包",
+          "componentId": "3:926"
+        },
+        {
+          "name": "多多钱包",
+          "componentId": "3:931"
+        },
+        {
+          "name": "数字人民币",
+          "componentId": "3:956"
+        },
+        {
+          "name": "京东小金库",
+          "componentId": "3:966"
+        },
+        {
+          "name": "云闪付",
+          "componentId": "3:971"
+        },
+        {
+          "name": "PayPal",
+          "componentId": "3:986"
+        },
+        {
+          "name": "公积金",
+          "componentId": "3:1021"
+        },
+        {
+          "name": "医保卡",
+          "componentId": "3:1026"
+        },
+        {
+          "name": "养老金",
+          "componentId": "3:1031"
+        },
+        {
+          "name": "存折",
+          "componentId": "3:1036"
+        },
+        {
+          "name": "其他资产",
+          "componentId": "3:1041"
+        }
+      ]
+    },
+    {
+      "name": "信用账户",
+      "types": [
+        {
+          "name": "信用卡",
+          "componentId": "3:1046"
+        },
+        {
+          "name": "贷款",
+          "componentId": "3:1051"
+        },
+        {
+          "name": "蚂蚁花呗",
+          "componentId": "3:1056"
+        },
+        {
+          "name": "京东白条",
+          "componentId": "3:1061"
+        },
+        {
+          "name": "借呗",
+          "componentId": "3:1071"
+        },
+        {
+          "name": "美团月付",
+          "componentId": "3:1086"
+        },
+        {
+          "name": "抖音月付",
+          "componentId": "3:1096"
+        },
+        {
+          "name": "微信分付",
+          "componentId": "3:1101"
+        },
+        {
+          "name": "其他信用",
+          "componentId": "3:1116"
+        }
+      ]
+    },
+    {
+      "name": "充值账户",
+      "types": [
+        {
+          "name": "公交卡",
+          "componentId": "3:1121"
+        },
+        {
+          "name": "饭卡",
+          "componentId": "3:1126"
+        },
+        {
+          "name": "话费",
+          "componentId": "3:1131"
+        },
+        {
+          "name": "会员卡",
+          "componentId": "3:1136"
+        },
+        {
+          "name": "加油卡",
+          "componentId": "3:1141"
+        },
+        {
+          "name": "押金",
+          "componentId": "3:1146"
+        },
+        {
+          "name": "其他充值卡",
+          "componentId": "3:1206"
+        }
+      ]
+    },
+    {
+      "name": "理财账户",
+      "types": [
+        {
+          "name": "蚂蚁财富",
+          "componentId": "3:901"
+        },
+        {
+          "name": "京东金融",
+          "componentId": "3:961"
+        },
+        {
+          "name": "腾讯理财通",
+          "componentId": "3:916"
+        },
+        {
+          "name": "同花顺",
+          "componentId": "14:3269"
+        },
+        {
+          "name": "东方财富",
+          "componentId": "14:3273"
+        },
+        {
+          "name": "天天基金",
+          "componentId": "14:3277"
+        },
+        {
+          "name": "中银证券",
+          "componentId": "14:3281"
+        },
+        {
+          "name": "平安证券",
+          "componentId": "14:3285"
+        },
+        {
+          "name": "新浪财经",
+          "componentId": "14:3289"
+        },
+        {
+          "name": "股票",
+          "componentId": "3:1211"
+        },
+        {
+          "name": "基金",
+          "componentId": "3:1216"
+        },
+        {
+          "name": "黄金",
+          "componentId": "3:1221"
+        },
+        {
+          "name": "保险",
+          "componentId": "3:1226"
+        },
+        {
+          "name": "期货",
+          "componentId": "3:1231"
+        },
+        {
+          "name": "数字货币",
+          "componentId": "3:1236"
+        },
+        {
+          "name": "定期存款",
+          "componentId": "3:1241"
+        },
+        {
+          "name": "其他理财",
+          "componentId": "3:1246"
+        }
+      ]
+    },
+    {
+      "name": "应收账户",
+      "types": [
+        {
+          "name": "借出",
+          "componentId": "3:1251"
+        },
+        {
+          "name": "其他应收",
+          "componentId": "3:1256"
+        }
+      ]
+    },
+    {
+      "name": "应付账户",
+      "types": [
+        {
+          "name": "借入",
+          "componentId": "3:1261"
+        },
+        {
+          "name": "其他应付",
+          "componentId": "3:1266"
+        }
+      ]
+    }
+  ],
+  "prototypeLinks": [
+    {
+      "from": "I5:2245;14:3412",
+      "to": "14:4584",
+      "label": "保存账户"
+    },
+    {
+      "from": "I5:2149;14:3427",
+      "to": "14:5692",
+      "label": "保存账户"
+    },
+    {
+      "from": "I5:2245;14:3397",
+      "to": "14:6430",
+      "label": "选择银行"
+    },
+    {
+      "from": "I14:6531;14:4281",
+      "to": "5:1833",
+      "label": "工商银行"
+    },
+    {
+      "from": "I14:4777;14:3726",
+      "to": "5:1833",
+      "label": "修改账户信息"
+    },
+    {
+      "from": "I14:5840;14:3772",
+      "to": "3:123",
+      "label": "修改账户信息"
+    },
+    {
+      "from": "14:3820",
+      "to": "5:1833",
+      "label": "储蓄卡"
+    }
+  ],
+  "stepComponents": {
+    "account": "15:9354",
+    "assets": "15:9358"
+  },
+  "prototypePolicy": "仅储蓄卡和理财账户两条关键流程及银行选择；其他平台共用理财表单；顶部单行新建账户 > 添加资产。",
+  "creditStart": "5:2076",
+  "creditPage": "3:121",
+  "formPolicy": "信用卡与储蓄卡均银行加尾号自动命名；录入表单不放解释性小字"
+}

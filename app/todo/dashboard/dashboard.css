@@ -149,6 +149,8 @@ html:has(.dg) {
   background: white;
   border: 1px solid #e6e6e4;
   border-radius: 14px;
+  /* Figma shadow radius × .85; shared with Folio's gym card elevation. */
+  box-shadow: 0 6px 15.3px -3px rgb(23 26.775 33.15 / 9%), 0 1px 2.55px rgb(23 26.775 33.15 / 5.5%);
 }
 .dg-widget {
   position: relative;
@@ -588,7 +590,7 @@ html:has(.dg) {
   display: grid;
   place-items: center;
 }
-.dg-appeared > .dg-scaled {
+.dg-appeared .dg-scaled {
   animation: dg-appear 0.24s ease-out;
 }
 @keyframes dg-appear {
@@ -608,12 +610,66 @@ html:has(.dg) {
   translate: -50% 0;
   z-index: 20;
   width: min(83vw, 1582px);
-  height: calc(450px * var(--tray-scale));
+  height: calc(max(64px, 77px * var(--tray-scale)) + 373px * var(--tray-scale));
   background: #fff;
   border-radius: 20px 20px 0 0;
   box-shadow: 0 -2px 14px #0002;
   padding: calc(25px * var(--tray-scale)) calc(41px * var(--tray-scale));
   animation: dg-rise 0.2s ease-out;
+  transition: transform 240ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.dg-tray-collapsed {
+  transform: translateY(calc(100% - 64px));
+}
+.dg-tray-heading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.dg-tray-collapsed .dg-tray-heading {
+  position: absolute;
+  inset: 0 24px auto;
+  height: 64px;
+}
+.dg-edit-hint {
+  color: #62625f;
+  font-size: 13px;
+  margin-left: auto;
+}
+.dg .dg-tray-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 44px;
+  min-width: 60px;
+  font-size: 14px;
+}
+.dg-tray-collapsed #dg-widget-shelf { visibility: hidden; }
+/* Edit layers: scrim 10; movable faces 11; remove controls 12;
+   active card 13; tray 20. Grid cells remain untransformed for hit testing. */
+.dg-sortable { position: absolute; inset: 0; }
+.dg-sorting .dg-sortable { z-index: 11; }
+.dg-sorting .dg-grid { padding-bottom: 100px; }
+.dg-sorting .dg-slot { border-radius: 14px; }
+.dg-sorting .dg-dragging { background: rgb(39 39 37 / 6%); outline: 1px dashed #aaa; }
+.dg-sorting .dg-dragging .dg-sortable { z-index: 13; }
+.dg .dg-drag-handle { position: absolute; inset: 0; border-radius: 14px; cursor: grab; touch-action: none; }
+.dg .dg-dragging .dg-drag-handle { cursor: grabbing; }
+.dg-drag-handle:focus-visible, .dg-tray-toggle:focus-visible { outline: 2px solid #272725; outline-offset: 4px; }
+.dg-tray-toggle:active { opacity: .65; }
+.dg-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (hover: hover) and (pointer: fine) {
+  .dg-tray-toggle:hover { color: #62625f; }
+  .dg-drag-handle:hover { outline: 1px solid #aaa; outline-offset: 2px; }
+}
+@media (max-width: 600px) {
+  .dg-edit-hint { display: none; }
+  .dg .dg-tray-toggle { margin-left: auto; min-height: 36px; }
+  .dg-tray-heading { gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dg-tray, .dg-appeared .dg-scaled { animation: none; transition: none; }
 }
 .dg-tray h2 {
   font-size: clamp(15px, 1.2vw, 23px);
@@ -630,7 +686,7 @@ html:has(.dg) {
 }
 .dg-shelf {
   position: absolute;
-  top: calc(77px * var(--tray-scale));
+  top: max(64px, calc(77px * var(--tray-scale)));
   left: calc(41px * var(--tray-scale));
   right: calc(41px * var(--tray-scale));
   display: grid;

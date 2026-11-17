@@ -7,21 +7,27 @@ import {
 import { widgetKeys } from "../lib/gym/desktop";
 
 describe("健身组件布局", () => {
-  it("先减列数，再在小于单张组件时缩放", () => {
+  it("常规桌面保持三列并整体等比适配，较窄窗口减少列数", () => {
     expect(boardDimensions(1830)).toEqual({
       columns: 3,
       scale: 1,
       canvasWidth: 1830,
     });
-    expect(boardDimensions(1378)).toEqual({
-      columns: 2,
-      scale: 1,
-      canvasWidth: 1215,
-    });
+    for (const width of [1790, 1378, 1170]) {
+      expect(boardDimensions(width)).toEqual({
+        columns: 3,
+        scale: width / 1830,
+        canvasWidth: 1830,
+      });
+    }
+    expect(boardDimensions(1169).columns).toBe(2);
+    expect(boardDimensions(740).columns).toBe(2);
+    expect(boardDimensions(739).columns).toBe(1);
+    expect(boardDimensions(2200).scale).toBe(1);
     expect(boardDimensions(1000)).toEqual({
-      columns: 1,
-      scale: 1,
-      canvasWidth: 600,
+      columns: 2,
+      scale: 1000 / 1215,
+      canvasWidth: 1215,
     });
     expect(boardDimensions(358)).toEqual({
       columns: 1,

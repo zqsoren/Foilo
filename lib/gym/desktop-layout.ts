@@ -1,7 +1,9 @@
 import { widgets, type Widget } from "./desktop";
 
 export function boardDimensions(width: number) {
-  const columns = width >= 1830 ? 3 : width >= 1215 ? 2 : 1;
+  // Use the same responsive column thresholds as the ToDo dashboard. The Figma
+  // canvas sets the proportions; its full pixel width is not a breakpoint.
+  const columns = width >= 1170 ? 3 : width >= 740 ? 2 : 1;
   const canvasWidth = columns * 600 + (columns - 1) * 15;
   return { columns, scale: Math.min(1, width / canvasWidth), canvasWidth };
 }

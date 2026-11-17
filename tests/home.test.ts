@@ -43,6 +43,41 @@ describe("账号主页与真实模块数据", () => {
     repo.writeTodo(91,current.revision,randomUUID(),{...current,events:[{...event,completed:false}]});
     expect((await readHome(db,91,"2026-11-17")).completed).toBe(0);
   });
+  it("当日日程保留四种状态，只计待办；无日程时保留年度完成数", async () => {
+    const repo = todoRepository(db);
+    const task = (title: string, date: string, status: "pending" | "completed" | "cancelled" | "deferred", start: string | null = null): TodoEvent => ({
+      id: randomUUID(), title, date, start, end: start ? "23:00" : null, status, completed: status === "completed", fixed: false, notes: "",
+    });
+    const events = [task("待办", "2026-11-17", "pending", "09:00"), task("完成", "2026-11-17", "completed", "10:00"),
+      task("取消", "2026-11-17", "cancelled", "11:00"), task("推迟", "2026-11-17", "deferred", "12:00"), task("待安排", "2026-11-17", "pending"),
+      task("昨天完成", "2026-11-16", "completed"), task("未来完成", "2026-12-01", "completed"), task("去年完成", "2025-11-17", "completed")];
+    repo.writeTodo(91, 0, randomUUID(), { ...emptyState(), events });
+    repo.writeTodo(92, 0, randomUUID(), { ...emptyState(), events: [task("另一账号", "2026-11-17", "pending")] });
+    const home = await readHome(db, 91, "2026-11-17");
+    expect(home.schedule).toMatchObject({ total: 5, pending: 2 });
+    expect(home.schedule.items.map((e) => e.title)).toEqual(["待办", "完成", "取消", "推迟", "待安排"]);
+    expect(home.schedule.items.map((e) => e.status)).toEqual(["pending", "completed", "cancelled", "deferred", "pending"]);
+    expect(home.completed).toBe(2);
+    expect(home.life.find((d) => d.date === "2026-11-17")?.count).toBe(1);
+    const emptyDay = await readHome(db, 91, "2026-11-18");
+    expect(emptyDay.schedule).toEqual({ total: 0, pending: 0, items: [] }); expect(emptyDay.completed).toBe(2);
+    const doneDay = await readHome(db, 91, "2026-11-16");
+    expect(doneDay.schedule).toMatchObject({ total: 1, pending: 0 });
+    expect((await readHome(db, 92, "2026-11-17")).schedule.items.map((e) => e.title)).toEqual(["另一账号"]);
+  });
+  it("今日重复日程遵循单次状态、删除例外与上海年界", async () => {
+    const recurring: TodoEvent = { id: randomUUID(), title: "每日", date: "2025-12-30", start: "08:00", end: "09:00", completed: false, fixed: false, notes: "", repeat: { frequency: "daily", days: [] },
+      exceptions: { "2025-12-31": { title: "去年完成", start: "08:00", end: "09:00", completed: true, notes: "" },
+        "2026-01-01": { title: "今年完成", start: "08:00", end: "09:00", completed: true, notes: "" }, "2026-01-02": null,
+        "2026-01-03": { title: "单次推迟", start: "10:00", end: "11:00", completed: false, status: "deferred", notes: "" } } };
+    todoRepository(db).writeTodo(91, 0, randomUUID(), { ...emptyState(), events: [recurring] });
+    const first = await readHome(db, 91, "2026-01-01");
+    expect(first.completed).toBe(1); expect(first.schedule).toMatchObject({ total: 1, pending: 0, items: [{ title: "今年完成", status: "completed" }] });
+    const deleted = await readHome(db, 91, "2026-01-02");
+    expect(deleted.completed).toBe(1); expect(deleted.schedule.total).toBe(0);
+    expect((await readHome(db, 91, "2026-01-03")).schedule).toMatchObject({ total: 1, pending: 0, items: [{ title: "单次推迟", status: "deferred" }] });
+    expect((await readHome(db, 91, "2026-01-04")).schedule).toMatchObject({ total: 1, pending: 1, items: [{ title: "每日", status: "pending" }] });
+  });
   it("每个自然月仅生成本月日期，包括闰年、年末和未来天", () => {
     for (const [date,length] of [["2026-11-17",30],["2024-02-10",29],["2026-02-10",28],["2026-12-31",31]] as const) {
       const days=monthHeatmap(date,new Map([["2026-10-31",99],[date,1],[date.slice(0,7)+"-28",1]]));

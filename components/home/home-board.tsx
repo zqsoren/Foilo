@@ -43,6 +43,23 @@ function AssetTrend({ points }: { points: HomeData["trend"] }) {
   </svg>;
 }
 
+function Schedule({ data }: { data: HomeData }) {
+  const { schedule } = data;
+  const hasToday = schedule.total > 0;
+  const count = hasToday ? schedule.pending : data.completed;
+  const statusLabels = { pending: "待办", completed: "已完成", cancelled: "已取消", deferred: "已推迟" };
+  return <>
+    {hasToday && <div className="fh-schedule">
+      <ul aria-label="今日日程">{schedule.items.map((item) => <li key={item.id} data-status={item.status}>
+        <span className="fh-schedule-time">{item.start ?? "待安排"}</span>
+        <span className="fh-schedule-title" title={item.title}>{item.title}</span>
+        {item.status === "completed" ? <Check size={14} aria-label="已完成" /> : item.status !== "pending" ? <small>{statusLabels[item.status]}</small> : null}
+      </li>)}</ul>
+    </div>}
+    <span className="fh-count" data-today={hasToday} aria-label={hasToday ? "今日待办" + count + "项日程" : "本年已完成" + count + "项日程"}>{count.toLocaleString("en-US")}</span>
+  </>;
+}
+
 export function HomeBoard({ name, data }: { name: string; data: HomeData }) {
   const router = useRouter();
   const dialog = useRef<HTMLDialogElement>(null);
@@ -108,9 +125,13 @@ export function HomeBoard({ name, data }: { name: string; data: HomeData }) {
       </section>
       {data.modules.map((module) => {
         const info = moduleInfo[module];
-        return <Link key={module} href={info.href} className={`fh-card fh-module fh-${module}`} aria-label={`打开${info.name}`}>
+        return <Link key={module} href={info.href} className={`fh-card fh-module fh-${module}`} aria-label={`打开${info.name}`} onKeyDown={module === "todo" ? (event) => {
+          if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+          const list = event.currentTarget.querySelector(".fh-schedule");
+          if (list && list.scrollHeight > list.clientHeight) { event.preventDefault(); list.scrollBy({ top: event.key === "ArrowDown" ? 38 : -38 }); }
+        } : undefined}>
           <div className="fh-card-heading"><img src={info.icon} width="40" height="40" alt="" /><h2>{info.name}</h2><img className="fh-arrow" src={module === "gym" ? "/folio/home/12-8207.svg" : "/folio/home/12-8243.svg"} width="24" height="24" alt="" /></div>
-          {module === "gym" ? <Heatmap days={data.gym} monthly /> : module === "wealth" ? <AssetTrend points={data.trend} /> : <span className="fh-count" aria-label={`本年已完成${data.completed}项日程`}>{data.completed.toLocaleString("en-US")}</span>}
+          {module === "gym" ? <Heatmap days={data.gym} monthly /> : module === "wealth" ? <AssetTrend points={data.trend} /> : <Schedule data={data} />}
           <span className="fh-open">打开{info.name}</span>
         </Link>;
       })}

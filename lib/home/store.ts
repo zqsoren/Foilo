@@ -1,6 +1,7 @@
 import type Database from "better-sqlite3";
 import { completedByScheduledDay } from "../todo/dashboard";
-import { shanghaiNow, type TodoState } from "../todo/model";
+import { isPending, shanghaiNow, statusOf, type TodoState } from "../todo/model";
+import { eventsForDate } from "../todo/recurrence";
 import { readLedger } from "../wealth/store";
 import { latestValues, valueAt } from "../wealth/read";
 import { exchangeRates, type RateSet } from "../wealth/fx";
@@ -51,9 +52,16 @@ export async function readHome(db: Database.Database, userId: number, date = sha
   const life = new Map<string, number>(), gym = new Map<string, number>();
   const add = (day: string, count: number) => life.set(day, (life.get(day) ?? 0) + count);
   let completed = 0;
+  let schedule: HomeData["schedule"] = { total: 0, pending: 0, items: [] };
   if (modules.includes("todo")) {
     const row = db.prepare("SELECT payload FROM todo_workspaces WHERE user_id=?").get(userId) as { payload: string } | undefined;
-    const counts = completedByScheduledDay(row ? (JSON.parse(row.payload) as TodoState).events : []);
+    const events = row ? (JSON.parse(row.payload) as TodoState).events : [];
+    const today = eventsForDate(events, date);
+    schedule = {
+      total: today.length, pending: today.filter(isPending).length,
+      items: today.map((event) => ({ id: event.id, title: event.title, start: event.start, status: statusOf(event) })),
+    };
+    const counts = completedByScheduledDay(events);
     for (const [day, count] of counts) {
       if (day >= start && day <= date) { add(day, count); completed += count; }
     }
@@ -66,5 +74,5 @@ export async function readHome(db: Database.Database, userId: number, date = sha
     const rows = db.prepare("SELECT as_of_date AS day,count(*) AS count FROM assets_valuations WHERE user_id=? AND as_of_date>=? AND as_of_date<=? GROUP BY as_of_date").all(userId, start, date) as { day: string; count: number }[];
     for (const row of rows) add(row.day, row.count);
   }
-  return { date, modules, completed, life: calendarDays(start, end, date, life), gym: monthHeatmap(date, gym), trend: modules.includes("wealth") ? await homeTrend(db, userId, date, fetcher) : [] };
+  return { date, modules, completed, schedule, life: calendarDays(start, end, date, life), gym: monthHeatmap(date, gym), trend: modules.includes("wealth") ? await homeTrend(db, userId, date, fetcher) : [] };
 }

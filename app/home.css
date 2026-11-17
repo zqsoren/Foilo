@@ -34,6 +34,17 @@ body:has(.fh-shell) { background: #f5f5f5; }
 .fh-todo { min-height: 400px; }
 .fh-count { font-family: FolioGenos, Bahnschrift, sans-serif; font-size: 100px; font-weight: 400; line-height: .713; font-variant-numeric: tabular-nums; align-self: flex-end; margin-top: auto; padding-top: 44px; max-width: 100%; overflow-wrap: anywhere; }
 .fh-todo .fh-open { margin-top: -24px; }
+.fh-schedule { margin-top: 28px; min-width: 0; max-height: 176px; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: thin; scrollbar-color: #c4c4c4 transparent; padding-right: 4px; }
+.fh-schedule ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+.fh-schedule li { display: flex; align-items: center; gap: 12px; min-width: 0; font-size: 15px; line-height: 24px; }
+.fh-schedule-time { flex: none; width: 46px; color: #6b6b6b; font-size: 12px; font-variant-numeric: tabular-nums; }
+.fh-schedule-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fh-schedule li[data-status='completed'] .fh-schedule-title { text-decoration: line-through; color: #767676; }
+.fh-schedule li[data-status='cancelled'],.fh-schedule li[data-status='deferred'] { color: #767676; }
+.fh-schedule li > svg,.fh-schedule li > small { flex: none; }
+.fh-schedule li > small { font-size: 11px; }
+.fh-count[data-today='true'] { font-size: 80px; padding-top: 20px; }
+@media (max-width:800px) { .fh-schedule { margin-top: 18px; max-height: 88px; }.fh-schedule ul { gap: 8px; }.fh-schedule li { font-size: 14px; }.fh-count[data-today='true'] { font-size: 68px; padding-top: 16px; } }
 .fh-wealth { background: #f0f0f0; }
 .fh-trend { width: 100%; height: auto; max-height: 253px; flex: 1; min-height: 0; margin: 53px 0 30px; color: #484848; overflow: visible; }
 .fh-no-trend { align-self: center; color: #777; font-size: 15px; position: absolute; top: 50%; }

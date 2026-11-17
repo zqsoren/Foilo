@@ -1,3 +1,4 @@
+import type { TaskStatus } from "../todo/model";
 import { addDays } from "../life-date";
 
 export const homeModules = ["gym", "todo", "wealth"] as const;
@@ -10,7 +11,7 @@ export const moduleInfo = {
 export type HeatDay = { date: string; count: number; future: boolean };
 export type HomeData = {
   date: string; modules: HomeModule[]; life: HeatDay[]; gym: HeatDay[];
-  completed: number; trend: { date: string; value: number | null }[];
+  completed: number; schedule: { total: number; pending: number; items: { id: string; title: string; start: string | null; status: TaskStatus }[] }; trend: { date: string; value: number | null }[];
 };
 // Calendar days use Shanghai midnight, matching the three existing modules.
 export function calendarDays(start: string, end: string, today: string, counts: Map<string, number>): HeatDay[] {

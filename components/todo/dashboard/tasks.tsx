@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Search } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { LoaderCircle, Search } from "lucide-react";
 import { eventsForDate } from "@/lib/todo/recurrence";
 import { addDays } from "@/lib/life-date";
 import { productVersions } from "@/lib/product-versions";
@@ -25,6 +25,7 @@ import {
 } from "./controls";
 import { signOutBoard } from "@/app/todo/dashboard/actions";
 import type { TodoEvent } from "@/lib/todo/model";
+import { useAnimatedDismiss, useContentChange } from "./motion";
 
 export function TaskSearch({
   data,
@@ -147,6 +148,8 @@ export function AllTasks({
 }) {
   const counts = taskTotals(data.events, today),
     items = eventsForDate(data.events, day);
+  const list = useRef<HTMLDivElement>(null);
+  useContentChange(list, day);
   useEffect(() => {
     if (!highlight) return;
     const el = document.getElementById("dg-record-" + highlight);
@@ -198,7 +201,7 @@ export function AllTasks({
               select={select}
             />
           </div>
-          <div className="dg-detail-list">
+          <div className="dg-detail-list" ref={list}>
             <DayHeading day={day} />
             {items.length === 0 ? (
               <p className="dg-empty-day">这一天没有任务</p>
@@ -276,6 +279,8 @@ export function TaskPopup({
     [end, setEnd] = useState(e?.end ?? "");
   const [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
+  const { exiting, requestDismiss } = useAnimatedDismiss(close);
+  const dismiss = () => { if (!busy) requestDismiss(); };
   const heading = {
     new: "添加任务",
     time: "选择时间",
@@ -285,9 +290,9 @@ export function TaskPopup({
   return (
     <Popup
       title={heading}
-      close={() => {
-        if (!busy) close();
-      }}
+      close={dismiss}
+      exiting={exiting}
+      busy={busy}
     >
       {model.kind === "settings" ? (
         <>
@@ -297,13 +302,15 @@ export function TaskPopup({
             <form action={signOutBoard}>
               <button>退出登录</button>
             </form>
-            <button className="dg-primary" onClick={close}>
+            <button className="dg-primary" disabled={exiting} onClick={dismiss}>
               完成
             </button>
           </div>
         </>
       ) : (
         <form
+          inert={exiting}
+          aria-busy={busy}
           onSubmit={async (ev) => {
             ev.preventDefault();
             if (busy) return;
@@ -345,7 +352,7 @@ export function TaskPopup({
                   status: "deferred",
                   targetDate: date,
                 });
-              if (ok) close();
+              if (ok) requestDismiss();
               else setError("保存未完成，请检查页面提示。");
             } finally {
               setBusy(false);
@@ -412,11 +419,12 @@ export function TaskPopup({
           )}
           {error && <p role="alert">{error}</p>}
           <div className="dg-modal-actions">
-            <button type="button" onClick={close}>
+            <button type="button" disabled={busy || exiting} onClick={dismiss}>
               取消
             </button>
-            <button className="dg-primary" disabled={busy}>
-              {model.kind === "new" ? "添加任务" : "保存"}
+            <button className="dg-primary" disabled={busy || exiting}>
+              {busy && <LoaderCircle className="dg-saving-icon" size={15} aria-hidden />}
+              {busy ? "正在保存…" : model.kind === "new" ? "添加任务" : "保存"}
             </button>
           </div>
         </form>

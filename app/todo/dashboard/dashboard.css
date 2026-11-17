@@ -1175,3 +1175,97 @@ html:has(.dg) {
   outline: 2px solid #77859c;
   border-radius: 3px;
 }
+
+/* Match the gym's quick feedback rhythm, while preserving ToDo's static design. */
+.dg { --motion-out: cubic-bezier(0.23, 1, 0.32, 1); }
+.dg button {
+  transition: background-color 150ms ease-out, color 150ms ease-out,
+    border-color 150ms ease-out, box-shadow 150ms ease-out, transform 150ms var(--motion-out);
+}
+.dg button:active:not(:disabled):not(.dg-drag-handle):not(.dg-sample > button) { transform: scale(.98); }
+.dg :is(input, textarea) { transition: border-color 150ms ease-out, background-color 150ms ease-out, color 150ms ease-out; }
+.dg :is(.dg-mark, .dg-dots i, .dg-task-title) { transition: background-color 180ms ease-out, border-color 180ms ease-out, color 180ms ease-out; }
+.dg :is(.dg-inline-note, .dg-results, .dg-notice, .dg-popup [role="alert"]) { animation: dg-fade-in 150ms ease-out; }
+.dg-years { animation: dg-years-in 180ms var(--motion-out); }
+
+.dg-view-tabs {
+  position: relative;
+  isolation: isolate;
+  --tab-width: 168px;
+  --tab-step: calc(372.57px - 15px - 168px);
+}
+.dg-view-tabs::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 7.5px;
+  width: var(--tab-width);
+  height: 38.25px;
+  border-radius: 20px;
+  background: #f2f2f2;
+  transform: translateX(0);
+  transition: transform 220ms var(--motion-out);
+}
+.dg-view-tabs[data-selected="tasks"]::before { transform: translateX(var(--tab-step)); }
+.dg-view-tabs button[aria-pressed="true"] { background: transparent; }
+.dg-switch {
+  position: relative;
+  isolation: isolate;
+  --switch-width: 53px;
+}
+.dg-switch::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 2px;
+  width: var(--switch-width);
+  height: 22px;
+  border-radius: 10px;
+  background: #e7e7e4;
+  transform: translateX(calc(var(--switch-index) * (var(--switch-width) + 2px)));
+  transition: transform 200ms var(--motion-out);
+}
+.dg-w-trend .dg-switch { --switch-width: 46px; }
+.dg-switch button { width: var(--switch-width); flex: none; }
+.dg-switch button[aria-pressed="true"] { background: transparent; }
+
+@media (hover: hover) and (pointer: fine) {
+  .dg :is(.dg-edit, .dg-tray-toggle, .dg-pager button, .dg-tools > button:last-child, .dg-popup header button):hover:not(:disabled),
+  .dg-modal-actions button:not(.dg-primary):hover:not(:disabled) { background-color: #e8e8e8; }
+  .dg :is(.dg-view-tabs, .dg-switch) button:hover:not([aria-pressed="true"]) { color: var(--ink); }
+  .dg .dg-add-task:hover:not(:disabled) { background-color: #386be0; }
+  .dg .dg-primary:hover:not(:disabled) { background-color: #41413f; }
+  .dg :is(.dg-detail-time, .dg-add-note, .dg-time):hover { color: #2466ee; }
+  .dg .dg-remove:hover:not(:disabled) { background-color: #bd2028; }
+  .dg-sample > button:hover { box-shadow: inset 0 0 0 1px #888; }
+  .dg-days button:hover:not([aria-pressed="true"]) { background-color: #f4f4f2; }
+}
+.dg-popup[open] { animation: dg-dialog-in 200ms var(--motion-out); }
+.dg-popup[open]::backdrop, .dg-scrim { animation: dg-fade-in 180ms ease-out; }
+.dg-popup.dg-popup-exiting { animation: dg-dialog-out 160ms ease-in forwards; pointer-events: none; }
+.dg-popup.dg-popup-exiting::backdrop, .dg-scrim-exiting { animation: dg-fade-out 160ms ease-out forwards; }
+.dg-tray.dg-tray-exiting { animation: dg-tray-out 160ms ease-in forwards; pointer-events: none; }
+.dg-removing .dg-scaled { animation: dg-remove-out 160ms ease-out forwards; }
+.dg-saving-icon { display: inline-block; vertical-align: -3px; margin-right: 6px; animation: dg-spin 800ms linear infinite; }
+
+@keyframes dg-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dg-fade-out { to { opacity: 0; } }
+@keyframes dg-dialog-in { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes dg-dialog-out { to { opacity: 0; transform: translateY(6px) scale(.98); } }
+@keyframes dg-tray-out { to { opacity: 0; translate: -50% 28px; } }
+@keyframes dg-remove-out { to { opacity: 0; scale: .97; } }
+@keyframes dg-years-in { from { opacity: 0; translate: -8px 0; } to { opacity: 1; translate: 0; } }
+@keyframes dg-spin { to { transform: rotate(360deg); } }
+@media (max-width: 800px) {
+  .dg-view-tabs {
+    --tab-width: calc((clamp(210px, 48vw, 372.57px) - 23px) / 2);
+    --tab-step: calc(var(--tab-width) + 8px);
+  }
+  .dg-view-tabs::before { height: 33px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dg button, .dg :is(input, textarea, .dg-mark, .dg-dots i, .dg-task-title) { transition-duration: 70ms; }
+  .dg button:active:not(:disabled):not(.dg-drag-handle):not(.dg-sample > button) { transform: none; }
+  .dg-view-tabs::before, .dg-switch::before { transition: none; }
+  .dg-popup::backdrop { animation: none !important; }
+}

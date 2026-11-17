@@ -1,10 +1,11 @@
 "use client";
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, Minus, X } from "lucide-react";
 import { statusOf, type TodoEvent, type TaskStatus } from "@/lib/todo/model";
 import { shortDate, weekName, monthCells } from "@/lib/todo/dashboard";
 import { eventsForDate } from "@/lib/todo/recurrence";
 import type { BoardCommand } from "@/app/todo/dashboard/actions";
+import { useContentChange } from "./motion";
 export type Commit = (cmd: BoardCommand) => Promise<boolean>;
 export type Editor =
   | { kind: "new"; date: string }
@@ -46,7 +47,7 @@ export function Switch<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <span className="dg-switch">
+    <span className="dg-switch" style={{ "--switch-index": values.indexOf(value), "--switch-count": values.length } as CSSProperties}>
       {values.map((v) => (
         <button key={v} aria-pressed={v === value} onClick={() => onChange(v)}>
           {v}
@@ -66,8 +67,10 @@ export function Calendar({
   selected: string;
   select: (d: string) => void;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useContentChange(ref, month.slice(0, 7));
   return (
-    <div className="dg-cal">
+    <div className="dg-cal" ref={ref}>
       <div className="dg-weekdays">
         {[..."一二三四五六日"].map((c) => (
           <span key={c}>{c}</span>
@@ -210,22 +213,31 @@ export function Popup({
   title,
   close,
   children,
+  exiting = false,
+  busy = false,
 }: {
   title: string;
   close: () => void;
   children: ReactNode;
+  exiting?: boolean;
+  busy?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const d = ref.current;
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     d?.showModal();
-    return () => d?.close();
+    return () => {
+      d?.close();
+      if (opener?.isConnected) opener.focus({ preventScroll: true });
+    };
   }, []);
   return (
     <dialog
       ref={ref}
-      className="dg-popup"
+      className={"dg-popup" + (exiting ? " dg-popup-exiting" : "")}
       aria-label={title}
+      aria-busy={busy}
       onCancel={(e) => {
         e.preventDefault();
         close();
@@ -245,7 +257,7 @@ export function Popup({
     >
       <header>
         <h2>{title}</h2>
-        <button aria-label="关闭" onClick={close}>
+        <button aria-label="关闭" disabled={busy || exiting} onClick={close}>
           <X size={19} />
         </button>
       </header>

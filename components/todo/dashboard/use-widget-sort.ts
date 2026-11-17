@@ -166,6 +166,6 @@ export function useWidgetSort(layout: Widget[], change: (next: Widget[]) => void
     if (target >= 0 && target < current.current.length) reorder(kind, current.current[target], false);
   }
 
-  return { slots, dragging, announcement, pointerDown, keyboardMove, suppressClick,
+  return { slots, dragging, announcement, pointerDown, keyboardMove, suppressClick, capture,
     isDragging: () => stop.current !== null };
 }

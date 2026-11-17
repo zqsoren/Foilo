@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { productVersions } from "@/lib/product-versions";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { sqlite } from "@/lib/db";
 import { dashboard, exercises, gymMonth } from "@/lib/gym/store";
@@ -36,6 +37,7 @@ export default async function GymPage({
         ? "mobile"
         : "desktop";
   const user = await requireUser("/gym?device=" + device);
+  if (device === "desktop") redirect("/gym/dashboard");
   const month = gymMonth();
   return (
     <GymApp

@@ -186,9 +186,9 @@ function apply(
   if (c.type === "start") {
     const plan = db
       .prepare(
-        "SELECT name FROM gym_plans WHERE id=? AND user_id=? AND archived=0",
+        "SELECT name,revision FROM gym_plans WHERE id=? AND user_id=? AND archived=0",
       )
-      .get(c.planId, uid) as { name: string } | undefined;
+      .get(c.planId, uid) as { name: string; revision: number } | undefined;
     if (!plan) throw Error("计划不存在");
     const active = db
       .prepare(
@@ -202,9 +202,9 @@ function apply(
     const wid = Number(
       db
         .prepare(
-          "INSERT INTO gym_workouts(user_id,plan_id,name,day,started) VALUES(?,?,?,?,?)",
+          "INSERT INTO gym_workouts(user_id,plan_id,name,day,started,plan_revision) VALUES(?,?,?,?,?,?)",
         )
-        .run(uid, c.planId, plan.name, epochToLocalInput(now).slice(0, 10), now)
+        .run(uid, c.planId, plan.name, epochToLocalInput(now).slice(0, 10), now, plan.revision)
         .lastInsertRowid,
     );
     const items = db

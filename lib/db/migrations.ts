@@ -577,4 +577,9 @@ export const migrations = [
   muscleLoadMigration,
   curatedMigration,
   historyImportMigration,
+  {version:14,name:"gym_desktop_preferences_and_plan_snapshot",sql:`
+    CREATE TABLE gym_dashboard_settings (user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE, settings TEXT NOT NULL, revision INTEGER NOT NULL DEFAULT 0);
+    CREATE TABLE gym_dashboard_requests (user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, request_id TEXT NOT NULL, created INTEGER NOT NULL, PRIMARY KEY(user_id,request_id));
+    ALTER TABLE gym_workouts ADD COLUMN plan_revision INTEGER;
+  `},
 ] as const;
